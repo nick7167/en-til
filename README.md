@@ -1,6 +1,6 @@
 # En til?
 
-Native Danish iPhone party board game, iOS 18+. Implementation in progress from the approved [specification](docs/SPECIFICATION.md); historical discovery is archived. Everything is local; no hosted resources have been created.
+Native Danish iPhone party board game, iOS 18+. Implementation in progress from the approved [specification](docs/SPECIFICATION.md); historical discovery is archived. Source is hosted privately at https://github.com/nick7167/en-til. No backend is deployed. GitHub Actions runs backend checks; the native simulator checkpoint is manual.
 
 - `ios/`: SwiftUI app, native controls, secure guest session, StoreKit client and XcodeGen project.
 - `backend/`: TypeScript Worker, SQLite Durable Object per room, versioned commands, private snapshots, D1 migrations and tests.
