@@ -35,28 +35,33 @@ struct WindingBoard: View {
                                 context.stroke(divider, with: .color(Color.lilac.opacity(0.4)), lineWidth: 1)
                             }
                         }.accessibilityHidden(true)
-                        ForEach(0...maximum, id: \.self) { space in
-                            let occupants = room.players.filter { $0.score == space }
-                            let x = centerX + sin(Double(space) * 0.47) * amplitude
-                            let y = height - 70 - CGFloat(space) * 84
-                            Text(space == room.settings.finish ? "MÅL" : "\(space)")
-                                .font(.headline.monospacedDigit()).foregroundStyle(space == room.settings.finish ? Color.lime : Color.cream.opacity(0.7))
-                                .position(x: x, y: y + (occupants.isEmpty ? 0 : 25)).accessibilityHidden(true)
-                            if !occupants.isEmpty {
-                                VStack(spacing: 0) {
-                                    HStack(spacing: -9) { ForEach(occupants.prefix(4)) { seat in CharacterView(index: seat.character, size: 38).accessibilityHidden(true) } }
-                                    if occupants.count > 4 { HStack(spacing: -9) { ForEach(occupants.dropFirst(4)) { seat in CharacterView(index: seat.character, size: 32).accessibilityHidden(true) } } }
-                                    Text(occupants.count == 1 ? occupants[0].name : "\(occupants.count) spillere")
-                                        .font(.caption2.bold()).foregroundStyle(occupants.contains { $0.id == room.me } ? Color.ink : Color.cream)
-                                        .padding(.horizontal, 9).padding(.vertical, 3).background(occupants.contains { $0.id == room.me } ? Color.lime : Color.ink, in: Capsule())
-                                }.position(x: x + 24, y: y-10)
-                                    .accessibilityElement(children: .ignore).accessibilityLabel("Felt \(space): \(occupants.map(\.name).joined(separator: ", "))")
+                        VStack(spacing: 0) {
+                            Color.clear.frame(height: 56)
+                            ForEach(Array((0...maximum).reversed()), id: \.self) { space in
+                                let occupants = room.players.filter { $0.score == space }
+                                let x = centerX + sin(Double(space) * 0.47) * amplitude - geometry.size.width / 2
+                                ZStack {
+                                    Text(space == room.settings.finish ? "MÅL" : "\(space)")
+                                        .font(.headline.monospacedDigit()).foregroundStyle(space == room.settings.finish ? Color.lime : Color.cream.opacity(0.7))
+                                        .offset(x: x, y: occupants.isEmpty ? 0 : 25).accessibilityHidden(true)
+                                    if !occupants.isEmpty {
+                                        VStack(spacing: 0) {
+                                            HStack(spacing: -9) { ForEach(occupants.prefix(4)) { seat in CharacterView(index: seat.character, size: 38).accessibilityHidden(true) } }
+                                            if occupants.count > 4 { HStack(spacing: -9) { ForEach(occupants.dropFirst(4)) { seat in CharacterView(index: seat.character, size: 32).accessibilityHidden(true) } } }
+                                            Text(occupants.count == 1 ? occupants[0].name : "\(occupants.count) spillere")
+                                                .font(.caption2.bold()).foregroundStyle(occupants.contains { $0.id == room.me } ? Color.ink : Color.cream)
+                                                .padding(.horizontal, 9).padding(.vertical, 3).background(occupants.contains { $0.id == room.me } ? Color.lime : Color.ink, in: Capsule())
+                                        }.offset(x: x + 24, y: -10)
+                                            .accessibilityElement(children: .ignore).accessibilityLabel("Felt \(space): \(occupants.map(\.name).joined(separator: ", "))")
+                                            .accessibilityIdentifier(occupants.contains { $0.id == room.me } ? "board-own-position" : "board-space-\(space)")
+                                    }
+                                }.frame(maxWidth: .infinity).frame(height: 84).id(space)
                             }
-                            Color.clear.frame(width: 1, height: 1).position(x: x, y: y).id(space)
+                            Color.clear.frame(height: 28)
                         }
                     }.frame(height: CGFloat(maximum + 2) * 84)
                 }
-            }.background(LinearGradient(colors: [.ink, .lounge, .ink], startPoint: .topLeading, endPoint: .bottomTrailing))
+            }.defaultScrollAnchor(.bottom).background(LinearGradient(colors: [.ink, .lounge, .ink], startPoint: .topLeading, endPoint: .bottomTrailing))
                 .onAppear { proxy.scrollTo(room.ownSeat?.score ?? 0, anchor: .center) }
                 .onChange(of: room.ownSeat?.score) { _, score in withAnimation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 1)) { proxy.scrollTo(score ?? 0, anchor: .center) } }
         }

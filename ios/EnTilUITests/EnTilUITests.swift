@@ -11,6 +11,8 @@ final class EnTilUITests: XCTestCase {
         let code = app.textFields.firstMatch
         XCTAssertTrue(code.waitForExistence(timeout: 3))
         code.tap(); code.typeText("k7mx")
+        XCTAssertEqual(code.value as? String, "K7MX")
+        XCTAssertTrue(app.buttons["Find spil"].isEnabled)
         XCTAssertTrue(app.buttons["Find spil"].isHittable)
         attach(app, "07-code-keyboard")
     }
@@ -20,6 +22,17 @@ final class EnTilUITests: XCTestCase {
             app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = name
             app.launch()
             XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))
+            if name == "guess" {
+                for number in 0...4 {
+                    XCTAssertTrue(app.buttons["guess-\(number)"].isHittable)
+                }
+                app.buttons["guess-2"].tap()
+                XCTAssertTrue(app.buttons["Lås dit gæt"].isEnabled)
+            }
+            if name == "board" {
+                XCTAssertTrue(app.otherElements["board-own-position"].waitForExistence(timeout: 5))
+                XCTAssertTrue(app.otherElements["board-own-position"].isHittable)
+            }
             attach(app, name)
             app.terminate()
         }

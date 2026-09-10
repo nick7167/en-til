@@ -94,7 +94,7 @@ struct RoomView: View {
                         Text("\(round.responseCount ?? 0) svar i alt · Dit eget svar tæller med").font(.footnote).multilineTextAlignment(.center)
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 82))], spacing: 12) {
                             ForEach(0...(round.responseCount ?? 0), id: \.self) { number in
-                                Choice(title: String(number), selected: answer == number) { answer = number }
+                                NumberChoice(number: number, selected: answer == number) { answer = number }
                             }
                         }
                     } else {

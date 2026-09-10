@@ -13,6 +13,7 @@ extension Font {
     static func editorial(_ size: CGFloat = 32) -> Font { .custom("Fraunces-Regular", size: size, relativeTo: .largeTitle).weight(.bold) }
 }
 struct LoungeButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
     var primary = true
     @Environment(\.accessibilityReduceMotion) private var reducedMotion
     func makeBody(configuration: Configuration) -> some View {
@@ -22,7 +23,7 @@ struct LoungeButtonStyle: ButtonStyle {
             .background(primary ? Color.lime : Color.violet, in: RoundedRectangle(cornerRadius: 17))
             .overlay(RoundedRectangle(cornerRadius: 17).strokeBorder(primary ? Color.white.opacity(0.15) : Color.lilac.opacity(0.25)))
             .scaleEffect(configuration.isPressed && !reducedMotion ? 0.975 : 1)
-            .opacity(configuration.isPressed ? 0.85 : 1)
+            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.85 : 1)
             .animation(reducedMotion ? nil : .spring(response: 0.25, dampingFraction: 1), value: configuration.isPressed)
     }
 }
@@ -139,5 +140,26 @@ struct SeatCard: View {
         }.frame(maxWidth: .infinity).padding(10).background(Color.lounge, in: RoundedRectangle(cornerRadius: 16))
             .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
             .accessibilityElement(children: .combine)
+    }
+}
+
+struct NumberChoice: View {
+    let number: Int
+    let selected: Bool
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Text(String(number)).font(.title.bold().monospacedDigit())
+                .frame(maxWidth: .infinity, minHeight: 72)
+                .foregroundStyle(selected ? Color.ink : Color.cream)
+                .background(selected ? Color.lime : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
+                .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
+                .overlay(alignment: .topTrailing) {
+                    if selected { Image(systemName: "checkmark").font(.caption.bold()).foregroundStyle(Color.ink).padding(6) }
+                }
+        }.buttonStyle(.plain)
+            .accessibilityLabel("\(number) ja-svar")
+            .accessibilityIdentifier("guess-\(number)")
+            .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

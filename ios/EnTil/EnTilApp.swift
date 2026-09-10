@@ -145,10 +145,11 @@ struct JoinView: View {
             Text(step == 0 ? "Indtast koden fra værten." : step == 1 ? "Dit navn bliver vist til de andre." : "Vælg den, der ligner dit humør.").multilineTextAlignment(.center)
             if step < 2 { CharacterView(index: step == 0 ? 1 : character, size: 115) }
             if step == 0 {
-                TextField("KODE", text: $code).font(.system(size: 40, weight: .black, design: .monospaced)).tracking(9).multilineTextAlignment(.center)
+                TextField("KODE", text: Binding(get: { code }, set: { value in
+                    code = String(value.uppercased().filter { $0.isASCII && ($0.isLetter || $0.isNumber) }.prefix(4))
+                })).font(.system(size: 40, weight: .black, design: .monospaced)).tracking(9).multilineTextAlignment(.center)
                     .textInputAutocapitalization(.characters).autocorrectionDisabled().keyboardType(.asciiCapable).submitLabel(.continue)
                     .padding(20).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18)).focused($focused)
-                    .onChange(of: code) { _, value in code = String(value.uppercased().filter { $0.isASCII && ($0.isLetter || $0.isNumber) }.prefix(4)) }
                     .onSubmit { if code.count == 4 { findRoom() } }.accessibilityLabel("Spilkode, fire bogstaver eller tal")
                 Button("Find spil") { findRoom() }.buttonStyle(LoungeButtonStyle()).disabled(code.count != 4 || client.busy)
             } else if step == 1 {
