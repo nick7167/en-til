@@ -1,0 +1,2 @@
+ALTER TABLE purchases ADD COLUMN signed_at INTEGER NOT NULL DEFAULT 0;
+CREATE TABLE apple_notifications (id TEXT PRIMARY KEY, received_at INTEGER NOT NULL);

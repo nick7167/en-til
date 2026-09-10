@@ -1,0 +1,9 @@
+# En til? — implementation handoff
+
+Updated 10 September 2026. The user explicitly authorized implementation of the supplied specification, superseding discovery-only status. Read [docs/SPECIFICATION.md](docs/SPECIFICATION.md) for the current contract. The original conversation summary is preserved at [docs/archive/DISCOVERY_HANDOFF.md](docs/archive/DISCOVERY_HANDOFF.md).
+
+Native Danish iPhone app, iOS 18+, SwiftUI/StoreKit 2; fresh TypeScript Cloudflare Workers, authoritative room Durable Objects, D1. No shared code or infrastructure with earlier games. Six approved sheets (26 screens) are in design/references. Written pack intensities override inconsistent mockup labels. En til? remains a working name. Bundle ID/endpoint are development placeholders.
+
+Implementation is in progress. Native home/join/lobby/question/backing/personal/reveal/board/finale/settings/shop/report screens, twelve scalable characters, generated lounge and six cover assets, Fraunces and sound cues are written. The backend has accountless sessions, persisted room coordination, private snapshots, verified-purchase/notification integration, and 29 engine/RPC tests. Real local HTTP/WebSocket, process-restart, and 100-room/800-socket checks pass. The first 20 development questions await review. A manual unsigned Codemagic checkpoint is prepared, not run. Check README and docs/VERIFICATION.md for tested scope and remaining work. Content is DRAFT: 0 human approvals. Never claim 750 reviewed questions exist.
+
+Keep all work local. No GitHub push, deploy, hosted build upload, TestFlight, website publication, App Store submission, external messaging or new spending without explicit project permission. No delegation unless authorized. The current environment has Swift command-line tools but no full Xcode; SwiftUI/simulator verification requires hosted Xcode. Do not call source parsing a native build.

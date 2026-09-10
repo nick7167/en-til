@@ -1,0 +1,96 @@
+{
+  "v": 1,
+  "roomID": "00000000-0000-4000-a000-000000000001",
+  "code": "K7MX",
+  "hostID": "p0",
+  "me": "p0",
+  "serverTime": 1000,
+  "phase": "answer",
+  "matchID": "826a418c-f856-4943-a9ff-54e5fdbf380d",
+  "settings": {
+    "finish": 20,
+    "timed": true,
+    "answerSeconds": 20,
+    "backingSeconds": 10,
+    "drinking": false,
+    "packs": [
+      "free"
+    ]
+  },
+  "adultRequired": false,
+  "contentVersion": "draft-2026-09-10.1",
+  "players": [
+    {
+      "id": "p0",
+      "name": "Nicklas",
+      "character": 0,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    },
+    {
+      "id": "p1",
+      "name": "Freja",
+      "character": 1,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p2",
+      "name": "Noah",
+      "character": 2,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p3",
+      "name": "Alma",
+      "character": 3,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    }
+  ],
+  "round": {
+    "id": "826a418c-f856-4943-a9ff-54e5fdbf380d:1:2188001677",
+    "number": 1,
+    "questionID": "free-f008",
+    "kind": "factual",
+    "pack": "free",
+    "prompt": "Hvilken er størst i diameter?",
+    "options": [
+      "Månen",
+      "Jorden"
+    ],
+    "responseCount": null,
+    "deadline": 11000,
+    "privateLocked": false,
+    "answerLocked": true,
+    "backLocked": true,
+    "ownAnswer": 0,
+    "correct": null,
+    "fact": null,
+    "source": null,
+    "revealAt": null,
+    "revealStage": 4,
+    "results": []
+  },
+  "countdownAt": null,
+  "winners": [],
+  "reactions": [],
+  "fallbackNotice": false
+}

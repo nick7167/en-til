@@ -1,0 +1,32 @@
+{
+  "name": "en-til",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsx --test backend/test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "content:check": "tsx scripts/validate-content.ts",
+    "check": "pnpm typecheck && pnpm content:check && pnpm test",
+    "dev": "wrangler dev --config backend/wrangler.jsonc",
+    "types": "wrangler types --config backend/wrangler.jsonc backend/worker-configuration.d.ts --strict-vars=false",
+    "test:http": "tsx scripts/integration.ts",
+    "test:ws": "tsx scripts/websocket-check.ts",
+    "test:recovery": "tsx scripts/recovery-check.ts",
+    "test:load": "tsx scripts/load-local.ts",
+    "test:rates": "tsx scripts/rate-check.ts",
+    "fixtures": "tsx scripts/make-fixtures.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.72.0",
+    "ws": "^8.21.3"
+  },
+  "dependencies": {
+    "@apple/app-store-server-library": "^3.1.0",
+    "zod": "^4.3.6"
+  },
+  "packageManager": "pnpm@10.13.1"
+}

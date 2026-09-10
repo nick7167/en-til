@@ -1,0 +1,10 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE sessions (id TEXT PRIMARY KEY, token_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL);
+CREATE TABLE rooms (code TEXT PRIMARY KEY, room_id TEXT NOT NULL UNIQUE, creator TEXT NOT NULL, request_id TEXT NOT NULL, created_at INTEGER NOT NULL, UNIQUE(creator, request_id));
+CREATE TABLE catalogue_versions (version TEXT PRIMARY KEY, payload TEXT NOT NULL, reviewed_at INTEGER NOT NULL, active INTEGER NOT NULL DEFAULT 0);
+CREATE UNIQUE INDEX one_active_catalogue ON catalogue_versions(active) WHERE active = 1;
+CREATE TABLE purchases (transaction_id TEXT NOT NULL, environment TEXT NOT NULL, product_id TEXT NOT NULL, revoked INTEGER NOT NULL DEFAULT 0, verified_at INTEGER NOT NULL, PRIMARY KEY(transaction_id, environment));
+CREATE TABLE ownership (session_id TEXT NOT NULL REFERENCES sessions(id), transaction_id TEXT NOT NULL, environment TEXT NOT NULL, PRIMARY KEY(session_id, transaction_id, environment), FOREIGN KEY(transaction_id, environment) REFERENCES purchases(transaction_id, environment));
+CREATE TABLE seen_questions (session_id TEXT NOT NULL REFERENCES sessions(id), question_id TEXT NOT NULL, PRIMARY KEY(session_id, question_id));
+CREATE TABLE reports (id TEXT PRIMARY KEY, session_id TEXT NOT NULL, room_id TEXT NOT NULL, question_id TEXT NOT NULL, reason TEXT NOT NULL, note TEXT, created_at INTEGER NOT NULL);
+CREATE TABLE metrics (day TEXT NOT NULL, event TEXT NOT NULL, count INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(day,event));

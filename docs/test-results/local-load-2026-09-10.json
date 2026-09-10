@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-10T11:42:24.693Z",
+  "scope": "local Miniflare; not Cloudflare production capacity or cost",
+  "rooms": 100,
+  "simultaneousSockets": 800,
+  "httpRequests": 4428,
+  "elapsedSeconds": 55.48586654,
+  "p50Milliseconds": 107.56343800000468,
+  "p95Milliseconds": 143.68614199999865,
+  "p99Milliseconds": 170.9667040000004
+}

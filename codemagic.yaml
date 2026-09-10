@@ -1,0 +1,21 @@
+# Manual checkpoints only. No triggers, signing, uploads or publication enabled.
+workflows:
+  native-checkpoint:
+    name: Native build, tests and screenshots
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      xcode: '26.6'
+      vars:
+        SIMULATOR_DESTINATION: 'platform=iOS Simulator,name=iPhone 17,OS=26.5'
+    scripts:
+      - name: Build and test native app
+        script: |
+          set -euo pipefail
+          xcodebuild test -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination "$SIMULATOR_DESTINATION" -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=NO
+      - name: Export native screenshot attachments
+        script: |
+          xcrun xcresulttool export attachments --path build/EnTil.xcresult --output-path build/screenshots
+    artifacts:
+      - build/EnTil.xcresult
+      - build/screenshots/**

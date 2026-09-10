@@ -1,0 +1,25 @@
+{
+  "version":"draft-2026-09-10.1",
+  "questions":[
+    {"id":"free-f001","pack":"free","kind":"factual","format":"trivia","prompt":"Hvilken planet er størst i solsystemet?","options":["Jorden","Mars","Jupiter","Saturn"],"correct":2,"source":"https://science.nasa.gov/jupiter/facts/","fact":"Jupiter er solsystemets største planet.","review":"draft"},
+    {"id":"free-f002","pack":"free","kind":"factual","format":"true-false","prompt":"Venus er varmere på overfladen end Merkur. Sandt eller falsk?","options":["Sandt","Falsk"],"correct":0,"source":"https://science.nasa.gov/venus/facts/","fact":"Venus har den varmeste overflade blandt solsystemets planeter.","review":"draft"},
+    {"id":"free-f003","pack":"free","kind":"factual","format":"comparison","prompt":"Hvilken planet ligger nærmest Solen?","options":["Mars","Jorden"],"correct":1,"source":"https://science.nasa.gov/solar-system/planets/","fact":"Jorden er tredje planet fra Solen; Mars er den fjerde.","review":"draft"},
+    {"id":"free-f004","pack":"free","kind":"factual","format":"before-after","prompt":"Kom den første bemandede månelanding før eller efter 1970?","options":["Før","Efter"],"correct":0,"source":"https://www.nasa.gov/mission/apollo-11/","fact":"Apollo 11 landede på Månen i juli 1969.","review":"draft"},
+    {"id":"free-f005","pack":"free","kind":"factual","format":"over-under","prompt":"Er der over eller under 10 planeter i solsystemet?","options":["Over","Under"],"correct":1,"source":"https://science.nasa.gov/solar-system/planets/","fact":"Solsystemet har otte planeter. Dværgplaneter tælles ikke med.","review":"draft"},
+    {"id":"free-f006","pack":"free","kind":"factual","format":"trivia","prompt":"Hvilken planet kaldes den røde planet?","options":["Venus","Neptun","Mars","Merkur"],"correct":2,"source":"https://science.nasa.gov/mars/facts/","fact":"Jernmineraler, der oxiderer, giver Mars' overflade dens rødlige farve.","review":"draft"},
+    {"id":"free-f007","pack":"free","kind":"factual","format":"true-false","prompt":"Solen er en stjerne. Sandt eller falsk?","options":["Sandt","Falsk"],"correct":0,"source":"https://science.nasa.gov/sun/facts/","fact":"Solen er en stjerne i centrum af vores solsystem.","review":"draft"},
+    {"id":"free-f008","pack":"free","kind":"factual","format":"comparison","prompt":"Hvilken er størst i diameter?","options":["Månen","Jorden"],"correct":1,"source":"https://science.nasa.gov/moon/facts/","fact":"Månens diameter er omkring en fjerdedel af Jordens.","review":"draft"},
+    {"id":"free-f009","pack":"free","kind":"factual","format":"trivia","prompt":"Hvilken planet er kendt for sine tydelige ringe?","options":["Mars","Merkur","Jorden","Saturn"],"correct":3,"source":"https://science.nasa.gov/saturn/facts/","fact":"Saturn har et stort og tydeligt ringsystem.","review":"draft"},
+    {"id":"free-f010","pack":"free","kind":"factual","format":"over-under","prompt":"Er et døgn på Mars længere eller kortere end 24 timer?","options":["Længere","Kortere"],"correct":0,"source":"https://science.nasa.gov/mars/facts/","fact":"Et soldøgn på Mars varer cirka 24 timer og 39 minutter.","review":"draft"},
+    {"id":"free-p001","pack":"free","kind":"personal","format":"personal","prompt":"Har du sunget med på en sang uden at kende teksten?","review":"draft"},
+    {"id":"free-p002","pack":"free","kind":"personal","format":"personal","prompt":"Har du vinket tilbage til en, der vinkede til en anden?","review":"draft"},
+    {"id":"free-p003","pack":"free","kind":"personal","format":"personal","prompt":"Har du åbnet køleskabet igen i håb om, at noget nyt var dukket op?","review":"draft"},
+    {"id":"free-p004","pack":"free","kind":"personal","format":"personal","prompt":"Har du sagt »i lige måde«, da det slet ikke passede?","review":"draft"},
+    {"id":"free-p005","pack":"free","kind":"personal","format":"personal","prompt":"Vil du helst have den sidste aften helt uden planer?","review":"draft"},
+    {"id":"free-p006","pack":"free","kind":"personal","format":"personal","prompt":"Har du øvet en samtale inde i hovedet, som aldrig blev til noget?","review":"draft"},
+    {"id":"free-p007","pack":"free","kind":"personal","format":"personal","prompt":"Synes du, at morgenmad også er en helt fin aftensmad?","review":"draft"},
+    {"id":"free-p008","pack":"free","kind":"personal","format":"personal","prompt":"Har du ledt efter din telefon, mens du holdt den i hånden?","review":"draft"},
+    {"id":"free-p009","pack":"free","kind":"personal","format":"personal","prompt":"Har du ladet som om, du kendte en sang, fordi alle andre gjorde?","review":"draft"},
+    {"id":"free-p010","pack":"free","kind":"personal","format":"personal","prompt":"Ville du vælge en hyggelig aften hjemme frem for en stor fest i morgen?","review":"draft"}
+  ]
+}

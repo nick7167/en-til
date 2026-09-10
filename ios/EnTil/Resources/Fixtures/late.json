@@ -1,0 +1,107 @@
+{
+  "v": 1,
+  "roomID": "00000000-0000-4000-a000-000000000001",
+  "code": "K7MX",
+  "hostID": "p0",
+  "me": "p4",
+  "serverTime": 9000,
+  "phase": "answer",
+  "matchID": "1a558a2c-7553-4197-9160-32391790ab10",
+  "settings": {
+    "finish": 20,
+    "timed": true,
+    "answerSeconds": 20,
+    "backingSeconds": 10,
+    "drinking": false,
+    "packs": [
+      "free"
+    ]
+  },
+  "adultRequired": false,
+  "contentVersion": "draft-2026-09-10.1",
+  "players": [
+    {
+      "id": "p0",
+      "name": "Nicklas",
+      "character": 0,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p1",
+      "name": "Freja",
+      "character": 1,
+      "connected": false,
+      "away": true,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    },
+    {
+      "id": "p2",
+      "name": "Noah",
+      "character": 2,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p3",
+      "name": "Alma",
+      "character": 3,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p4",
+      "name": "Sofie",
+      "character": 4,
+      "connected": true,
+      "away": false,
+      "late": true,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    }
+  ],
+  "round": {
+    "id": "1a558a2c-7553-4197-9160-32391790ab10:1:441813549",
+    "number": 1,
+    "questionID": "free-f010",
+    "kind": "factual",
+    "pack": "free",
+    "prompt": "Er et døgn på Mars længere eller kortere end 24 timer?",
+    "options": [
+      "Længere",
+      "Kortere"
+    ],
+    "responseCount": null,
+    "deadline": 29000,
+    "privateLocked": false,
+    "answerLocked": false,
+    "backLocked": false,
+    "ownAnswer": null,
+    "correct": null,
+    "fact": null,
+    "source": null,
+    "revealAt": null,
+    "revealStage": 4,
+    "results": []
+  },
+  "countdownAt": null,
+  "winners": [],
+  "reactions": [],
+  "fallbackNotice": false
+}
