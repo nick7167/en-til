@@ -10,3 +10,5 @@ Read PROJECT_HANDOFF.md and README.md before project work. The user's implementa
 - Do not delegate unless explicitly authorized.
 - Review original Danish questions with Nicklas in batches of about 20; automation cannot grant human approval.
 - Record limitations and unfinished acceptance checks honestly.
+
+On 10 September 2026 the user explicitly authorized making nick7167/en-til public for free standard GitHub Actions builds. The repository is public; use standard runners only. No new spending or release/deployment authorization is implied.

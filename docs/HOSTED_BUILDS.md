@@ -1,10 +1,10 @@
 # Hosted native checkpoints
 
-Source: https://github.com/nick7167/en-til (private). Creation and pushes were authorized on 10 September 2026. The user selected GitHub Actions for build/test checks, with Codemagic reserved for later signing and TestFlight.
+Source: https://github.com/nick7167/en-til (public). Creation and pushes were authorized on 10 September 2026. The user selected GitHub Actions for build/test checks, with Codemagic reserved for later signing and TestFlight.
 
 `.github/workflows/native.yml` is a manual unsigned checkpoint using the standard `macos-26` runner and Xcode 26.6, iPhone 17 / iOS 26.5. The runner inventory was checked at https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md on 10 September 2026. It builds the committed project, runs contract/UI tests, and retains logs/screenshots for one day. A 30-minute timeout and cancellation of superseded runs limit usage. Native checks are manual to conserve included minutes.
 
-No native run has completed yet. The current GitHub token cannot inspect billing. Confirm included allowance and a blocking spending budget before starting macOS jobs; no paid overage is authorized. Existing backend checks run on Linux when pushed.
+No native run has completed yet. Standard GitHub-hosted runners are free for this now-public repository. No paid larger runners or overage is authorized. Existing backend checks run on Linux when pushed.
 
 `codemagic.yaml` remains an unused unsigned fallback, not a TestFlight pipeline. No signing secrets, Apple integration, upload or publication are configured.
 
@@ -13,3 +13,5 @@ Screenshot fixture mode is DEBUG-only and loads public server snapshots generate
 Remaining native matrix: small iPhone plus larger device, iOS 18 minimum runtime, accessibility text sizes, VoiceOver, reduced motion, mute, real hardware haptics/audio, eight-player/long-name layouts, and comparison against every approved concept. No test result is established until the hosted run completes.
 
 Signing/TestFlight workflow must be finalized after a real bundle identifier, Apple team, App Store record, backend endpoint and explicit upload permission are provided. No placeholder production resources are created by this repository.
+
+On 10 September 2026 the user explicitly authorized making nick7167/en-til public for free standard GitHub Actions builds. The repository is public; use standard runners only. No new spending or release/deployment authorization is implied.
