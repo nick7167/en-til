@@ -28,3 +28,7 @@ This is an implementation checkpoint, not release approval.
 - Production load/cost/monitoring/deploy recovery, private GitHub/Codemagic connection, support/privacy publication, name clearance, signing, age rating and App Store review.
 
 Run commands and detailed implementation limitations are recorded in README.md, HOSTED_BUILDS.md and PRIVACY_AND_OPERATIONS.md. Future work must update this record with actual outputs, not assumptions.
+
+## First hosted iOS checkpoint
+
+The app compiled on Xcode 26.6 / iPhone 17 / iOS 26.5. One Swift Testing contract test and two XCTest UI tests passed; xcodebuild printed TEST SUCCEEDED. The enclosing Actions run was cancelled around completion by the agent and is not green. Thirteen screenshots were inspected; follow-up fixes and outstanding visual checks are in [NATIVE_REVIEW.md](NATIVE_REVIEW.md). This supersedes earlier statements that no full iOS build has run.

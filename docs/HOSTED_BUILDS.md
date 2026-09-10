@@ -4,7 +4,7 @@ Source: https://github.com/nick7167/en-til (public). Creation, pushes and public
 
 `.github/workflows/native.yml` is a manual unsigned checkpoint using the standard `macos-26` runner and Xcode 26.6, iPhone 17 / iOS 26.5. The runner inventory was checked at https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md on 10 September 2026. It builds the committed project, runs contract/UI tests, and retains logs/screenshots for one day. A 30-minute timeout and cancellation of superseded runs limit usage. Native checks are manual at meaningful checkpoints.
 
-The first native run found a missing AppIcon; a development icon was added and the corrected build is running. No successful native result is established yet. Standard GitHub-hosted runners are free for this now-public repository. No paid larger runners or overage is authorized. Existing backend checks run on Linux when pushed.
+The first run found a missing AppIcon. After correction, xcodebuild completed successfully with one contract test and two UI tests; the Actions wrapper is marked cancelled because cancellation was requested around completion. See [native review](NATIVE_REVIEW.md) for evidence and screenshot findings. A follow-up run tests the resulting UI fixes. Standard GitHub-hosted runners are free for this now-public repository. No paid larger runners or overage is authorized. Existing backend checks run on Linux when pushed.
 
 `codemagic.yaml` remains an unused unsigned fallback, not a TestFlight pipeline. No signing secrets, Apple integration, upload or publication are configured.
 
