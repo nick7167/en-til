@@ -20,6 +20,7 @@ targets:
   EnTil:
     type: application
     platform: iOS
+    supportedDestinations: [iOS]
     sources: [EnTil]
     info:
       path: EnTil/Info.plist
@@ -41,12 +42,14 @@ targets:
   EnTilTests:
     type: bundle.unit-test
     platform: iOS
+    supportedDestinations: [iOS]
     sources: [EnTilTests]
     dependencies:
       - target: EnTil
   EnTilUITests:
     type: bundle.ui-testing
     platform: iOS
+    supportedDestinations: [iOS]
     sources: [EnTilUITests]
     dependencies:
       - target: EnTil
