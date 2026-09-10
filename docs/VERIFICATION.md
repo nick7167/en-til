@@ -32,3 +32,5 @@ Run commands and detailed implementation limitations are recorded in README.md, 
 ## First hosted iOS checkpoint
 
 The app compiled on Xcode 26.6 / iPhone 17 / iOS 26.5. One Swift Testing contract test and two XCTest UI tests passed; xcodebuild printed TEST SUCCEEDED. The enclosing Actions run was cancelled around completion by the agent and is not green. Thirteen screenshots were inspected; follow-up fixes and outstanding visual checks are in [NATIVE_REVIEW.md](NATIVE_REVIEW.md). This supersedes earlier statements that no full iOS build has run.
+
+Follow-up run https://github.com/nick7167/en-til/actions/runs/34504392490 completed successfully on commit 9c15017. All three native tests passed, including complete normalized code entry, enabled number-guess confirmation, and visibility of the own board position. Updated screenshots confirm the fixes; the keyboard screenshot contains the simulator first-use tutorial and is not a clean keyboard reference.

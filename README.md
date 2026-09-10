@@ -13,4 +13,4 @@ The content release gate (`pnpm exec tsx scripts/validate-content.ts --release`)
 
 Local integration checks (service running): `pnpm test:http`, `pnpm test:ws`, `pnpm test:rates`. `pnpm test:recovery` starts an isolated local Worker on port 8791 and tests two process restarts. `pnpm test:load` creates 100 local rooms with 800 WebSockets. These scripts refuse/use local endpoints; no production load test has run.
 
-Content review starts at [batch 001](content/review/batch-001.md). The app remains a development implementation pending full iOS build, visual/accessibility/device review, Apple configuration, and the rest of the content.
+Content review starts at [batch 001](content/review/batch-001.md). The app remains a development implementation with a passing hosted iOS build and three native tests; pending full visual/accessibility/device review, Apple configuration, and the rest of the content.

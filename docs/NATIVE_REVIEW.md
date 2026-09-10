@@ -14,7 +14,7 @@ Thirteen screenshots were exported and reviewed locally. Their original manifest
 - The board initially displayed empty spaces 8–12 while players were at 1–2. Positioned scroll anchors were replaced by real fixed-height rows and a bottom default anchor; a test checks the own-position element is visible.
 - Disabled primary actions previously looked enabled. The button style now dims them using the native enabled environment.
 
-These corrections are in 9c15017 and require the follow-up simulator result.
+These corrections are in 9c15017. The follow-up run passed: https://github.com/nick7167/en-til/actions/runs/34504392490. All three tests passed and thirteen screenshots were exported. Visual inspection confirms the complete K7MX code, readable/selectable numbers, and visible player positions on the board. The code screenshot includes the simulator’s first-use keyboard tutorial; repeat a clean keyboard capture in the broader device matrix.
 
 ## Remaining visual work
 
