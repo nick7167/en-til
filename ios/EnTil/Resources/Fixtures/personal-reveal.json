@@ -1,0 +1,134 @@
+{
+  "v": 1,
+  "roomID": "00000000-0000-4000-a000-000000000001",
+  "code": "K7MX",
+  "hostID": "p0",
+  "me": "p0",
+  "serverTime": 13000,
+  "phase": "reveal",
+  "matchID": "b5ffff23-e728-4e5f-8ba8-0725e90cc620",
+  "settings": {
+    "finish": 20,
+    "timed": true,
+    "answerSeconds": 20,
+    "backingSeconds": 10,
+    "drinking": false,
+    "packs": [
+      "isbryderen"
+    ]
+  },
+  "adultRequired": false,
+  "contentVersion": "draft-2026-09-10.1",
+  "players": [
+    {
+      "id": "p0",
+      "name": "Nicklas",
+      "character": 0,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    },
+    {
+      "id": "p1",
+      "name": "Freja",
+      "character": 1,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    },
+    {
+      "id": "p2",
+      "name": "Noah",
+      "character": 2,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    },
+    {
+      "id": "p3",
+      "name": "Alma",
+      "character": 3,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": true
+    }
+  ],
+  "round": {
+    "id": "b5ffff23-e728-4e5f-8ba8-0725e90cc620:1:a81c9124-ede4-4c73-b214-78555b1a35ed",
+    "number": 1,
+    "questionID": "free-p001",
+    "kind": "personal",
+    "pack": "isbryderen",
+    "prompt": "Har du nogensinde sunget med på en sang uden at kende teksten?",
+    "options": [],
+    "responseCount": 4,
+    "deadline": 19000,
+    "privateLocked": false,
+    "answerLocked": true,
+    "backLocked": true,
+    "ownAnswer": 2,
+    "correct": 2,
+    "fact": null,
+    "source": null,
+    "revealAt": 9000,
+    "revealStage": 2,
+    "results": [
+      {
+        "playerID": "p0",
+        "answer": 2,
+        "back": "p1",
+        "own": 1,
+        "backing": 1,
+        "points": 2,
+        "score": 2,
+        "sips": null
+      },
+      {
+        "playerID": "p1",
+        "answer": 2,
+        "back": "p0",
+        "own": 1,
+        "backing": 1,
+        "points": 2,
+        "score": 2,
+        "sips": null
+      },
+      {
+        "playerID": "p2",
+        "answer": 3,
+        "back": "p1",
+        "own": 0,
+        "backing": 1,
+        "points": 1,
+        "score": 1,
+        "sips": null
+      },
+      {
+        "playerID": "p3",
+        "answer": 1,
+        "back": "p2",
+        "own": 0,
+        "backing": 0,
+        "points": 0,
+        "score": 0,
+        "sips": null
+      }
+    ]
+  },
+  "countdownAt": null,
+  "winners": [],
+  "reactions": [],
+  "fallbackNotice": false
+}

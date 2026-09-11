@@ -2,43 +2,106 @@ import XCTest
 
 final class EnTilUITests: XCTestCase {
     @MainActor func testHomeAndKeyboard() throws {
-        let app = XCUIApplication()
-        app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = "home"
-        app.launch()
+        let app = launch("home")
         XCTAssertTrue(app.buttons["Opret spil"].waitForExistence(timeout: 5))
-        attach(app, "01-home")
         app.buttons["Deltag i spil"].tap()
         let code = app.textFields.firstMatch
         XCTAssertTrue(code.waitForExistence(timeout: 3))
-        code.tap(); code.typeText("k7mx")
+        code.tap()
+        dismissKeyboardTutorial(app)
+        code.typeText("k7mx")
         XCTAssertEqual(code.value as? String, "K7MX")
         XCTAssertTrue(app.buttons["Find spil"].isEnabled)
         XCTAssertTrue(app.buttons["Find spil"].isHittable)
-        attach(app, "07-code-keyboard")
+        attach(app, "keyboard-uppercase-K7MX")
+        app.terminate()
     }
-    @MainActor func testServerSnapshotScreens() throws {
-        for name in ["lobby", "answer", "backing", "waiting", "private", "guess", "reveal", "board", "finale", "away", "late"] {
-            let app = XCUIApplication()
-            app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = name
-            app.launch()
-            XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))
-            if name == "guess" {
-                for number in 0...4 {
-                    XCTAssertTrue(app.buttons["guess-\(number)"].isHittable)
-                }
+
+    @MainActor func testAllApprovedReferenceScreens() throws {
+        // Sheet position is the stable screenshot name; routes are DEBUG only.
+        let screens: [(String, String, String)] = [
+            ("A01-home", "home", "Opret spil"),
+            ("A02-lobby", "lobby", "Dit spil"),
+            ("A03-question", "answer", "Hvilken planet er størst i solsystemet?"),
+            ("A04-backing", "backing", "Hvem satser du på?"),
+            ("A05-board", "board", "Sådan står I"),
+            ("A06-shop", "shop", "Mere på spil"),
+            ("B01-code", "join", "Find spil"),
+            ("B02-name", "name", "Hvad skal vi kalde dig?"),
+            ("B03-characters", "characters", "Find din figur"),
+            ("B04-guest-lobby", "guest-lobby", "Vi samler holdet"),
+            ("C01-setup", "setup", "Spilindstillinger"),
+            ("C02-pack-selection", "pack-selection", "Vælg pakker"),
+            ("C03-pack-detail", "pack-detail", "Isbryderen"),
+            ("C04-bundle", "bundle", "Alle seks pakker"),
+            ("D01-private", "private", "Spring over"),
+            ("D02-private-waiting", "private-waiting", "Dit svar er låst"),
+            ("D03-guess", "guess", "Hvor mange svarede ja?"),
+            ("D04-personal-reveal", "personal-reveal", "Så mange svarede ja"),
+            ("E01-code-error", "code-error", "Prøv igen"),
+            ("E02-reconnect", "reconnect", "Forbindelsen blev afbrudt"),
+            ("E03-paused", "paused", "Vi mangler en spiller"),
+            ("E04-finale", "finale", "Freja vinder!"),
+            ("F01-settings", "settings", "Indstillinger"),
+            ("F02-adult", "adult", "Er du fyldt 18 år?"),
+            ("F03-results", "results", "Rundens resultat"),
+            ("F04-pack-owned", "pack-owned", "Pakken er din")
+        ]
+        for (attachmentName, route, expected) in screens {
+            let app = launch(route)
+            let marker = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", expected)).firstMatch
+            XCTAssertTrue(marker.waitForExistence(timeout: 8), "Missing \(expected) on \(route)")
+            XCTAssertFalse(app.staticTexts["Skærmeksemplet kunne ikke indlæses."].exists)
+            if ["join", "name", "code-error"].contains(route) { dismissKeyboardTutorial(app) }
+            if route == "answer" {
+                for answer in ["Jorden", "Mars", "Jupiter", "Saturn"] { XCTAssertTrue(app.buttons[answer].exists, answer) }
+            }
+            if route == "guess" {
+                for number in 0...4 { XCTAssertTrue(app.buttons["guess-\(number)"].isHittable) }
                 app.buttons["guess-2"].tap()
                 XCTAssertTrue(app.buttons["Lås dit gæt"].isEnabled)
             }
-            if name == "board" {
-                XCTAssertTrue(app.otherElements["board-own-position"].waitForExistence(timeout: 5))
-                XCTAssertTrue(app.otherElements["board-own-position"].isHittable)
+            if route == "board" {
+                let position = app.otherElements["board-own-position"]
+                XCTAssertTrue(position.waitForExistence(timeout: 5))
+                XCTAssertTrue(position.isHittable)
             }
-            attach(app, name)
+            if route == "personal-reveal" { XCTAssertTrue(app.staticTexts["2 af 4"].exists) }
+            attach(app, attachmentName)
             app.terminate()
         }
     }
+
+    @MainActor func testAdditionalServerSnapshotScreens() throws {
+        for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang")] {
+            let app = launch(route)
+            XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
+            attach(app, "extra-\(route)")
+            app.terminate()
+        }
+    }
+
+    @MainActor private func launch(_ route: String) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = route
+        app.launch()
+        return app
+    }
+
+    @MainActor private func dismissKeyboardTutorial(_ app: XCUIApplication) {
+        // Only dismiss a first-use keyboard notice, never an arbitrary app Continue button.
+        let notices = ["Speed Up Your Typing", "QuickPath", "Skriv hurtigere"]
+        guard notices.contains(where: { app.staticTexts[$0].exists }) else { return }
+        for title in ["Continue", "Fortsæt"] {
+            let button = app.buttons[title]
+            if button.exists && button.isHittable { button.tap(); return }
+        }
+    }
+
     @MainActor private func attach(_ app: XCUIApplication, _ name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 }

@@ -1,0 +1,49 @@
+# Approved reference screen map
+
+Read-only visual audit, 10 September 2026, before the current visual implementation pass. All six original sheets were inspected. This maps concepts to existing source, not completed acceptance checks. Reference labels below are transcribed from the sheets; names, scores and question text are examples. The written specification overrides mockup intensities, prices and privacy implications.
+
+Sheet keys (all in `design/references/`):
+
+| Key | Original file |
+| --- | --- |
+| A | `exec-00162405-7f6d-4645-bc0f-401e7237046e.png` |
+| B | `exec-520ba086-193f-42ab-ac78-3cd7afa2ce65.png` |
+| C | `exec-8ed021f8-b54c-4d9a-bf99-cd0464c184aa.png` |
+| D | `exec-ad7b2695-d676-4ed8-be77-8d0ce5badc35.png` |
+| E | `exec-406bc08e-1755-4947-b149-a771f558cd30.png` |
+| F | `exec-ba5fcc62-3d19-4084-a8ae-8a736dc43779.png` |
+
+Swift source keys: App = `ios/EnTil/EnTilApp.swift`; Room = `ios/EnTil/RoomView.swift`; Settings = `ios/EnTil/SettingsViews.swift`; Design = `ios/EnTil/Design.swift`; Board = `ios/EnTil/BoardView.swift`.
+
+| # / reference concept | Exact visible heading / principal action | Current view or branch | Composition and specific asset needs / observed gap |
+| --- | --- | --- | --- |
+| A01 Hjem | “En til?” / “Opret spil”, “Deltag i spil”, “Se pakker” | App `HomeView` | Large irregular cream handlettered logo with curved lime underline; relaxed lime arch on sofa spans screen width behind centered italic tagline. Current logo is rotated Fraunces; square lounge image is a separate block. |
+| A02 Lobby | “Dit spil” / “Start spil” | Room `lobby`, host | Code plaque, two-column cast cards, floating crown above lime host, readiness pills; separate compact settings and selected-pack rows. Current settings and packs share one row; host crown is a text label. |
+| A03 Spørgsmål | “Hvilken planet er størst i solsystemet?” / “Lås dit svar” | Room `question`, factual unlocked | Center countdown arc and four answers above a full-width space scene: purple angular friend, Saturn, stars and plants. Current branch has a lone small purple figure after the CTA; scene absent. |
+| A04 Sats på en ven | “Hvem satser du på?” / “Sats på Freja” | Room `question`, answer locked, backing unlocked | Question remains above three tall character cards; snacks, glass, foliage and handwritten “Bedre venner = sjovere spil” fill lower scene. Current heading “Sats på en ven”; lower scene absent. |
+| A05 Resultat | “Sådan står I” / “Klar til næste runde” | Room `board`; Board `WindingBoard` | Winding segmented violet path occupies illustrated lounge with foliage, lamp, candles and sign; named figures stand on spaces. Score panel overlays lower path, then reactions and CTA. Current path is a standalone gradient viewport. |
+| A06 Pakker | “Mere på spil” / “Gendan køb” | Settings `ShopView`, `PackRow` | Six dense illustrated thumbnail rows plus lime-outlined bundle row with four-character thumbnail. Current bundle thumbnail is one lime figure. |
+| B01 Spilkode | “Deltag i spil” / “Find spil” | App `JoinView`, step 0 | Coral friend peeks over sofa/form; four separate large code cells; foliage/lamp frame top; keyboard directly below CTA. Current single code field and detached figure. |
+| B02 Dit navn | “Hvad skal vi kalde dig?” / “Vælg figur” | App `JoinView`, step 1 | Code capsule at top; waving coral friend stands on name-panel edge; name and CTA above keyboard. Current CTA becomes “Fortsæt som …”; no integrated lounge backdrop. |
+| B03 Vælg figur | “Find din figur” / “Deltag i spil” | App `JoinView`, step 2; Design `CharacterPicker` | Code and name pills, “Figurer med navn er allerede valgt.”, fixed three-column/four-row cast grid, occupied names and dimming, lime selection outline/check. Current adaptive grid and alternative helper copy. |
+| B04 Gæstelobby | “Vi samler holdet” / “Jeg er klar” | Room `lobby`, guest | Same code/two-column cast as host, purple “Dig” pill on own card, separate settings and pack rows, “Nicklas starter spillet, når alle er klar.”; foliage at edges. Own-seat pill and separate pack row absent. |
+| C01 Spilindstillinger | “Spilindstillinger” / “Gem ændringer” | Settings `SetupView` | Tall rounded sheet over dimmed home with drag handle/close; grouped target pills, custom stepper, timed controls and drinking toggle. Current sheet additionally embeds pack selection. |
+| C02 Vælg pakker | “Vælg pakker” / “Gem ændringer” | Settings `SetupView`, embedded pack section | Separate full page with “2 valgt”, free mix, six packs, bundle; square thumbnail left, ownership/price and check/chevron right. No separate selection page at audit. |
+| C03 En pakke | “Isbryderen” / “Køb for 29 kr.” | Settings `PackDetailView`, unowned | Title/intensity over full-bleed midnight ice landscape; lime arch in knit hat holds pickaxe on foreground iceberg; purchase text and CTA over scene. Current square cover has rounded frame. Use localized StoreKit price. |
+| C04 Alle seks pakker | “Alle seks pakker” / “Køb alle seks for 99 kr.” | Settings `BundleView` | Four original friends above a six-cover strip; dense ownership table, remaining-price panel, fixed bundle CTA. Current cast row exists; six-cover strip absent. Use localized StoreKit price. |
+| D01 Dit private svar | “Har du nogensinde sunget med på en sang uden at kende teksten?” / “Lås dit svar”, “Spring over” | Room `question`, private unlocked | Timer and pack pill; singing lime friend reclines on full-width sofa; two large square Ja/Nej cards. Current standing figure and short horizontal choices. Keep specification privacy caveat. |
+| D02 Vi venter | “Dit svar er låst” / no primary action | Room `waiting(privateStep: true)` | Four friends across sofa around snack table occupy middle/lower screen; bottom “3 af 4 har valgt” card with four completion dots. Current “Dit valg er låst”, shared square illustration and no private progress card. Do not expose individual private choices. |
+| D03 Gæt antallet | “Hvor mange svarede ja?” / “Lås dit gæt” | Room `question`, personal guess unlocked | Smaller repeated question, count helper, 0–4 square grid, four friends behind snack table beneath grid. Current grid exists; ensemble footer absent. |
+| D04 Afsløringen | “Så mange svarede ja” / “Videre til brættet …” | Room `reveal`, personal | Giant lime “2 af 4”, aggregate dots, “2 gættede rigtigt”, four compact illustrated result rows over lounge-edge scene. Current dots/correct-guesser count/scene absent; staged result rows exist. |
+| E01 Koden findes ikke | “Deltag i spil” / “Prøv igen” | App `JoinView` step 0 plus Root generic alert | Concerned coral friend with question mark, red outline around four code cells, inline “Vi kunne ikke finde et spil med den kode.” above retry CTA and keyboard. No dedicated inline error composition at audit. |
+| E02 Forbindelsen røg | “Forbindelsen blev afbrudt” / “Forlad spillet” | App `RootView` reconnect overlay | Centered modal over dimmed current question; worried purple friend perched on panel; spinner, “Vi prøver at forbinde dig igen.” and “Tiden løber videre.” Current compact top capsule does not match modal. |
+| E03 Vi venter på spillere | “Vi mangler en spiller” / “Tilbage til lobbyen” | Room `board`, fewer than 3 active | Two active friends on sofa; four narrow status cards, dim away characters; active-count/code panel and ending-match helper. Current branch keeps winding board and normal board controls; dedicated pause composition absent. |
+| E04 Vinderen | “Freja vinder!” / “En til?”, “Forlad spillet” | Room `board`, finale; `standings` | Coral winner on stage under spotlight/confetti, “20 point” flag; numbered leaderboard with lime-outlined winner. Current floating character row and unnumbered standings; stage/flag absent. |
+| F01 Dine indstillinger | “Indstillinger” | Settings `PreferencesView` | Profile card with relaxed lime friend; grouped “Lyd og følelse” and “Spil” rows; leaf/lamp corner scene. Current controls exist but no reference profile card/group composition. |
+| F02 Før du deltager | “Er du fyldt 18 år?” / “Ja, jeg er fyldt 18 år”, “Nej, gå tilbage” | App `AdultView` | Smaller handlettered logo, code plaque, title, relaxed lime-on-sofa scene behind helper and buttons. Current Fraunces logo and square shared lounge illustration; code sourced only from current room. |
+| F03 Alle resultater | “Rundens resultat” / “Luk” | Settings `ResultsView` | Rounded sheet over dimmed board; correct-answer band and compact five-column table: Spiller / Svar / Satsede på / Point / Valgfrie slurke. Current per-player vertical panels; table composition absent. |
+| F04 Pakken er din | “Pakken er din” / “Tilbage til pakker” | Settings `PackDetailView`, owned | Big celebratory title/check, pack name and “Pakken er føjet til dit valg. Gem ændringerne, når du er klar.” above full-bleed ice/pickaxe scene. Current owned detail retains purchase explanation and lacks this return CTA/success composition. |
+
+Asset fidelity: the reference cast is lime arch, coral circle with raised arms, lavender angular skeptic, peach shy rounded triangle, turquoise clover, yellow star, pink heart, green polygon, blue sunglasses drop, purple flower, orange sun and tall pink rectangle. Native `CharacterView` supplies these silhouette concepts but facial expressions, hand poses, reclining legs, crowns and scene-specific props still require direct visual comparison. The existing generated `Lounge` and six `Pack-*` images are candidates, not proof of matching each distinct scene.
+
+Written intensity labels: Isbryderen **Let**; Lidt for ærlig **Personlig**; Efter midnat **Fræk**; Uden filter **Meget fræk**. Do not copy the shifted labels on C02/C04. This audit does not verify simulator rendering, keyboard behavior, accessibility, StoreKit outcomes, or human content approval.

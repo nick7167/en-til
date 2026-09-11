@@ -22,29 +22,16 @@ struct RootView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if let room = client.room { RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }) }
-                else if joining { JoinView(client: client, close: { joining = false }) }
-                else { HomeView(client: client, show: { sheet = $0 }, join: { joining = true }) }
+                #if DEBUG
+                if let route = specialFixtureRoute { VisualFixtureView(name: route, client: client, store: store) }
+                else { liveContent }
+                #else
+                liveContent
+                #endif
             }
-            .toolbar {
-                if client.room != nil {
-                    ToolbarItem(placement: .topBarLeading) { Button("Forlad", systemImage: "chevron.left") { leaving = true }.labelStyle(.iconOnly) }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Button("Sådan spiller I", systemImage: "questionmark.circle") { sheet = .rules }
-                            Button("Dine indstillinger", systemImage: "gearshape") { sheet = .settings }
-                            if client.room?.isHost == true && client.room?.phase != "lobby" { Button("Afslut kampen", role: .destructive) { leaving = true } }
-                        } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }
-                        .accessibilityLabel("Spilmenu")
-                    }
-                }
-            }
-            .overlay(alignment: .top) {
-                if client.reconnecting {
-                    HStack { ProgressView(); Text("Forbinder igen · Tiden løber videre").font(.caption) }
-                        .padding(12).background(Color.lounge, in: Capsule()).padding(.top, 8)
-                        .accessibilityElement(children: .combine)
-                }
+            .toolbar(.hidden, for: .navigationBar)
+            .overlay {
+                if client.reconnecting { ReconnectingView { leaving = true } }
             }
             .sheet(item: $sheet) { selected in
                 NavigationStack {
@@ -72,7 +59,7 @@ struct RootView: View {
         .task {
             #if DEBUG
             if let fixture = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] {
-                client.loadFixture(fixture); return
+                client.loadFixture(fixture); if fixture == "reconnect" { client.reconnecting = true }; return
             }
             #endif
             await client.restoreSeat()
@@ -93,6 +80,34 @@ struct RootView: View {
             if after == "countdown" { Feedback.shared.play("ready") }
         }
     }
+    @ViewBuilder private var liveContent: some View {
+
+                if let room = client.room {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Button("Forlad", systemImage: "chevron.left") { leaving = true }.labelStyle(.iconOnly)
+                            Spacer()
+                            Menu {
+                                Button("Sådan spiller I") { sheet = .rules }
+                                Button("Dine indstillinger") { sheet = .settings }
+                                if room.isHost { Button("Spilindstillinger") { sheet = .setup } }
+                            } label: { Image(systemName: "ellipsis").frame(width: 44, height: 32) }
+                        }.font(.title3).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).frame(height: 32)
+                        RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile })
+                    }.background { SceneBackground() }
+                }
+                else if joining { JoinView(client: client, close: { joining = false }) }
+                else { HomeView(client: client, show: { sheet = $0 }, join: { joining = true }) }
+
+    }
+    #if DEBUG
+    private var specialFixtureRoute: String? {
+        guard let name = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"],
+              ["join", "name", "characters", "code-error", "settings", "setup", "pack-selection", "shop", "pack-detail", "bundle", "adult", "results", "pack-owned"].contains(name) else { return nil }
+        return name
+    }
+    #endif
+
 }
 struct HomeView: View {
     @Bindable var client: GameClient
@@ -103,31 +118,27 @@ struct HomeView: View {
     @AppStorage("adult") private var adult = false
     @AppStorage("drinking") private var drinking = false
     var body: some View {
-        Screen {
-            HStack { Spacer(); Button("Indstillinger", systemImage: "gearshape") { show(.settings) }.labelStyle(.iconOnly).frame(width: 44, height: 44) }
-            VStack(spacing: 0) {
-                Text("En til?").font(.editorial(76)).rotationEffect(.degrees(-5)).accessibilityAddTraits(.isHeader)
-                Capsule().fill(Color.lime).frame(width: 145, height: 7).rotationEffect(.degrees(-7))
-            }.padding(.bottom, -40).zIndex(1)
-            LoungeIllustration().frame(height: 280).padding(.horizontal, -22)
-            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.editorial(21)).italic().multilineTextAlignment(.center).padding(.top, -35)
+        Screen(scene: .home, spacing: 10) {
+            HStack { Spacer(); Button("Indstillinger", systemImage: "gearshape") { show(.settings) }.labelStyle(.iconOnly).font(.title2).frame(width: 36, height: 32) }.foregroundStyle(Color.cream)
+            BrandLogo().frame(height: 132).padding(.horizontal, 22)
+            Spacer(minLength: 166)
+            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 17, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0)
             Button { show(.profile) } label: {
-                Panel { HStack { CharacterView(index: character, size: 42); Text(name.isEmpty ? "Vælg navn og figur" : name); Spacer(); Image(systemName: "chevron.right") } }
+                Panel { HStack(spacing: 10) { CharacterView(index: character, size: 32); Text(name.isEmpty ? "Vælg navn og figur" : name).font(.subheadline); Spacer(); Image(systemName: "chevron.right") } }
             }.buttonStyle(.plain)
-            VStack(spacing: 12) {
-                Button("Opret spil") {
-                    if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { show(.profile) }
-                    else { Task { await client.create(name: name, character: character, adult: adult, drinking: drinking) } }
-                }.buttonStyle(LoungeButtonStyle()).disabled(client.busy)
-                Button("Deltag i spil", action: join).buttonStyle(LoungeButtonStyle(primary: false))
-                Button("Se pakker ›") { show(.packs) }.padding(10)
-                if UserDefaults.standard.string(forKey: "roomID") != nil {
-                    Button("Tilbage til dit spil") { Task { await client.restoreSeat() } }.font(.footnote)
-                }
+            Button("Opret spil") {
+                if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { show(.profile) }
+                else { Task { await client.create(name: name, character: character, adult: adult, drinking: drinking) } }
+            }.buttonStyle(LoungeButtonStyle()).disabled(client.busy)
+            Button("Deltag i spil", action: join).buttonStyle(LoungeButtonStyle(primary: false))
+            Button("Se pakker ›") { show(.packs) }.font(.footnote).padding(.vertical, 8).foregroundStyle(Color.cream)
+            if UserDefaults.standard.string(forKey: "roomID") != nil {
+                Button("Tilbage til dit spil") { Task { await client.restoreSeat() } }.font(.footnote)
             }
         }
     }
 }
+
 struct JoinView: View {
     @Bindable var client: GameClient
     let close: () -> Void
@@ -138,24 +149,45 @@ struct JoinView: View {
     @State private var code = ""
     @State private var step = 0
     @FocusState private var focused: Bool
+    @State private var codeError: Bool
+    init(client: GameClient, close: @escaping () -> Void, initialStep: Int = 0, initialCode: String = "", initialError: Bool = false) {
+        self.client = client; self.close = close
+        _step = State(initialValue: initialStep); _code = State(initialValue: initialCode); _codeError = State(initialValue: initialError)
+    }
     var body: some View {
-        Screen {
+        Screen(scene: step < 2 ? .lounge : .plain, spacing: 10) {
             HStack { Button("Tilbage", systemImage: "chevron.left") { if step > 0 { step -= 1 } else { close() } }.labelStyle(.iconOnly).frame(width: 44, height: 44); Spacer(); if step > 0 { Text(code).font(.headline.monospaced()).tracking(4) } }
             Text(step == 0 ? "Deltag i spil" : step == 1 ? "Hvad skal vi kalde dig?" : "Find din figur").font(.editorial()).multilineTextAlignment(.center)
             Text(step == 0 ? "Indtast koden fra værten." : step == 1 ? "Dit navn bliver vist til de andre." : "Vælg den, der ligner dit humør.").multilineTextAlignment(.center)
-            if step < 2 { CharacterView(index: step == 0 ? 1 : character, size: 115) }
+            if step < 2 { CharacterView(index: 1, size: 96).padding(.bottom, -18).zIndex(1) }
             if step == 0 {
-                TextField("KODE", text: Binding(get: { code }, set: { value in
-                    code = String(value.uppercased().filter { $0.isASCII && ($0.isLetter || $0.isNumber) }.prefix(4))
-                })).font(.system(size: 40, weight: .black, design: .monospaced)).tracking(9).multilineTextAlignment(.center)
-                    .textInputAutocapitalization(.characters).autocorrectionDisabled().keyboardType(.asciiCapable).submitLabel(.continue)
-                    .padding(20).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18)).focused($focused)
-                    .onSubmit { if code.count == 4 { findRoom() } }.accessibilityLabel("Spilkode, fire bogstaver eller tal")
-                Button("Find spil") { findRoom() }.buttonStyle(LoungeButtonStyle()).disabled(code.count != 4 || client.busy)
+                ZStack {
+                    HStack(spacing: 6) {
+                        ForEach(0..<4, id: \.self) { index in
+                            let letters = Array(code)
+                            Text(index < letters.count ? String(letters[index]) : " ")
+                                .font(.system(size: 37, weight: .black, design: .rounded))
+                                .frame(maxWidth: .infinity).frame(height: 74)
+                                .background(Color.ink.opacity(0.8), in: RoundedRectangle(cornerRadius: 11))
+                                .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(focused && index == min(code.count, 3) ? Color.lime : Color.lilac.opacity(0.3), lineWidth: focused && index == min(code.count, 3) ? 2 : 1))
+                        }
+                    }.accessibilityHidden(true)
+                    TextField("KODE", text: Binding(get: { code }, set: { value in
+                        code = String(value.uppercased().filter { $0.isASCII && ($0.isLetter || $0.isNumber) }.prefix(4))
+                    })).foregroundStyle(.clear).tint(.clear).opacity(0.02)
+                        .textInputAutocapitalization(.characters).autocorrectionDisabled().keyboardType(.asciiCapable).submitLabel(.continue)
+                        .focused($focused).onSubmit { if code.count == 4 { findRoom() } }
+                        .accessibilityLabel("Spilkode, fire bogstaver eller tal")
+                        .frame(height: 74)
+                }.padding(13).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18)).onTapGesture { focused = true }
+                if codeError { Label("Vi kunne ikke finde et spil med den kode.", systemImage: "exclamationmark.circle.fill").font(.footnote).foregroundStyle(Color(hex: 0xFF9188)) }
+                Button(codeError ? "Prøv igen" : "Find spil") { findRoom() }.buttonStyle(LoungeButtonStyle()).disabled(code.count != 4 || client.busy)
             } else if step == 1 {
                 Panel { VStack(alignment: .leading) { Text("Navn").font(.caption); TextField("Dit navn", text: $name).textContentType(.nickname).submitLabel(.continue).onSubmit { if validName { step = 2; focused = false } }.focused($focused) } }
-                Button(name.isEmpty ? "Vælg figur" : "Fortsæt som \(name)") { step = 2; focused = false }.buttonStyle(LoungeButtonStyle()).disabled(!validName)
+                Button("Vælg figur") { step = 2; focused = false }.buttonStyle(LoungeButtonStyle()).disabled(!validName)
             } else {
+                Text(name).font(.subheadline).padding(.horizontal, 18).padding(.vertical, 5).background(Color.violet, in: Capsule())
+                Text("Figurer med navn er allerede valgt.").font(.footnote)
                 CharacterPicker(selection: $character, seats: client.joinPreview?.seats ?? [])
                 Button("Deltag i spil") { Task { await client.join(code: code, name: name, character: character, adult: adult, drinking: drinking) } }
                     .buttonStyle(LoungeButtonStyle()).disabled(client.busy)
@@ -172,8 +204,8 @@ struct JoinView: View {
                 if client.joinPreview?.characters.contains(where: { $0.character == character }) == true {
                     character = (0..<12).first { index in !(client.joinPreview?.characters.contains { $0.character == index } ?? false) } ?? character
                 }
-                step = 1
-            }
+                step = 1; codeError = false
+            } else { codeError = true; client.problem = nil }
         }
     }
     private var validName: Bool { (1...24).contains(name.trimmingCharacters(in: .whitespacesAndNewlines).count) }
@@ -183,15 +215,15 @@ struct CharacterPicker: View {
     let seats: [Seat]
     var me: String?
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 88))], spacing: 12) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 7), count: 3), spacing: 7) {
             ForEach(0..<12, id: \.self) { index in
                 let occupant = seats.first { $0.character == index && $0.id != me }
                 Button { selection = index } label: {
                     VStack(spacing: 2) {
-                        CharacterView(index: index, size: 72)
+                        CharacterView(index: index, size: 68)
                         if let occupant { Text(occupant.name).font(.caption).lineLimit(2) }
                         else if selection == index { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime) }
-                    }.frame(maxWidth: .infinity, minHeight: 96).padding(5)
+                    }.frame(maxWidth: .infinity, minHeight: 83).padding(5)
                         .background(Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                         .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selection == index ? Color.lime : Color.lilac.opacity(0.2), lineWidth: selection == index ? 2 : 1))
                         .opacity(occupant == nil ? 1 : 0.5)
@@ -225,16 +257,38 @@ struct ProfileView: View {
 struct AdultView: View {
     @Bindable var client: GameClient
     var body: some View {
-        Screen {
-            Text("En til?").font(.editorial(64))
-            if let code = client.room?.code { Text(code).font(.title.monospaced().bold()).tracking(5) }
+        Screen(scene: .home) {
+            BrandLogo().frame(height: 108)
+            if let code = client.room?.code { CodePlaque(code: code) }
             Text("Er du fyldt 18 år?").font(.editorial()).multilineTextAlignment(.center)
             Text("Dette spil indeholder voksenindhold eller valgfrie drikkeregler.").multilineTextAlignment(.center)
-            LoungeIllustration()
+            Spacer(minLength: 170)
             Text("Vi husker dit svar på denne iPhone.").font(.footnote).foregroundStyle(Color.lilac)
             Button("Ja, jeg er fyldt 18 år") { Task { await client.confirmAdult() } }.buttonStyle(LoungeButtonStyle())
             Button("Nej, gå tilbage") { Task { await client.declineAdult() } }.buttonStyle(LoungeButtonStyle(primary: false))
             Text("Du kan stadig deltage i spil uden voksenindhold og drikkeregler.").font(.footnote).multilineTextAlignment(.center)
         }.preferredColorScheme(.dark).interactiveDismissDisabled()
+    }
+}
+
+struct ReconnectingView: View {
+    let leave: () -> Void
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.65).ignoresSafeArea()
+            VStack(spacing: 0) {
+                CharacterView(index: 2, size: 95).frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 30).padding(.bottom, -28).zIndex(1)
+                Panel {
+                    VStack(spacing: 24) {
+                        Text("Forbindelsen blev afbrudt").font(.editorial(30)).multilineTextAlignment(.center)
+                        Text("Vi prøver at forbinde dig igen.").multilineTextAlignment(.center)
+                        ProgressView().controlSize(.large).tint(.lilac).padding(8)
+                        Text("Tiden løber videre.").font(.footnote)
+                        Divider().overlay(Color.lilac.opacity(0.25))
+                        Button("Forlad spillet", action: leave).underline().foregroundStyle(Color.lilac)
+                    }.padding(.vertical, 20)
+                }
+            }.padding(.horizontal, 34).frame(maxWidth: 420)
+        }.foregroundStyle(Color.cream)
     }
 }

@@ -6,7 +6,7 @@
   "me": "p0",
   "serverTime": 1000,
   "phase": "answer",
-  "matchID": "826a418c-f856-4943-a9ff-54e5fdbf380d",
+  "matchID": "fda7381d-37a8-47b1-96e2-a97631301d3d",
   "settings": {
     "finish": 20,
     "timed": true,
@@ -66,22 +66,24 @@
     }
   ],
   "round": {
-    "id": "826a418c-f856-4943-a9ff-54e5fdbf380d:1:2188001677",
+    "id": "fda7381d-37a8-47b1-96e2-a97631301d3d:1:4db24b26-c52e-42cc-a59e-ec5451b94a77",
     "number": 1,
-    "questionID": "free-f008",
+    "questionID": "free-f001",
     "kind": "factual",
     "pack": "free",
-    "prompt": "Hvilken er størst i diameter?",
+    "prompt": "Hvilken planet er størst i solsystemet?",
     "options": [
-      "Månen",
-      "Jorden"
+      "Jorden",
+      "Mars",
+      "Jupiter",
+      "Saturn"
     ],
     "responseCount": null,
     "deadline": 11000,
     "privateLocked": false,
     "answerLocked": true,
     "backLocked": true,
-    "ownAnswer": 0,
+    "ownAnswer": 3,
     "correct": null,
     "fact": null,
     "source": null,

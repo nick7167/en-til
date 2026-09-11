@@ -6,7 +6,7 @@
   "me": "p4",
   "serverTime": 9000,
   "phase": "answer",
-  "matchID": "1a558a2c-7553-4197-9160-32391790ab10",
+  "matchID": "a8c8b0d6-12ad-4c20-94f6-84641c02573c",
   "settings": {
     "finish": 20,
     "timed": true,
@@ -77,15 +77,17 @@
     }
   ],
   "round": {
-    "id": "1a558a2c-7553-4197-9160-32391790ab10:1:441813549",
+    "id": "a8c8b0d6-12ad-4c20-94f6-84641c02573c:1:5ee2dbf1-85d9-4fdc-9e80-ffe65f92bd67",
     "number": 1,
-    "questionID": "free-f010",
+    "questionID": "free-f001",
     "kind": "factual",
     "pack": "free",
-    "prompt": "Er et døgn på Mars længere eller kortere end 24 timer?",
+    "prompt": "Hvilken planet er størst i solsystemet?",
     "options": [
-      "Længere",
-      "Kortere"
+      "Jorden",
+      "Mars",
+      "Jupiter",
+      "Saturn"
     ],
     "responseCount": null,
     "deadline": 29000,

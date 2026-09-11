@@ -1,0 +1,93 @@
+{
+  "v": 1,
+  "roomID": "00000000-0000-4000-a000-000000000001",
+  "code": "K7MX",
+  "hostID": "p0",
+  "me": "p0",
+  "serverTime": 9000,
+  "phase": "private",
+  "matchID": "b5ffff23-e728-4e5f-8ba8-0725e90cc620",
+  "settings": {
+    "finish": 20,
+    "timed": true,
+    "answerSeconds": 20,
+    "backingSeconds": 10,
+    "drinking": false,
+    "packs": [
+      "isbryderen"
+    ]
+  },
+  "adultRequired": false,
+  "contentVersion": "draft-2026-09-10.1",
+  "players": [
+    {
+      "id": "p0",
+      "name": "Nicklas",
+      "character": 0,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p1",
+      "name": "Freja",
+      "character": 1,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p2",
+      "name": "Noah",
+      "character": 2,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p3",
+      "name": "Alma",
+      "character": 3,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": false,
+      "score": 0,
+      "complete": false
+    }
+  ],
+  "round": {
+    "id": "b5ffff23-e728-4e5f-8ba8-0725e90cc620:1:a81c9124-ede4-4c73-b214-78555b1a35ed",
+    "number": 1,
+    "questionID": "free-p001",
+    "kind": "personal",
+    "pack": "isbryderen",
+    "prompt": "Har du nogensinde sunget med på en sang uden at kende teksten?",
+    "options": [],
+    "responseCount": null,
+    "deadline": 29000,
+    "privateLocked": true,
+    "answerLocked": false,
+    "backLocked": false,
+    "ownAnswer": null,
+    "correct": null,
+    "fact": null,
+    "source": null,
+    "revealAt": null,
+    "revealStage": 4,
+    "results": []
+  },
+  "countdownAt": null,
+  "winners": [],
+  "reactions": [],
+  "fallbackNotice": false
+}
