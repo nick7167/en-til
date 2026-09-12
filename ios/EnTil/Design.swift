@@ -13,10 +13,11 @@ extension Font {
     static func editorial(_ size: CGFloat = 32) -> Font { .custom("EnTilHeadings-Bold", size: size, relativeTo: .largeTitle) }
 }
 enum SceneArtwork: String {
-    case lounge, lobby, settings, adult, home, question, backing, privateRound, waiting, guess, board, finale, ice, plain
+    case lounge, lobby, settings, adult, home, question, backing, privateRound, waiting, paused, guess, board, finale, ice, plain
 }
 struct SceneBackground: View {
     var scene: SceneArtwork = .lounge
+    @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -24,6 +25,7 @@ struct SceneBackground: View {
                 Image("Scene-" + scene.rawValue).resizable().scaledToFill()
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .offset(y: scene == .adult ? geometry.size.height * 0.12 : 0)
+                    .opacity(typeSize.isAccessibilitySize ? 0.25 : 1)
                     .clipped()
                 if scene == .settings {
                     LinearGradient(stops: [.init(color: .clear, location: 0.14), .init(color: .ink, location: 0.34)], startPoint: .top, endPoint: .bottom)

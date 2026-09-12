@@ -37,3 +37,7 @@ Follow-up run https://github.com/nick7167/en-til/actions/runs/34504392490 comple
 
 ## Reference checkpoint — 12 September 2026
 GitHub Actions run 34696177984 passed on commit 92e7225 using the pinned standard macOS/Xcode runner. All three native tests passed, including 26 approved-reference captures and lowercase room-code keyboard/accessibility normalization. Local `pnpm check`, Swift syntax parsing and `git diff --check` passed. Screenshots are being compared; passing tests does not establish pixel-perfect fidelity. Subsequent board-background/menu/picker adjustments require the next checkpoint.
+
+Further green native checkpoints: 34697301308 (d44fcba), 34697872872 (eea9fa0), and 34710744987 (ee21aa2). These include 26 reference routes, eight-player captures, and the keyboard check. Backend/content CI also passed at 1591681. The next checkpoint adds assertions for selecting the last friend in a full room and reaching actions at accessibility XXXL text size.
+
+`python3 scripts/check-native-assets.py` now runs before native compilation. Its failure path was exercised with a temporary missing-image reference; the guard rejected it, then passed with the probe removed. This caught the absent compact bundle artwork, now committed. Dynamic image-name families still require screenshot review.

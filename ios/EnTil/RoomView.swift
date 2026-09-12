@@ -185,7 +185,7 @@ struct RoomView: View {
     private var reveal: some View {
         Screen(scene: .backing, spacing: 9) {
             if let round = room.round {
-                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial()).padding(.horizontal, 28).multilineTextAlignment(.center)
+                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial(round.kind == "personal" ? 28 : 32)).padding(.horizontal, 28).multilineTextAlignment(.center)
                 Text(round.kind == "personal" ? "\(round.correct ?? 0) af \(round.responseCount ?? 0)" : round.correct.flatMap { round.options.indices.contains($0) ? round.options[$0] : nil } ?? "")
                     .font(.editorial(48)).foregroundStyle(Color.lime).multilineTextAlignment(.center)
                 if round.kind == "personal", let count = round.responseCount, let yes = round.correct {
@@ -264,10 +264,10 @@ struct RoomView: View {
         }
     }
     private var paused: some View {
-        Screen(scene: .waiting) {
+        Screen(scene: .paused) {
             Text("Vi mangler en spiller").font(.editorial(30)).padding(.horizontal, 28).multilineTextAlignment(.center)
             Text("Spillet fortsætter, når mindst 3 er aktive.").font(.subheadline).multilineTextAlignment(.center)
-            Spacer(minLength: 245)
+            Color.clear.frame(height: 245)
             HStack(spacing: 7) { ForEach(room.players) { seat in SeatCard(seat: seat, host: seat.id == room.hostID, compact: true).opacity(seat.away ? 0.45 : 1) } }
             Panel { HStack { VStack(alignment: .leading) { Text("\(room.players.filter { !$0.away && !$0.late }.count) aktive spillere").font(.headline); Text("Stillingen er gemt.").font(.caption) }; Spacer(); Text(room.code).font(.headline.monospaced()) } }
             if room.isHost { Button("Tilbage til lobbyen") { send(.init(type: "end")) }.buttonStyle(LoungeButtonStyle(primary: false)); Text("Det afslutter den igangværende kamp.").font(.caption) }
@@ -292,7 +292,7 @@ struct RoomView: View {
                 }
                 Spacer(); if showPoints { Text("+\(result.points)").font(.title.bold()).foregroundStyle(Color.lime) }
             }
-        }
+        }.overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(showPoints && result.own > 0 ? Color.lime : Color.clear, lineWidth: 2))
     }
     private func reaction(_ value: String, _ emoji: String, _ label: String) -> some View {
         Button { send(.init(type: "reaction", value: .text(value))) } label: { Text(emoji).font(.title).frame(maxWidth: .infinity, minHeight: 52).background(Color.lounge, in: RoundedRectangle(cornerRadius: 14)) }.buttonStyle(.plain).accessibilityLabel(label)

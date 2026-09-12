@@ -39,7 +39,7 @@ def save(name,canvas):
  canvas.convert('RGB').save(folder/'art.png',optimize=True)
  (folder/'Contents.json').write_text(json.dumps({'images':[{'filename':'art.png','idiom':'universal'}],'info':{'author':'xcode','version':1}},indent=2)+'\n')
 
-for name in ['plain','lounge','home','question','backing','privateRound','waiting','guess','board','finale','ice']:
+for name in ['plain','lounge','home','question','backing','privateRound','waiting','paused','guess','board','finale','ice']:
  c=base()
  if name=='lounge':edges(c);footer(c)
  if name=='home':art(c,'A',(23,241,331,424),(0,455),780,35)
@@ -47,6 +47,7 @@ for name in ['plain','lounge','home','question','backing','privateRound','waitin
  if name=='backing':footer(c)
  if name=='privateRound':art(c,'D',(85,348,487,491),(0,692),780,20)
  if name=='waiting':art(c,'D',(534,273,938,585),(0,535),780,30)
+ if name=='paused':art(c,'E',(98,970,487,1114),(0,350),780,16)
  if name=='guess':art(c,'D',(86,1279,487,1421),(0,1255),780,20)
  if name=='board':edges(c);footer(c)
  if name=='finale':
@@ -55,7 +56,7 @@ for name in ['plain','lounge','home','question','backing','privateRound','waitin
   # Keep stage and winner composition; native winner artwork covers the reference winner when needed.
  if name=='ice':art(c,'C',(104,1065,482,1285),(0,655),780,25)
  save(name,c)
-print('Extracted 11 production scene backgrounds; six original sheets unchanged.')
+print('Extracted 12 production scene backgrounds; six original sheets unchanged.')
 
 # Reviewed reconstruction candidates replace crop fallbacks; original sheets stay untouched.
 import shutil

@@ -26,3 +26,5 @@ The rejected OpenCV inpainting experiment is removed. `scripts/extract-reference
 Board environment: generated candidate `exec-34f066da-c2d2-4a64-a3f5-5cfe51463553.png`, same generation folder. Preserved with its exact prompt in `design/artwork/scenes/board*`. Only the surrounding environment is raster artwork; track tiles, occupants and scores remain native and live.
 
 The lime avatar now uses the upright A02 lobby pose (crown and ready-label excluded) instead of the squat C04 bundle pose. Its original face and contour are preserved; no recoloring or generated replacement was used.
+
+Pause scene: original E03 two-character lounge crop `(98,970,487,1114)`, assembled by `scripts/extract-reference-scenes.py` without UI text or player cards. Large accessibility text sizes dim scene backgrounds; the foreground controls and character assets remain native and readable.
