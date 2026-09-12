@@ -15,6 +15,7 @@ struct RootView: View {
     @Bindable var client: GameClient
     @Bindable var store: PackStore
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var sheet: HomeSheet?
     @State private var joining = false
     @State private var leaving = false
@@ -84,6 +85,7 @@ struct RootView: View {
 
                 if let room = client.room {
                     RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }, showRules: { sheet = .rules }, showPreferences: { sheet = .settings }, leave: { leaving = true })
+                        .padding(.top, typeSize.isAccessibilitySize && !["answer", "private"].contains(room.phase) ? 52 : 0)
                         .overlay(alignment: .top) {
                             if !["answer", "private"].contains(room.phase) {
                                 HStack {
@@ -94,7 +96,8 @@ struct RootView: View {
                                         Button("Dine indstillinger") { sheet = .settings }
                                         if room.isHost { Button("Spilindstillinger") { sheet = .setup } }
                                     } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }
-                                }.font(.title3).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).padding(.top, 8)
+                                }.font(.system(size: 20)).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).padding(.top, 8)
+                                    .background(typeSize.isAccessibilitySize ? Color.ink : Color.clear)
                             }
                         }
                 }

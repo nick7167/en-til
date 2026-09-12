@@ -99,14 +99,22 @@ final class EnTilUITests: XCTestCase {
             let app = launch(route, largeText: true)
             let button = app.buttons[action]
             XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))
-            for _ in 0..<6 {
-                if button.exists && button.isHittable { break }
-                app.swipeUp()
+            revealFully(button, in: app)
+            if route == "eight-backing" {
+                button.tap()
+                revealFully(app.buttons["Sats på Oscar"], in: app)
             }
-            XCTAssertTrue(button.exists && button.isHittable, "Large text action: \(route)")
             attach(app, "large-text-\(route)")
             app.terminate()
         }
+    }
+
+    @MainActor private func revealFully(_ element: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<8 {
+            if element.exists && element.isHittable && element.frame.minY >= 64 && element.frame.maxY <= app.frame.maxY - 34 { return }
+            app.swipeUp()
+        }
+        XCTFail("Control is not fully visible: \(element.identifier)")
     }
 
     @MainActor private func launch(_ route: String, largeText: Bool = false) -> XCUIApplication {

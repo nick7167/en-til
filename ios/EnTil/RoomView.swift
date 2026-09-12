@@ -4,6 +4,7 @@ import UIKit
 struct RoomView: View {
     @Bindable var client: GameClient
     @Bindable var store: PackStore
+    @Environment(\.dynamicTypeSize) private var typeSize
     let room: RoomSnapshot
     let showSetup: () -> Void
     let showProfile: () -> Void
@@ -35,7 +36,7 @@ struct RoomView: View {
             Button { UIPasteboard.general.string = room.code } label: { CodePlaque(code: room.code) }
                 .buttonStyle(.plain).accessibilityLabel("Kopiér spilkode \(room.code)")
             Text("\(room.players.count) spillere").font(.caption)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: room.players.count > 4 ? 98 : 125))], spacing: 12) {
+            LazyVGrid(columns: typeSize.isAccessibilitySize ? [GridItem(.flexible())] : [GridItem(.adaptive(minimum: room.players.count > 4 ? 98 : 125))], spacing: 12) {
                 ForEach(room.players) { seat in
                     SeatCard(seat: seat, host: seat.id == room.hostID, own: seat.id == room.me && !room.isHost, compact: room.players.count > 4)
                         .contextMenu {
@@ -122,7 +123,7 @@ struct RoomView: View {
                 } else if !round.backLocked {
                     Text("Hvem satser du på?").font(.editorial()).multilineTextAlignment(.center).padding(.top, room.players.filter { !$0.away && !$0.late }.count > 5 ? 0 : 24)
                     Text("Du får 1 point, hvis din ven svarer rigtigt.").font(.footnote).multilineTextAlignment(.center)
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 98))], spacing: 9) {
+                    LazyVGrid(columns: typeSize.isAccessibilitySize ? [GridItem(.flexible())] : [GridItem(.adaptive(minimum: 98))], spacing: 9) {
                         ForEach(room.players.filter { $0.id != room.me && !$0.away && !$0.late }) { seat in
                             Button { backedID = seat.id } label: {
                                 SeatCard(seat: seat, host: false, selected: backedID == seat.id,
