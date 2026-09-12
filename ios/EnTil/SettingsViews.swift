@@ -135,7 +135,7 @@ struct PackSelectionView: View {
                 }
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
-                HStack { Image("CharacterGroup").resizable().scaledToFit().frame(width: 66, height: 66).accessibilityHidden(true); VStack(alignment: .leading, spacing: 3) { Text("Se alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Image(systemName: "chevron.right") }.padding(8).settingsSurface()
+                HStack { Image("PackReference-launch-bundle").resizable().scaledToFit().frame(width: 66, height: 66).accessibilityHidden(true); VStack(alignment: .leading, spacing: 3) { Text("Se alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Image(systemName: "chevron.right") }.padding(8).settingsSurface()
             }.buttonStyle(.plain)
             Button("Tilbage til spilindstillinger") { dismiss() }.buttonStyle(LoungeButtonStyle()).padding(.top, 8)
         }.alert("Er du fyldt 18 år?", isPresented: $adultPrompt) {
@@ -157,7 +157,7 @@ struct PackRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Group {
-                if pack.id == "free" { Image("CharacterGroup").resizable().scaledToFit().background(Color.violet.opacity(0.4)) }
+                if pack.id == "free" { Image("PackReference-launch-bundle").resizable().scaledToFit().background(Color.violet.opacity(0.4)) }
                 else { Image("PackReference-\(pack.id)").resizable().scaledToFill() }
             }.frame(width: 70, height: typeSize.isAccessibilitySize ? 90 : 72).clipped().accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
@@ -183,7 +183,7 @@ struct ShopView: View {
                 NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "Se pakke") }.buttonStyle(.plain)
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
-                Panel { HStack { Image("CharacterGroup").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }
+                Panel { HStack { Image("PackReference-launch-bundle").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }
             }.buttonStyle(.plain)
             if let route = store.cheapestRoute(owned: client.owned) { Text(route).font(.footnote).foregroundStyle(Color.lilac) }
             Button("Gendan køb") { Task { await store.restore() } }.padding(10)
@@ -202,7 +202,7 @@ struct PackOwnedView: View {
             Text(pack.title).font(.editorial(32)).multilineTextAlignment(.center)
             Text("Alle i dit spil kan være med.\nVælg pakken under spilindstillinger.").multilineTextAlignment(.center)
             if pack.id == "isbryderen" {
-                Color.clear.frame(height: 340).accessibilityHidden(true)
+                Color.clear.frame(height: 380).accessibilityHidden(true)
             } else {
                 Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300)
                     .clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true)
@@ -225,7 +225,7 @@ struct PackDetailView: View {
                     Text(pack.title).font(.editorial(43)).multilineTextAlignment(.center)
                     if let intensity = pack.intensity { IntensityPill(title: intensity) }
                     Text(pack.subtitle).multilineTextAlignment(.center)
-                    if pack.id == "isbryderen" { Color.clear.frame(height: 340).accessibilityHidden(true) }
+                    if pack.id == "isbryderen" { Color.clear.frame(height: 380).accessibilityHidden(true) }
                     else { Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300).clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true) }
                     Text("Du køber pakken én gang.\nAlle i dit spil kan være med.").multilineTextAlignment(.center)
                     if let product = store.product(pack.id) {

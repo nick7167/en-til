@@ -56,6 +56,8 @@ final class EnTilUITests: XCTestCase {
             if route == "answer" {
                 for answer in ["Jorden", "Mars", "Jupiter", "Saturn"] { XCTAssertTrue(app.buttons[answer].exists, answer) }
             }
+            if route == "answer" { app.buttons["Saturn"].tap() }
+            if route == "private" { app.buttons["Ja"].tap() }
             if route == "guess" {
                 for number in 0...4 { XCTAssertTrue(app.buttons["guess-\(number)"].isHittable) }
                 app.buttons["guess-2"].tap()
@@ -73,7 +75,7 @@ final class EnTilUITests: XCTestCase {
     }
 
     @MainActor func testAdditionalServerSnapshotScreens() throws {
-        for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang")] {
+        for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
             let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
             attach(app, "extra-\(route)")
@@ -90,8 +92,8 @@ final class EnTilUITests: XCTestCase {
 
     @MainActor private func dismissKeyboardTutorial(_ app: XCUIApplication) {
         // Only dismiss a first-use keyboard notice, never an arbitrary app Continue button.
-        let notices = ["Speed Up Your Typing", "QuickPath", "Skriv hurtigere"]
-        guard notices.contains(where: { app.staticTexts[$0].exists }) else { return }
+        let notices = ["Speed up your typing", "QuickPath", "Skriv hurtigere"]
+        guard notices.contains(where: { app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.exists }) else { return }
         for title in ["Continue", "Fortsæt"] {
             let button = app.buttons[title]
             if button.exists && button.isHittable { button.tap(); return }

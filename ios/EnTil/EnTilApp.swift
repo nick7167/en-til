@@ -83,7 +83,7 @@ struct RootView: View {
     @ViewBuilder private var liveContent: some View {
 
                 if let room = client.room {
-                    RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }, showRules: { sheet = .rules }, leave: { leaving = true })
+                    RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }, showRules: { sheet = .rules }, showPreferences: { sheet = .settings }, leave: { leaving = true })
                         .overlay(alignment: .top) {
                             if !["answer", "private"].contains(room.phase) {
                                 HStack {
@@ -222,7 +222,7 @@ struct CharacterPicker: View {
                 let occupant = seats.first { $0.character == index && $0.id != me }
                 Button { selection = index } label: {
                     VStack(spacing: 2) {
-                        CharacterView(index: index, size: 68)
+                        CharacterView(index: index, size: 90)
                         if let occupant { Text(occupant.name).font(.caption).lineLimit(2) }
                         else if selection == index { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime) }
                     }.frame(maxWidth: .infinity, minHeight: 105).padding(5)

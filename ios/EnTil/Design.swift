@@ -22,7 +22,9 @@ struct SceneBackground: View {
             ZStack {
                 Color.ink
                 Image("Scene-" + scene.rawValue).resizable().scaledToFill()
-                    .frame(width: geometry.size.width, height: geometry.size.height).clipped()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .offset(y: scene == .adult ? geometry.size.height * 0.12 : 0)
+                    .clipped()
             }
         }.ignoresSafeArea().accessibilityHidden(true)
     }
@@ -38,7 +40,7 @@ struct LoungeButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reducedMotion
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(.system(.headline, design: .rounded).weight(.heavy)).multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity, minHeight: 23).padding(.vertical, 13).padding(.horizontal, 12)
+            .frame(maxWidth: .infinity, minHeight: 28).padding(.vertical, 16).padding(.horizontal, 12)
             .foregroundStyle(primary ? Color.ink : Color.cream)
             .background(LinearGradient(colors: primary ? [Color(hex: 0xDEF989), .lime, Color(hex: 0xE6FF95)] : [Color(hex: 0x453765), Color(hex: 0x362B53), Color(hex: 0x504073)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
             .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(primary ? Color.lime.opacity(0.7) : Color.lilac.opacity(0.3)))
@@ -122,6 +124,7 @@ struct SeatCard: View {
     var selected = false
     var own = false
     var compact = false
+    var tall = false
     var body: some View {
         VStack(spacing: 3) {
             ZStack(alignment: .topTrailing) {
@@ -136,7 +139,7 @@ struct SeatCard: View {
             Text(seat.name).font(.caption).multilineTextAlignment(.center).lineLimit(2)
             if seat.away { Text("Væk").font(.caption2).foregroundStyle(Color.lilac) }
             if seat.late { Text("Næste spil").font(.caption2).foregroundStyle(Color.lilac) }
-        }.frame(maxWidth: .infinity).padding(.vertical, 7).padding(.horizontal, 4)
+        }.frame(maxWidth: .infinity, minHeight: tall ? 190 : nil).padding(.vertical, 7).padding(.horizontal, 4)
             .background(LinearGradient(colors: [.lounge.opacity(0.86), .ink.opacity(0.88)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
             .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
             .overlay(alignment: .topTrailing) { if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime).font(.title3).padding(7) } }

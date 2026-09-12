@@ -12,7 +12,7 @@ struct VisualFixtureView: View {
         Group {
             switch name {
             case "join":
-                JoinView(client: client, close: {})
+                JoinView(client: client, close: {}, initialCode: "K7MX")
             case "name":
                 JoinView(client: client, close: {}, initialStep: 1, initialCode: "K7MX")
             case "characters":

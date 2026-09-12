@@ -8,6 +8,7 @@ struct RoomView: View {
     let showSetup: () -> Void
     let showProfile: () -> Void
     var showRules: () -> Void = {}
+    var showPreferences: () -> Void = {}
     var leave: () -> Void = {}
     @State private var answer: Int?
     @State private var privateAnswer: String?
@@ -123,7 +124,7 @@ struct RoomView: View {
                     Text("Du får 1 point, hvis din ven svarer rigtigt.").font(.footnote).multilineTextAlignment(.center)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 98))], spacing: 9) {
                         ForEach(room.players.filter { $0.id != room.me && !$0.away && !$0.late }) { seat in
-                            Button { backedID = seat.id } label: { SeatCard(seat: seat, host: false, selected: backedID == seat.id) }.buttonStyle(.plain).accessibilityAddTraits(backedID == seat.id ? .isSelected : [])
+                            Button { backedID = seat.id } label: { SeatCard(seat: seat, host: false, selected: backedID == seat.id, tall: true) }.buttonStyle(.plain).accessibilityAddTraits(backedID == seat.id ? .isSelected : [])
                         }
                     }
                     Button(backedID.flatMap { id in room.players.first { $0.id == id }.map { "Sats på \($0.name)" } } ?? "Vælg en ven") { if let backedID { send(.init(type: "back", playerID: backedID)) } }.buttonStyle(LoungeButtonStyle()).disabled(backedID == nil || client.busy)
@@ -136,6 +137,7 @@ struct RoomView: View {
         HStack {
             Menu {
                 Button("Sådan spiller I", action: showRules)
+                Button("Dine indstillinger", action: showPreferences)
                 Button("Forlad spillet", role: .destructive, action: leave)
             } label: {
                 Label("Runde \(round.number)", systemImage: "ellipsis.circle").font(.subheadline)
@@ -178,7 +180,7 @@ struct RoomView: View {
     private var reveal: some View {
         Screen(scene: .backing, spacing: 9) {
             if let round = room.round {
-                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial()).multilineTextAlignment(.center)
+                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial()).padding(.horizontal, 28).multilineTextAlignment(.center)
                 Text(round.kind == "personal" ? "\(round.correct ?? 0) af \(round.responseCount ?? 0)" : round.correct.flatMap { round.options.indices.contains($0) ? round.options[$0] : nil } ?? "")
                     .font(.editorial(48)).foregroundStyle(Color.lime).multilineTextAlignment(.center)
                 if round.kind == "personal", let count = round.responseCount, let yes = round.correct {
@@ -195,9 +197,9 @@ struct RoomView: View {
     private var board: some View {
         Screen(scene: room.phase == "finale" ? .finale : .board, spacing: 9) {
             if room.phase == "finale" {
-                Text(room.winners.count > 1 ? "I deler sejren!" : "\(room.players.first { room.winners.contains($0.id) }?.name ?? "I") vinder!").font(.editorial(38)).multilineTextAlignment(.center)
+                Text(room.winners.count > 1 ? "I deler sejren!" : "\(room.players.first { room.winners.contains($0.id) }?.name ?? "I") vinder!").font(.editorial(38)).padding(.horizontal, 28).multilineTextAlignment(.center)
                 Text("Den var åbenbart god nok.")
-                HStack { ForEach(room.players.filter { room.winners.contains($0.id) }) { CharacterView(index: $0.character, size: 150) } }.accessibilityHidden(true)
+                HStack { ForEach(room.players.filter { room.winners.contains($0.id) }) { CharacterView(index: $0.character, size: min(180, 300 / CGFloat(max(1, room.winners.count)))) } }.padding(.top, 24).padding(.bottom, 20).accessibilityHidden(true)
                 standings
                 if room.isHost { Button("En til?") { send(.init(type: "rematch")) }.buttonStyle(LoungeButtonStyle()) }
                 else { Text("Værten kan starte en ny kamp.").foregroundStyle(Color.lilac) }
@@ -249,7 +251,7 @@ struct RoomView: View {
     }
     private var paused: some View {
         Screen(scene: .waiting) {
-            Text("Vi mangler en spiller").font(.editorial(30)).multilineTextAlignment(.center)
+            Text("Vi mangler en spiller").font(.editorial(30)).padding(.horizontal, 28).multilineTextAlignment(.center)
             Text("Spillet fortsætter, når mindst 3 er aktive.").font(.subheadline).multilineTextAlignment(.center)
             Spacer(minLength: 245)
             HStack(spacing: 7) { ForEach(room.players) { seat in SeatCard(seat: seat, host: seat.id == room.hostID, compact: true).opacity(seat.away ? 0.45 : 1) } }

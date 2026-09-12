@@ -79,12 +79,12 @@ struct WindingBoard: View {
             }.defaultScrollAnchor(.bottom)
                 .onAppear {
                     if textSize.isAccessibilitySize { proxy.scrollTo(room.me, anchor: .center) }
-                    else { proxy.scrollTo(room.ownSeat?.score ?? 0, anchor: .center) }
+                    else { proxy.scrollTo(room.ownSeat?.score ?? 0, anchor: UnitPoint(x: 0.5, y: 0.7)) }
                 }
                 .onChange(of: room.ownSeat?.score) { _, score in
                     withAnimation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 1)) {
                         if textSize.isAccessibilitySize { proxy.scrollTo(room.me, anchor: .center) }
-                        else { proxy.scrollTo(score ?? 0, anchor: .center) }
+                        else { proxy.scrollTo(score ?? 0, anchor: UnitPoint(x: 0.5, y: 0.7)) }
                     }
                 }
         }
@@ -96,7 +96,7 @@ struct WindingBoard: View {
 
     private func halfWidth(at progress: Double) -> CGFloat {
         let distance = progress - Double(room.ownSeat?.score ?? 0)
-        return 49 - CGFloat(min(max(distance, -3), 5)) * 2.2
+        return 72 - CGFloat(min(max(distance, -3), 5)) * 2.2
     }
 
     private func tilePath(space: Int, centerX: CGFloat, amplitude: CGFloat) -> Path {

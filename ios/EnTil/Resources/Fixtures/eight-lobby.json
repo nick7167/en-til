@@ -4,9 +4,9 @@
   "code": "K7MX",
   "hostID": "p0",
   "me": "p0",
-  "serverTime": 1000,
-  "phase": "answer",
-  "matchID": "5c4a4591-2fc3-4d86-9c96-7042f20cfea2",
+  "serverTime": 13000,
+  "phase": "lobby",
+  "matchID": null,
   "settings": {
     "finish": 20,
     "timed": true,
@@ -28,8 +28,8 @@
       "away": false,
       "late": false,
       "ready": false,
-      "score": 5,
-      "complete": true
+      "score": 0,
+      "complete": false
     },
     {
       "id": "p1",
@@ -38,8 +38,8 @@
       "connected": true,
       "away": false,
       "late": false,
-      "ready": false,
-      "score": 7,
+      "ready": true,
+      "score": 0,
       "complete": false
     },
     {
@@ -49,8 +49,8 @@
       "connected": true,
       "away": false,
       "late": false,
-      "ready": false,
-      "score": 5,
+      "ready": true,
+      "score": 0,
       "complete": false
     },
     {
@@ -60,37 +60,56 @@
       "connected": true,
       "away": false,
       "late": false,
-      "ready": false,
-      "score": 5,
+      "ready": true,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p4",
+      "name": "Sofie",
+      "character": 4,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": true,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p5",
+      "name": "William",
+      "character": 5,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": true,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p6",
+      "name": "Ida",
+      "character": 6,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": true,
+      "score": 0,
+      "complete": false
+    },
+    {
+      "id": "p7",
+      "name": "Oscar",
+      "character": 7,
+      "connected": true,
+      "away": false,
+      "late": false,
+      "ready": true,
+      "score": 0,
       "complete": false
     }
   ],
-  "round": {
-    "id": "5c4a4591-2fc3-4d86-9c96-7042f20cfea2:1:49178735-4403-4497-8e01-a6f99fc9de1e",
-    "number": 4,
-    "questionID": "free-f001",
-    "kind": "factual",
-    "pack": "free",
-    "prompt": "Hvilken planet er størst i solsystemet?",
-    "options": [
-      "Jorden",
-      "Mars",
-      "Jupiter",
-      "Saturn"
-    ],
-    "responseCount": null,
-    "deadline": 11000,
-    "privateLocked": false,
-    "answerLocked": true,
-    "backLocked": true,
-    "ownAnswer": 3,
-    "correct": null,
-    "fact": null,
-    "source": null,
-    "revealAt": null,
-    "revealStage": 4,
-    "results": []
-  },
+  "round": null,
   "countdownAt": null,
   "winners": [],
   "reactions": [],
