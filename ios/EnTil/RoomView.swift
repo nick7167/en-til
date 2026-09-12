@@ -90,7 +90,7 @@ struct RoomView: View {
                 roundHeader(round)
                 if round.kind == "personal" { Text(Pack.all.first { $0.id == round.pack }?.title ?? "Gratis mix").font(.caption.weight(.semibold)).padding(.horizontal, 16).padding(.vertical, 6).background(Color.violet.opacity(0.75), in: Capsule()) }
                 if !round.backLocked && !(room.phase == "private" && round.privateLocked) {
-                    Text(round.prompt).font(.editorial(round.answerLocked || (round.kind == "personal" && room.phase != "private") ? 21 : 27)).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+                    Text(round.prompt).font(.editorial(round.answerLocked ? 28 : (round.kind == "personal" && room.phase != "private") ? 24 : 32)).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                 }
                 if room.fallbackNotice { Text("For få private svar. Her er et fælles spørgsmål i stedet.").font(.footnote).foregroundStyle(Color.lilac) }
                 if room.phase == "private" {
@@ -120,7 +120,7 @@ struct RoomView: View {
                     Spacer(minLength: round.kind == "personal" ? 135 : 135)
                     Button(round.kind == "personal" ? "Lås dit gæt" : "Lås dit svar") { if let answer { send(.init(type: "answer", value: .number(answer))) } }.buttonStyle(LoungeButtonStyle()).disabled(answer == nil || client.busy)
                 } else if !round.backLocked {
-                    Text("Hvem satser du på?").font(.editorial()).multilineTextAlignment(.center)
+                    Text("Hvem satser du på?").font(.editorial()).multilineTextAlignment(.center).padding(.top, room.players.filter { !$0.away && !$0.late }.count > 5 ? 0 : 24)
                     Text("Du får 1 point, hvis din ven svarer rigtigt.").font(.footnote).multilineTextAlignment(.center)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 98))], spacing: 9) {
                         ForEach(room.players.filter { $0.id != room.me && !$0.away && !$0.late }) { seat in

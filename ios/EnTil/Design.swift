@@ -101,7 +101,7 @@ struct Choice: View {
                 Text(title).font(.headline).multilineTextAlignment(.leading)
                 Spacer(minLength: 8)
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Color.lime : Color.lilac)
-            }.padding(18).frame(minHeight: 58).frame(maxWidth: .infinity)
+            }.padding(22).frame(minHeight: 66).frame(maxWidth: .infinity)
                 .background(selected ? Color.lime.opacity(0.1) : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                 .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
         }.buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])

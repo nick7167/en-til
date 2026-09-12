@@ -57,6 +57,7 @@ final class EnTilUITests: XCTestCase {
                 for answer in ["Jorden", "Mars", "Jupiter", "Saturn"] { XCTAssertTrue(app.buttons[answer].exists, answer) }
             }
             if route == "answer" { app.buttons["Saturn"].tap() }
+            if route == "backing" { app.buttons["back-p1"].tap() }
             if route == "private" { app.buttons["Ja"].tap() }
             if route == "guess" {
                 for number in 0...4 { XCTAssertTrue(app.buttons["guess-\(number)"].isHittable) }
