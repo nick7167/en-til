@@ -56,3 +56,11 @@ for name in ['plain','lounge','home','question','backing','privateRound','waitin
  if name=='ice':art(c,'C',(104,1065,482,1285),(0,655),780,25)
  save(name,c)
 print('Extracted 11 production scene backgrounds; six original sheets unchanged.')
+
+# Reviewed reconstruction candidates replace crop fallbacks; original sheets stay untouched.
+import shutil
+for name, source in {'home':'home','question':'question','waiting':'waiting','ice':'ice','lobby':'lobby','privateRound':'privateRound','finale':'finale','adult':'home','settings':'lobby','lounge':'lobby'}.items():
+    folder=ASSETS/f'Scene-{name}.imageset'
+    folder.mkdir(exist_ok=True)
+    shutil.copy2(ROOT/'design/artwork/scenes'/f'{source}.png', folder/'art.png')
+    (folder/'Contents.json').write_text(json.dumps({'images':[{'filename':'art.png','idiom':'universal'}],'info':{'author':'xcode','version':1}},indent=2)+'\n')

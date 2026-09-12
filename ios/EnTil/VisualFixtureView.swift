@@ -63,7 +63,8 @@ struct VisualFixtureView: View {
         VStack(spacing: 0) {
             Capsule().fill(Color.lilac.opacity(0.5)).frame(width: 38, height: 5).padding(.top, 12).padding(.bottom, 5)
             content()
-        }.background(Color.lounge, in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
+        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Color.lounge, in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
             .padding(.top, 34)
     }
 }

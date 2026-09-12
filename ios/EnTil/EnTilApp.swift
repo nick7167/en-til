@@ -83,18 +83,20 @@ struct RootView: View {
     @ViewBuilder private var liveContent: some View {
 
                 if let room = client.room {
-                    VStack(spacing: 0) {
-                        HStack {
-                            Button("Forlad", systemImage: "chevron.left") { leaving = true }.labelStyle(.iconOnly)
-                            Spacer()
-                            Menu {
-                                Button("Sådan spiller I") { sheet = .rules }
-                                Button("Dine indstillinger") { sheet = .settings }
-                                if room.isHost { Button("Spilindstillinger") { sheet = .setup } }
-                            } label: { Image(systemName: "ellipsis").frame(width: 44, height: 32) }
-                        }.font(.title3).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).frame(height: 32)
-                        RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile })
-                    }.background { SceneBackground() }
+                    RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }, showRules: { sheet = .rules }, leave: { leaving = true })
+                        .overlay(alignment: .top) {
+                            if !["answer", "private"].contains(room.phase) {
+                                HStack {
+                                    Button("Forlad", systemImage: "chevron.left") { leaving = true }.labelStyle(.iconOnly).frame(width: 44, height: 44)
+                                    Spacer()
+                                    Menu {
+                                        Button("Sådan spiller I") { sheet = .rules }
+                                        Button("Dine indstillinger") { sheet = .settings }
+                                        if room.isHost { Button("Spilindstillinger") { sheet = .setup } }
+                                    } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }
+                                }.font(.title3).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).padding(.top, 8)
+                            }
+                        }
                 }
                 else if joining { JoinView(client: client, close: { joining = false }) }
                 else { HomeView(client: client, show: { sheet = $0 }, join: { joining = true }) }
@@ -120,9 +122,9 @@ struct HomeView: View {
     var body: some View {
         Screen(scene: .home, spacing: 10) {
             HStack { Spacer(); Button("Indstillinger", systemImage: "gearshape") { show(.settings) }.labelStyle(.iconOnly).font(.title2).frame(width: 36, height: 32) }.foregroundStyle(Color.cream)
-            BrandLogo().frame(height: 132).padding(.horizontal, 22)
+            BrandLogo().frame(height: 144).padding(.horizontal, 8)
             Spacer(minLength: 166)
-            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 17, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0)
+            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 21, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0)
             Button { show(.profile) } label: {
                 Panel { HStack(spacing: 10) { CharacterView(index: character, size: 32); Text(name.isEmpty ? "Vælg navn og figur" : name).font(.subheadline); Spacer(); Image(systemName: "chevron.right") } }
             }.buttonStyle(.plain)
@@ -159,7 +161,7 @@ struct JoinView: View {
             HStack { Button("Tilbage", systemImage: "chevron.left") { if step > 0 { step -= 1 } else { close() } }.labelStyle(.iconOnly).frame(width: 44, height: 44); Spacer(); if step > 0 { Text(code).font(.headline.monospaced()).tracking(4) } }
             Text(step == 0 ? "Deltag i spil" : step == 1 ? "Hvad skal vi kalde dig?" : "Find din figur").font(.editorial()).multilineTextAlignment(.center)
             Text(step == 0 ? "Indtast koden fra værten." : step == 1 ? "Dit navn bliver vist til de andre." : "Vælg den, der ligner dit humør.").multilineTextAlignment(.center)
-            if step < 2 { CharacterView(index: 1, size: 96).padding(.bottom, -18).zIndex(1) }
+            if step < 2 { CharacterView(index: 1, size: 116).padding(.bottom, -18).zIndex(1) }
             if step == 0 {
                 ZStack {
                     HStack(spacing: 6) {
@@ -177,7 +179,7 @@ struct JoinView: View {
                     })).foregroundStyle(.clear).tint(.clear).opacity(0.02)
                         .textInputAutocapitalization(.characters).autocorrectionDisabled().keyboardType(.asciiCapable).submitLabel(.continue)
                         .focused($focused).onSubmit { if code.count == 4 { findRoom() } }
-                        .accessibilityLabel("Spilkode, fire bogstaver eller tal")
+                        .accessibilityLabel("Spilkode, fire bogstaver eller tal").accessibilityValue(code)
                         .frame(height: 74)
                 }.padding(13).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18)).onTapGesture { focused = true }
                 if codeError { Label("Vi kunne ikke finde et spil med den kode.", systemImage: "exclamationmark.circle.fill").font(.footnote).foregroundStyle(Color(hex: 0xFF9188)) }
@@ -223,7 +225,7 @@ struct CharacterPicker: View {
                         CharacterView(index: index, size: 68)
                         if let occupant { Text(occupant.name).font(.caption).lineLimit(2) }
                         else if selection == index { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime) }
-                    }.frame(maxWidth: .infinity, minHeight: 83).padding(5)
+                    }.frame(maxWidth: .infinity, minHeight: 105).padding(5)
                         .background(Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                         .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selection == index ? Color.lime : Color.lilac.opacity(0.2), lineWidth: selection == index ? 2 : 1))
                         .opacity(occupant == nil ? 1 : 0.5)
@@ -257,12 +259,12 @@ struct ProfileView: View {
 struct AdultView: View {
     @Bindable var client: GameClient
     var body: some View {
-        Screen(scene: .home) {
+        Screen(scene: .adult) {
             BrandLogo().frame(height: 108)
             if let code = client.room?.code { CodePlaque(code: code) }
             Text("Er du fyldt 18 år?").font(.editorial()).multilineTextAlignment(.center)
             Text("Dette spil indeholder voksenindhold eller valgfrie drikkeregler.").multilineTextAlignment(.center)
-            Spacer(minLength: 170)
+            Spacer(minLength: 200)
             Text("Vi husker dit svar på denne iPhone.").font(.footnote).foregroundStyle(Color.lilac)
             Button("Ja, jeg er fyldt 18 år") { Task { await client.confirmAdult() } }.buttonStyle(LoungeButtonStyle())
             Button("Nej, gå tilbage") { Task { await client.declineAdult() } }.buttonStyle(LoungeButtonStyle(primary: false))

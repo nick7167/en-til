@@ -29,7 +29,7 @@ targets:
         LSRequiresIPhoneOS: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UILaunchScreen: {}
-        UIAppFonts: [Fraunces.ttf]
+        UIAppFonts: [Fraunces.ttf, EnTilHeadings-Bold.ttf]
         EnTilAPIURL: $(ENTIL_API_URL)
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true

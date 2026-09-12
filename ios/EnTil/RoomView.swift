@@ -7,6 +7,8 @@ struct RoomView: View {
     let room: RoomSnapshot
     let showSetup: () -> Void
     let showProfile: () -> Void
+    var showRules: () -> Void = {}
+    var leave: () -> Void = {}
     @State private var answer: Int?
     @State private var privateAnswer: String?
     @State private var backedID: String?
@@ -27,7 +29,7 @@ struct RoomView: View {
         .sheet(isPresented: $report) { NavigationStack { ReportView(client: client) }.presentationDragIndicator(.visible).preferredColorScheme(.dark) }
     }
     private var lobby: some View {
-        Screen {
+        Screen(scene: .lobby) {
             Text(room.isHost ? "Dit spil" : "Vi samler holdet").font(.editorial())
             Button { UIPasteboard.general.string = room.code } label: { CodePlaque(code: room.code) }
                 .buttonStyle(.plain).accessibilityLabel("Kopiér spilkode \(room.code)")
@@ -94,7 +96,7 @@ struct RoomView: View {
                     if round.privateLocked { waiting(privateStep: true) }
                     else {
                         Text("Kun det samlede antal ja-svar bliver vist. I små grupper kan man stadig gætte, hvem der svarede hvad.").font(.footnote).multilineTextAlignment(.center).foregroundStyle(Color.lilac)
-                        Color.clear.frame(height: 165)
+                        Color.clear.frame(height: 175)
                         HStack(spacing: 12) {
                             PersonalChoice(title: "Ja", selected: privateAnswer == "yes") { privateAnswer = "yes" }
                             PersonalChoice(title: "Nej", selected: privateAnswer == "no") { privateAnswer = "no" }
@@ -132,7 +134,12 @@ struct RoomView: View {
     }
     private func roundHeader(_ round: RoundSnapshot) -> some View {
         HStack {
-            Text("Runde \(round.number)").font(.subheadline)
+            Menu {
+                Button("Sådan spiller I", action: showRules)
+                Button("Forlad spillet", role: .destructive, action: leave)
+            } label: {
+                Label("Runde \(round.number)", systemImage: "ellipsis.circle").font(.subheadline)
+            }.foregroundStyle(Color.cream)
             Spacer()
             if let deadline = round.deadline, !round.backLocked && !(room.phase == "private" && round.privateLocked) {
                 TimelineView(.periodic(from: .now, by: 0.25)) { _ in
@@ -197,7 +204,7 @@ struct RoomView: View {
             } else {
                 Text(room.players.filter { !$0.away && !$0.late }.count < 3 ? "Vi mangler en spiller" : "Sådan står I").font(.editorial()).multilineTextAlignment(.center)
                 if room.players.filter({ !$0.away && !$0.late }).count < 3 { Text("Spillet fortsætter, når mindst 3 er aktive.").multilineTextAlignment(.center) }
-                WindingBoard(room: room).frame(height: 350).padding(.horizontal, -18)
+                WindingBoard(room: room).frame(height: 420).padding(.horizontal, -18)
                 if let own = room.round?.results.first(where: { $0.playerID == room.me }) {
                     Panel {
                         HStack(alignment: .top) {
@@ -233,7 +240,7 @@ struct RoomView: View {
     private var standings: some View {
         VStack(spacing: 6) {
             ForEach(Array(room.players.sorted { $0.score > $1.score }.enumerated()), id: \.element.id) { rank, seat in
-                HStack(spacing: 12) { Text("\(rank + 1)").font(.headline).frame(width: 18); CharacterView(index: seat.character, size: 36); Text(seat.name).font(.subheadline.weight(.semibold)); Spacer(); Text("\(seat.score)").font(.headline) }
+                HStack(spacing: 12) { Text("\(rank + 1)").font(.headline).frame(width: 18); CharacterView(index: seat.character, size: 44); Text(seat.name).font(.subheadline.weight(.semibold)); Spacer(); Text("\(seat.score)").font(.headline) }
                     .foregroundStyle(room.winners.contains(seat.id) ? Color.lime : Color.cream)
                     .padding(.horizontal, 13).padding(.vertical, 5).background(Color.lounge.opacity(0.9), in: RoundedRectangle(cornerRadius: 10))
                     .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(room.winners.contains(seat.id) ? Color.lime : Color.lilac.opacity(0.25), lineWidth: room.winners.contains(seat.id) ? 2 : 1))
@@ -261,7 +268,7 @@ struct RoomView: View {
         let seat = room.players.first { $0.id == result.playerID }
         return Panel {
             HStack {
-                CharacterView(index: seat?.character ?? 0, size: 50).accessibilityHidden(true)
+                CharacterView(index: seat?.character ?? 0, size: 60).accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(seat?.name ?? "Spiller").font(.headline)
                     Text(result.answer.map { round.kind == "personal" ? "Gæt: \($0)" : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "Intet svar").font(.caption)

@@ -13,3 +13,12 @@ The development AppIcon uses the existing Fraunces heading and native lime chara
 ## Approved-reference extraction — 11 September 2026
 
 The user explicitly authorized direct local image processing after the image-generation service hit its usage limit. `scripts/extract-reference-cast.py` extracts the original wordmark, twelve bright character silhouettes, ensemble and six miniature pack covers. `scripts/extract-reference-scenes.py` assembles full-screen backgrounds from scene-only crops. Both preserve all six source sheets. These assets reuse approved pixels; no new external artwork or model call was used. Source resolution limits sharpness; native text, buttons, scores and inputs remain live SwiftUI controls. Crops and screen composition require screenshot comparison, not automatic approval.
+
+`EnTilHeadings-Bold.ttf` is a static soft-axis instance of the bundled OFL Fraunces font (SOFT 100, WONK 1, wght 700, opsz 24), renamed to avoid claiming an upstream release. `scripts/derive-heading-font.py` regenerates it with build-only fontTools; OFL copyright/license records are retained. Native Dynamic Type remains enabled.
+
+## Full-screen reconstruction candidates — 12 September 2026
+Seven built-in image-generation outputs are preserved in `design/artwork/scenes`: home, question, waiting, ice, lobby, privateRound, finale. They reconstruct the approved sheets’ illustrated environments without baked-in controls. Lobby also supplies settings/lounge; home supplies the adult background. These are implementation candidates, not additional user approvals. The extracted wordmark, twelve characters and pack covers remain unchanged.
+
+Source generation folder: `01a08935-5b1c-7b30-9eb8-298443c5a11b`. Scene generation IDs, in the same order: `36b782e5-3f24-4e3d-a0f2-a6f9edcb35f6`, `ac05909e-4968-4d63-a977-7b1dd0d59bb9`, `bae64cb1-4ed7-4b51-b27a-5b6d65307172`, `0af9b6a4-7a83-445d-aae1-4543c6678f5a`, `2b2e9f5e-363a-47e7-a283-1f82369c51e0`, `8342150c-3c71-4393-8e63-fed13fe74b26`, `46169eb5-a7a4-4111-9c82-05bdfdac0234`.
+
+The rejected OpenCV inpainting experiment is removed. `scripts/extract-reference-scenes.py` retains clean crop fallbacks for other scenes and copies these preserved reconstruction assets. No OpenCV dependency is required. Pixel-level fidelity remains under comparison using `scripts/compare-reference-screens.py`; the previous native checkpoint passed all 26 reference captures but failed the code-field accessibility assertion. The normalized accessibility value is now explicit, awaiting another hosted run.

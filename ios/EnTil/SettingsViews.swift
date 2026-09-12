@@ -18,24 +18,24 @@ struct SetupView: View {
             Text("Spilindstillinger").font(.editorial()).multilineTextAlignment(.center)
             VStack(alignment: .leading, spacing: 12) {
                 Divider()
-                Text("Mållinje").font(.headline)
+                Text("Mållinje").font(.system(size: 18, weight: .semibold))
                 Text("Spil til det antal point, der passer jer.").font(.footnote).foregroundStyle(Color.lilac)
                 HStack(spacing: 12) {
                     ForEach([10, 20, 30], id: \.self) { number in
                         Button { draft.finish = number } label: {
-                            Text("\(number)").font(.headline).frame(maxWidth: .infinity, minHeight: 44)
+                            Text("\(number)").font(.system(size: 18, weight: .semibold)).frame(maxWidth: .infinity, minHeight: 44)
                                 .background(draft.finish == number ? Color.lime.opacity(0.12) : Color.lounge, in: RoundedRectangle(cornerRadius: 11))
                                 .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(draft.finish == number ? Color.lime : Color.lilac.opacity(0.3), lineWidth: draft.finish == number ? 2 : 1))
                         }.buttonStyle(.plain).accessibilityAddTraits(draft.finish == number ? .isSelected : [])
                     }
                 }
                 Divider()
-                Text("Vælg selv").font(.headline)
+                Text("Vælg selv").font(.system(size: 18, weight: .semibold))
                 Text("Indstil præcis, hvor mange felter I vil spille.").font(.footnote).foregroundStyle(Color.lilac)
                 SettingStepper(title: "Mållinje", value: $draft.finish, range: 5...50, unit: "felter")
                 Divider()
                 Toggle(isOn: $draft.timed) {
-                    VStack(alignment: .leading, spacing: 3) { Text("Tid pr. runde").font(.headline); Text("Spil med tid").font(.footnote).foregroundStyle(Color.lilac) }
+                    VStack(alignment: .leading, spacing: 3) { Text("Tid pr. runde").font(.system(size: 18, weight: .semibold)); Text("Spil med tid").font(.footnote).foregroundStyle(Color.lilac) }
                 }
                 if draft.timed {
                     SettingStepper(title: "Svar", value: $draft.answerSeconds, range: 10...60, step: 5, unit: "sek.", showTitle: true)
@@ -47,13 +47,13 @@ struct SetupView: View {
                     if value && !UserDefaults.standard.bool(forKey: "adult") { adultPrompt = true }
                     else { draft.drinking = value }
                 })) {
-                    VStack(alignment: .leading, spacing: 3) { Text("Drikkeregler").font(.headline); Text("Valgfrit for den enkelte.").font(.footnote).foregroundStyle(Color.lilac) }
+                    VStack(alignment: .leading, spacing: 3) { Text("Drikkeregler").font(.system(size: 18, weight: .semibold)); Text("Valgfrit for den enkelte.").font(.footnote).foregroundStyle(Color.lilac) }
                 }
                 Divider()
                 NavigationLink {
                     PackSelectionView(client: client, store: store, draft: $draft)
                 } label: {
-                    HStack { Text("Vælg pakker").font(.headline); Spacer(); Text("\(draft.packs.count) valgt").foregroundStyle(Color.lilac); Image(systemName: "chevron.right") }.padding(.vertical, 8)
+                    HStack { Text("Vælg pakker").font(.system(size: 18, weight: .semibold)); Spacer(); Text("\(draft.packs.count) valgt").foregroundStyle(Color.lilac); Image(systemName: "chevron.right") }.padding(.vertical, 8)
                 }.buttonStyle(.plain)
             }
             Button("Gem ændringer") {
@@ -90,10 +90,10 @@ private struct SettingStepper: View {
     var showTitle = false
     var body: some View {
         HStack(spacing: 12) {
-            if showTitle { Text(title).font(.subheadline).frame(maxWidth: .infinity, alignment: .leading) }
+            if showTitle { Text(title).font(.system(size: 17)).frame(maxWidth: .infinity, alignment: .leading) }
             HStack(spacing: 0) {
                 Button { value = max(range.lowerBound, value - step) } label: { Image(systemName: "minus").font(.title3.weight(.semibold)).frame(width: 44, height: 44).background(Color.violet.opacity(0.6), in: RoundedRectangle(cornerRadius: 9)) }.disabled(value <= range.lowerBound).accessibilityLabel("Færre: \(title)")
-                Text("\(value) \(unit)").font(.subheadline.monospacedDigit()).frame(maxWidth: .infinity).padding(.horizontal, 8)
+                Text("\(value) \(unit)").font(.system(size: 17).monospacedDigit()).frame(maxWidth: .infinity).padding(.horizontal, 8)
                 Button { value = min(range.upperBound, value + step) } label: { Image(systemName: "plus").font(.title3.weight(.semibold)).frame(width: 44, height: 44).background(Color.violet.opacity(0.6), in: RoundedRectangle(cornerRadius: 9)) }.disabled(value >= range.upperBound).accessibilityLabel("Flere: \(title)")
             }.background(Color.lounge, in: RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.lilac.opacity(0.25)))
@@ -135,7 +135,7 @@ struct PackSelectionView: View {
                 }
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
-                HStack { CharacterView(index: 0, size: 54); VStack(alignment: .leading, spacing: 3) { Text("Se alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Image(systemName: "chevron.right") }.padding(8).settingsSurface()
+                HStack { Image("CharacterGroup").resizable().scaledToFit().frame(width: 66, height: 66).accessibilityHidden(true); VStack(alignment: .leading, spacing: 3) { Text("Se alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Image(systemName: "chevron.right") }.padding(8).settingsSurface()
             }.buttonStyle(.plain)
             Button("Tilbage til spilindstillinger") { dismiss() }.buttonStyle(LoungeButtonStyle()).padding(.top, 8)
         }.alert("Er du fyldt 18 år?", isPresented: $adultPrompt) {
@@ -157,11 +157,11 @@ struct PackRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Group {
-                if pack.id == "free" { CharacterView(index: 0, size: 58).background(Color.violet) }
+                if pack.id == "free" { Image("CharacterGroup").resizable().scaledToFit().background(Color.violet.opacity(0.4)) }
                 else { Image("PackReference-\(pack.id)").resizable().scaledToFill() }
-            }.frame(width: 60, height: typeSize.isAccessibilitySize ? 80 : 60).clipped().accessibilityHidden(true)
+            }.frame(width: 70, height: typeSize.isAccessibilitySize ? 90 : 72).clipped().accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
-                Text(pack.title).font(.subheadline.weight(.bold))
+                Text(pack.title).font(.body.weight(.bold))
                 if let intensity = pack.intensity { IntensityPill(title: intensity) }
                 else { Text(pack.id == "danmark" && trailing.contains("✓") ? "Købt" : pack.subtitle).font(.caption).foregroundStyle(Color.cream.opacity(0.8)).lineLimit(typeSize.isAccessibilitySize ? nil : 2) }
             }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 5)
@@ -169,7 +169,7 @@ struct PackRow: View {
                 Image(systemName: "checkmark").font(.headline).foregroundStyle(Color.ink).frame(width: 28, height: 28).background(Color.lime, in: RoundedRectangle(cornerRadius: 8)).accessibilityLabel("Valgt")
             } else { Text(trailing).font(.subheadline.weight(.semibold)).multilineTextAlignment(.trailing) }
             if !trailing.contains("✓") && trailing != "Vælg" { Image(systemName: "chevron.right").font(.caption) }
-        }.padding(.trailing, 10).frame(maxWidth: .infinity, minHeight: 60).settingsSurface().clipShape(RoundedRectangle(cornerRadius: 11))
+        }.padding(.trailing, 10).frame(maxWidth: .infinity, minHeight: 72).settingsSurface().clipShape(RoundedRectangle(cornerRadius: 11))
     }
 }
 struct ShopView: View {
@@ -183,7 +183,7 @@ struct ShopView: View {
                 NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "Se pakke") }.buttonStyle(.plain)
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
-                Panel { HStack { CharacterView(index: 0, size: 58); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }
+                Panel { HStack { Image("CharacterGroup").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }
             }.buttonStyle(.plain)
             if let route = store.cheapestRoute(owned: client.owned) { Text(route).font(.footnote).foregroundStyle(Color.lilac) }
             Button("Gendan køb") { Task { await store.restore() } }.padding(10)
@@ -202,7 +202,7 @@ struct PackOwnedView: View {
             Text(pack.title).font(.editorial(32)).multilineTextAlignment(.center)
             Text("Alle i dit spil kan være med.\nVælg pakken under spilindstillinger.").multilineTextAlignment(.center)
             if pack.id == "isbryderen" {
-                Color.clear.frame(minHeight: 220, idealHeight: 300, maxHeight: 380).accessibilityHidden(true)
+                Color.clear.frame(height: 340).accessibilityHidden(true)
             } else {
                 Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300)
                     .clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true)
@@ -225,7 +225,7 @@ struct PackDetailView: View {
                     Text(pack.title).font(.editorial(43)).multilineTextAlignment(.center)
                     if let intensity = pack.intensity { IntensityPill(title: intensity) }
                     Text(pack.subtitle).multilineTextAlignment(.center)
-                    if pack.id == "isbryderen" { Color.clear.frame(minHeight: 220, idealHeight: 300, maxHeight: 380).accessibilityHidden(true) }
+                    if pack.id == "isbryderen" { Color.clear.frame(height: 340).accessibilityHidden(true) }
                     else { Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300).clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true) }
                     Text("Du køber pakken én gang.\nAlle i dit spil kan være med.").multilineTextAlignment(.center)
                     if let product = store.product(pack.id) {
@@ -253,10 +253,10 @@ struct BundleView: View {
     @Bindable var store: PackStore
     @State private var adultPrompt = false
     var body: some View {
-        Screen {
+        Screen(scene: .plain) {
             Text("Alle seks pakker").font(.editorial(40)).multilineTextAlignment(.center)
             Text("Hele holdet. Hele pakken.")
-            HStack(spacing: 0) { ForEach(0..<4, id: \.self) { CharacterView(index: $0, size: 77) } }.accessibilityHidden(true)
+            HStack(spacing: 0) { ForEach(0..<4, id: \.self) { CharacterView(index: $0, size: 88) } }.accessibilityHidden(true)
             HStack(spacing: 6) {
                 ForEach(Pack.all.filter { $0.id != "free" }) { pack in
                     Image("PackReference-\(pack.id)").resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 7))
@@ -301,7 +301,7 @@ struct PreferencesView: View {
     @AppStorage("drinking") private var drinking = false
     @State private var adultPrompt = false
     var body: some View {
-        Screen {
+        Screen(scene: .settings, spacing: 16) {
             Text("Indstillinger").font(.editorial())
             Text("Din profil").font(.headline).frame(maxWidth: .infinity, alignment: .leading)
             if client.room == nil || client.room?.phase == "lobby" {
@@ -311,9 +311,9 @@ struct PreferencesView: View {
             }
             Text("Lyd og følelse").font(.headline).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 5)
             VStack(spacing: 0) {
-                Toggle(isOn: $sound) { Label("Lydeffekter", systemImage: "speaker.wave.2.fill") }.padding(12)
+                Toggle(isOn: $sound) { Label("Lydeffekter", systemImage: "speaker.wave.2.fill") }.padding(.horizontal, 14).frame(minHeight: 52)
                 Divider()
-                Toggle(isOn: $haptics) { Label("Vibration", systemImage: "iphone.radiowaves.left.and.right") }.padding(12)
+                Toggle(isOn: $haptics) { Label("Vibration", systemImage: "iphone.radiowaves.left.and.right") }.padding(.horizontal, 14).frame(minHeight: 52)
             }.settingsSurface()
             Label("Animationer følger indstillingerne på din iPhone.", systemImage: "info.circle").font(.footnote).foregroundStyle(Color.lilac).frame(maxWidth: .infinity, alignment: .leading)
             Text("Spil").font(.headline).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 5)
@@ -343,7 +343,7 @@ struct PreferencesView: View {
             }
     }
     private func preferenceRow(_ title: String, icon: String) -> some View {
-        HStack(spacing: 14) { Image(systemName: icon).font(.title3).frame(width: 26); Text(title); Spacer(); Image(systemName: "chevron.right").font(.caption) }.padding(.horizontal, 14).frame(minHeight: 44)
+        HStack(spacing: 14) { Image(systemName: icon).font(.title3).frame(width: 26); Text(title); Spacer(); Image(systemName: "chevron.right").font(.caption) }.padding(.horizontal, 14).frame(minHeight: 52)
     }
 }
 struct RulesView: View {
@@ -378,7 +378,7 @@ struct ResultsView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.dismiss) private var dismiss
     var body: some View {
-        Screen {
+        Screen(scene: .plain, spacing: 18) {
             Text("Rundens resultat").font(.editorial())
             if let round = room.round {
                 Text("Runde \(round.number)")
@@ -397,26 +397,27 @@ struct ResultsView: View {
                         GridRow {
                             Text("Spiller"); Text("Svar"); Text("Satsede på"); Text("Point")
                             if room.settings.drinking { Text("Valgfrie slurke") }
-                        }.font(.caption2).foregroundStyle(Color.lilac).padding(.vertical, 12)
+                        }.font(.caption).foregroundStyle(Color.lilac).padding(.vertical, 14)
                         Divider()
                         ForEach(round.results) { result in
                             GridRow {
                                 HStack(spacing: 2) {
-                                    CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 32).accessibilityHidden(true)
+                                    CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 40).accessibilityHidden(true)
                                     Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller")
                                 }
                                 Text(result.answer.map { round.kind == "personal" ? String($0) : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "—")
                                 Text(room.players.first { $0.id == result.back }?.name ?? "—")
                                 Text("+\(result.points)").font(.headline.bold()).foregroundStyle(Color.lime)
                                 if room.settings.drinking { Text(result.sips.map(String.init) ?? "—") }
-                            }.font(.caption2).padding(.vertical, 9)
+                            }.font(.subheadline).padding(.vertical, 13)
                             if result.id != round.results.last?.id { Divider() }
                         }
                     }.padding(.horizontal, 8).frame(maxWidth: .infinity).settingsSurface()
                 }
                 if let fact = round.fact { DisclosureGroup("Fakta og kilde") { VStack(alignment: .leading, spacing: 10) { Text(fact); if let source = round.source, let url = URL(string: source), url.scheme == "https" { Link("Se kilde", destination: url) } }.padding(.vertical, 10) } }
-                if room.settings.drinking { Text("Drikkeregler er valgfrie. Du kan altid springe over.").font(.footnote) }
+                if room.settings.drinking { Label("Drikkeregler er valgfrie. Du kan altid springe over.", systemImage: "info.circle").font(.callout).padding(.vertical, 12) }
             }
+            Spacer(minLength: 36)
             Button("Luk") { dismiss() }.buttonStyle(LoungeButtonStyle())
         }
     }

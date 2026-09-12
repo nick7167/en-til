@@ -36,6 +36,7 @@
 		CA55AD0966EF4ABA69F0DDFE /* EnTilUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C9ACBF28EA2BDE584F3C8 /* EnTilUITests.swift */; };
 		CBB714DE91DFDCFC8BF130DC /* reveal.wav in Resources */ = {isa = PBXBuildFile; fileRef = 36BF1ED298524B636CBF4890 /* reveal.wav */; };
 		D174477CCDDD7E4B9E5E9111 /* finale.json in Resources */ = {isa = PBXBuildFile; fileRef = 079F29B37FA8EFCB905E5532 /* finale.json */; };
+		D3F422CD8B16F026FED52E7D /* EnTilHeadings-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D78D2A0E9FDD84D57077C23 /* EnTilHeadings-Bold.ttf */; };
 		D4AB31BA6A6F09A0D8EE9B22 /* VisualFixtureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369356B7A8977A178AC33348 /* VisualFixtureView.swift */; };
 		D9C8CDEFFB5F39717E6CDD3B /* private.json in Resources */ = {isa = PBXBuildFile; fileRef = 9216E21A7A9007921D191332 /* private.json */; };
 		EAC2ECE9E496CE1A350305C6 /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7433231CA24C3D6B3BD4A6 /* BoardView.swift */; };
@@ -68,6 +69,7 @@
 		2C3B8E90E6AD422402CD64F0 /* GameClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameClient.swift; sourceTree = "<group>"; };
 		369356B7A8977A178AC33348 /* VisualFixtureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualFixtureView.swift; sourceTree = "<group>"; };
 		36BF1ED298524B636CBF4890 /* reveal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = reveal.wav; sourceTree = "<group>"; };
+		3D78D2A0E9FDD84D57077C23 /* EnTilHeadings-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "EnTilHeadings-Bold.ttf"; sourceTree = "<group>"; };
 		3EE0BE733B6B1084D2F89DA1 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		40341FCE143034E184978290 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
 		42377B1C3EE088A17A600459 /* ready.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ready.wav; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 		CBD04BF4AF93F2719C3FBBB0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3D78D2A0E9FDD84D57077C23 /* EnTilHeadings-Bold.ttf */,
 				C665140E11016A2DC398FDB9 /* Fraunces-OFL.txt */,
 				28710E056E12A4A1AD6CEF08 /* Fraunces.ttf */,
 				460F4476219C169C0CFC0C63 /* lock.wav */,
@@ -302,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B0449A4C3AB6DA96DCAC65F /* Assets.xcassets in Resources */,
+				D3F422CD8B16F026FED52E7D /* EnTilHeadings-Bold.ttf in Resources */,
 				BC911F4867E7417594AD12C4 /* Fraunces-OFL.txt in Resources */,
 				5DB6C1B7221A4FE91FB1EE09 /* Fraunces.ttf in Resources */,
 				7E441C0CDD26E15C08561F84 /* answer.json in Resources */,

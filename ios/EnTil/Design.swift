@@ -10,10 +10,10 @@ extension Color {
     static let lilac = Color(hex: 0xC4A9F4)
 }
 extension Font {
-    static func editorial(_ size: CGFloat = 32) -> Font { .custom("Fraunces-Regular", size: size, relativeTo: .largeTitle).weight(.bold) }
+    static func editorial(_ size: CGFloat = 32) -> Font { .custom("EnTilHeadings-Bold", size: size, relativeTo: .largeTitle) }
 }
 enum SceneArtwork: String {
-    case lounge, home, question, backing, privateRound, waiting, guess, board, finale, ice, plain
+    case lounge, lobby, settings, adult, home, question, backing, privateRound, waiting, guess, board, finale, ice, plain
 }
 struct SceneBackground: View {
     var scene: SceneArtwork = .lounge
@@ -125,7 +125,7 @@ struct SeatCard: View {
     var body: some View {
         VStack(spacing: 3) {
             ZStack(alignment: .topTrailing) {
-                CharacterView(index: seat.character, size: compact ? 63 : 80).accessibilityHidden(true)
+                CharacterView(index: seat.character, size: compact ? 75 : 111).accessibilityHidden(true)
                 if host { Image(systemName: "crown.fill").font(.system(size: 19)).foregroundStyle(Color(hex: 0xFFD466)).rotationEffect(.degrees(12)).offset(x: -7, y: -7) }
             }
             if host || own || seat.ready {
@@ -136,7 +136,7 @@ struct SeatCard: View {
             Text(seat.name).font(.caption).multilineTextAlignment(.center).lineLimit(2)
             if seat.away { Text("Væk").font(.caption2).foregroundStyle(Color.lilac) }
             if seat.late { Text("Næste spil").font(.caption2).foregroundStyle(Color.lilac) }
-        }.frame(maxWidth: .infinity).padding(.vertical, 8).padding(.horizontal, 4)
+        }.frame(maxWidth: .infinity).padding(.vertical, 7).padding(.horizontal, 4)
             .background(LinearGradient(colors: [.lounge.opacity(0.86), .ink.opacity(0.88)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
             .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
             .overlay(alignment: .topTrailing) { if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime).font(.title3).padding(7) } }
@@ -150,8 +150,8 @@ struct NumberChoice: View {
     let action: () -> Void
     var body: some View {
         Button(action: action) {
-            Text(String(number)).font(.title.bold().monospacedDigit())
-                .frame(maxWidth: .infinity, minHeight: 72)
+            Text(String(number)).font(.editorial(42)).monospacedDigit()
+                .frame(maxWidth: .infinity, minHeight: 100)
                 .foregroundStyle(selected ? Color.ink : Color.cream)
                 .background(selected ? Color.lime : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                 .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
