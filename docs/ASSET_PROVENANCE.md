@@ -24,3 +24,5 @@ Source generation folder: `01a08935-5b1c-7b30-9eb8-298443c5a11b`. Scene generati
 The rejected OpenCV inpainting experiment is removed. `scripts/extract-reference-scenes.py` retains clean crop fallbacks for other scenes and copies these preserved reconstruction assets. No OpenCV dependency is required. Pixel-level fidelity remains under comparison using `scripts/compare-reference-screens.py`; the previous native checkpoint passed all 26 reference captures but failed the code-field accessibility assertion. The normalized accessibility value is now explicit, awaiting another hosted run.
 
 Board environment: generated candidate `exec-34f066da-c2d2-4a64-a3f5-5cfe51463553.png`, same generation folder. Preserved with its exact prompt in `design/artwork/scenes/board*`. Only the surrounding environment is raster artwork; track tiles, occupants and scores remain native and live.
+
+The lime avatar now uses the upright A02 lobby pose (crown and ready-label excluded) instead of the squat C04 bundle pose. Its original face and contour are preserved; no recoloring or generated replacement was used.

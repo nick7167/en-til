@@ -1,6 +1,6 @@
 """Extract approved raster contours; no redraw, recoloring, or enlargement.
 
-Sources remain untouched. Active C04 poses replace three dimmed B03 figures.
+Sources remain untouched. The A02 host and two C04 poses replace dimmed B03 figures.
 Run from the repository root with Pillow and numpy installed.
 """
 from collections import deque
@@ -88,9 +88,9 @@ hues = [(28,56),(0,22),(163,207),(10,31),(105,139),(28,47),
 results = []
 for index, (box, (low, high)) in enumerate(zip(boxes,hues)):
     active_boxes = {0: (556,982,652,1049), 2: (722,970,809,1048), 3: (813,964,891,1043)}
-    crop = bundle.crop(active_boxes[index]) if index in active_boxes else cast.crop(box)
+    crop = home.crop((394,257,498,319)) if index == 0 else bundle.crop(active_boxes[index]) if index in active_boxes else cast.crop(box)
     hsv = np.array(crop.convert('HSV'))
-    mask = (hsv[:,:,0] >= low) & (hsv[:,:,0] <= high) & (hsv[:,:,1] > 45) & (hsv[:,:,2] > (65 if index in [0,3] else 87 if index == 2 else 105))
+    mask = (hsv[:,:,0] >= (38 if index == 0 else low)) & (hsv[:,:,0] <= high) & (hsv[:,:,1] > 45) & (hsv[:,:,2] > (65 if index in [0,3] else 87 if index == 2 else 105))
     mask = fill_enclosed(largest_components(mask, minimum=25))
     results.append(export(f'Character-{index}',crop,mask))
 
@@ -124,4 +124,4 @@ preview.paste(group_result,(160,535),group_result)
 for index, result in enumerate(pack_results):
     preview.paste(result,(40+index*108,665),result)
 preview.save('/private/tmp/en-til-reference-cast.png')
-print('Extracted BrandLogo, 12 characters, CharacterGroup and six PackReference covers; contact sheet /private/tmp/en-til-reference-cast.png')
+print('Extracted BrandLogo, 12 characters, CharacterGroup and seven PackReference covers; contact sheet /private/tmp/en-til-reference-cast.png')

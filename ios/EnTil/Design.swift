@@ -77,12 +77,12 @@ struct CodePlaque: View {
         VStack(spacing: 5) {
             Text("Spilkode").font(.caption)
             HStack(spacing: 8) {
-                Text(code).font(.system(size: 43, weight: .black, design: .rounded)).tracking(7)
+                Text(code).font(.system(size: 55, weight: .black, design: .rounded)).tracking(7)
                 Image(systemName: "doc.on.doc").font(.caption)
             }.padding(.horizontal, 18).padding(.vertical, 4)
                 .background(Color.ink.opacity(0.75), in: RoundedRectangle(cornerRadius: 9))
                 .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(Color.lilac.opacity(0.35)))
-        }.padding(.horizontal, 16).padding(.vertical, 10)
+        }.padding(.horizontal, 16).padding(.vertical, 10).frame(maxWidth: .infinity)
             .background(Color.lounge.opacity(0.85), in: RoundedRectangle(cornerRadius: 18))
     }
 }

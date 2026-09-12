@@ -153,13 +153,14 @@ private extension View {
 struct PackRow: View {
     let pack: Pack
     let trailing: String
+    var rowHeight: CGFloat = 72
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         HStack(spacing: 10) {
             Group {
                 if pack.id == "free" { Image("PackReference-launch-bundle").resizable().scaledToFit().background(Color.violet.opacity(0.4)) }
                 else { Image("PackReference-\(pack.id)").resizable().scaledToFill() }
-            }.frame(width: 70, height: typeSize.isAccessibilitySize ? 90 : 72).clipped().accessibilityHidden(true)
+            }.frame(width: rowHeight, height: typeSize.isAccessibilitySize ? max(90, rowHeight) : rowHeight).clipped().accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 3) {
                 Text(pack.title).font(.body.weight(.bold))
                 if let intensity = pack.intensity { IntensityPill(title: intensity) }
@@ -169,7 +170,7 @@ struct PackRow: View {
                 Image(systemName: "checkmark").font(.headline).foregroundStyle(Color.ink).frame(width: 28, height: 28).background(Color.lime, in: RoundedRectangle(cornerRadius: 8)).accessibilityLabel("Valgt")
             } else { Text(trailing).font(.subheadline.weight(.semibold)).multilineTextAlignment(.trailing) }
             if !trailing.contains("✓") && trailing != "Vælg" { Image(systemName: "chevron.right").font(.caption) }
-        }.padding(.trailing, 10).frame(maxWidth: .infinity, minHeight: 72).settingsSurface().clipShape(RoundedRectangle(cornerRadius: 11))
+        }.padding(.trailing, 10).frame(maxWidth: .infinity, minHeight: rowHeight).settingsSurface().clipShape(RoundedRectangle(cornerRadius: 11))
     }
 }
 struct ShopView: View {
@@ -180,7 +181,7 @@ struct ShopView: View {
         Screen(scene: .plain, spacing: 7) {
             Text("Mere på spil").font(.editorial())
             ForEach(Pack.all.filter { $0.id != "free" }) { pack in
-                NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "Se pakke") }.buttonStyle(.plain)
+                NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "Se pakke", rowHeight: 86) }.buttonStyle(.plain)
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
                 Panel { HStack { Image("PackReference-launch-bundle").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }

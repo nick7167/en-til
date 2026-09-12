@@ -115,18 +115,18 @@ struct WindingBoard: View {
     }
 
     private func occupantOffset(_ x: CGFloat, count: Int, width: CGFloat) -> CGFloat {
-        let halfGroup = CGFloat(min(count, 4)) * (count > 2 ? 25 : 31)
+        let halfGroup = CGFloat(min(count, 4)) * (count > 2 ? 31 : 37)
         let limit = max(0, width / 2 - halfGroup - 8)
         return min(max(x + 23, -limit), limit)
     }
 
     private func boardPlayer(_ seat: Seat, crowded: Bool) -> some View {
         VStack(spacing: -5) {
-            CharacterView(index: seat.character, size: crowded ? 30 : 47).accessibilityHidden(true)
-            Text(seat.name).font(.system(size: crowded ? 9 : 10, weight: .semibold))
+            CharacterView(index: seat.character, size: crowded ? 42 : 64).accessibilityHidden(true)
+            Text(seat.name).font(.system(size: crowded ? 11 : 12, weight: .semibold))
                 .lineLimit(1).padding(.horizontal, 6).padding(.vertical, 3)
                 .foregroundStyle(seat.id == room.me ? Color.ink : Color.cream)
                 .background(seat.id == room.me ? Color.lime : Color.violet, in: Capsule())
-        }.frame(width: crowded ? 48 : 60)
+        }.frame(width: crowded ? 60 : 72)
     }
 }
