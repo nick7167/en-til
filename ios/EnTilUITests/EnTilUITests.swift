@@ -78,14 +78,40 @@ final class EnTilUITests: XCTestCase {
         for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
             let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
+            if route == "eight-backing" {
+                let lastFriend = app.buttons["back-p7"]
+                XCTAssertTrue(lastFriend.isHittable)
+                lastFriend.tap()
+                XCTAssertTrue(app.buttons["Sats på Oscar"].isHittable)
+            }
+            if route == "eight-lobby" {
+                if !app.buttons["Start spil"].isHittable { app.swipeUp() }
+                XCTAssertTrue(app.buttons["Start spil"].isHittable)
+            }
             attach(app, "extra-\(route)")
             app.terminate()
         }
     }
 
-    @MainActor private func launch(_ route: String) -> XCUIApplication {
+    @MainActor func testLargeTextLayouts() throws {
+        for (route, action) in [("home", "Opret spil"), ("board", "Klar til næste runde"), ("eight-backing", "back-p7")] {
+            let app = launch(route, largeText: true)
+            let button = app.buttons[action]
+            XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))
+            for _ in 0..<6 {
+                if button.exists && button.isHittable { break }
+                app.swipeUp()
+            }
+            XCTAssertTrue(button.exists && button.isHittable, "Large text action: \(route)")
+            attach(app, "large-text-\(route)")
+            app.terminate()
+        }
+    }
+
+    @MainActor private func launch(_ route: String, largeText: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = route
+        if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         app.launch()
         return app
     }

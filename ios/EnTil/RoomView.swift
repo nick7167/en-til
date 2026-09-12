@@ -35,7 +35,7 @@ struct RoomView: View {
             Button { UIPasteboard.general.string = room.code } label: { CodePlaque(code: room.code) }
                 .buttonStyle(.plain).accessibilityLabel("Kopiér spilkode \(room.code)")
             Text("\(room.players.count) spillere").font(.caption)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 125))], spacing: 12) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: room.players.count > 4 ? 98 : 125))], spacing: 12) {
                 ForEach(room.players) { seat in
                     SeatCard(seat: seat, host: seat.id == room.hostID, own: seat.id == room.me && !room.isHost, compact: room.players.count > 4)
                         .contextMenu {
@@ -124,7 +124,12 @@ struct RoomView: View {
                     Text("Du får 1 point, hvis din ven svarer rigtigt.").font(.footnote).multilineTextAlignment(.center)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 98))], spacing: 9) {
                         ForEach(room.players.filter { $0.id != room.me && !$0.away && !$0.late }) { seat in
-                            Button { backedID = seat.id } label: { SeatCard(seat: seat, host: false, selected: backedID == seat.id, tall: true) }.buttonStyle(.plain).accessibilityAddTraits(backedID == seat.id ? .isSelected : [])
+                            Button { backedID = seat.id } label: {
+                                SeatCard(seat: seat, host: false, selected: backedID == seat.id,
+                                         compact: room.players.filter { !$0.away && !$0.late }.count > 5,
+                                         tall: room.players.filter { !$0.away && !$0.late }.count <= 5)
+                            }.buttonStyle(.plain).accessibilityAddTraits(backedID == seat.id ? .isSelected : [])
+                                .accessibilityIdentifier("back-\(seat.id)")
                         }
                     }
                     Button(backedID.flatMap { id in room.players.first { $0.id == id }.map { "Sats på \($0.name)" } } ?? "Vælg en ven") { if let backedID { send(.init(type: "back", playerID: backedID)) } }.buttonStyle(LoungeButtonStyle()).disabled(backedID == nil || client.busy)
