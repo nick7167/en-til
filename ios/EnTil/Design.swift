@@ -25,6 +25,9 @@ struct SceneBackground: View {
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .offset(y: scene == .adult ? geometry.size.height * 0.12 : 0)
                     .clipped()
+                if scene == .settings {
+                    LinearGradient(stops: [.init(color: .clear, location: 0.14), .init(color: .ink, location: 0.34)], startPoint: .top, endPoint: .bottom)
+                }
             }
         }.ignoresSafeArea().accessibilityHidden(true)
     }

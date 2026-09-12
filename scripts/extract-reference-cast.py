@@ -107,6 +107,12 @@ for name, top in zip(pack_names, [872,944,1016,1088,1161,1234]):
     crop = home.crop((713,top,772,top+58))
     pack_results.append(export(f'PackReference-{name}',crop,np.ones((crop.height,crop.width),dtype=bool)))
 
+# A06 compact quartet, separate from the wide C04 header ensemble.
+cover_group = home.crop((710,1315,786,1398))
+cover_hsv = np.array(cover_group.convert('HSV'))
+export('PackReference-launch-bundle', cover_group,
+       fill_enclosed(largest_components((cover_hsv[:,:,1] > 45) & (cover_hsv[:,:,2] > 110), minimum=20)))
+
 # C04 ensemble includes its original floating host crown.
 group = bundle.crop((554,963,894,1048))
 hsv = np.array(group.convert('HSV'))
