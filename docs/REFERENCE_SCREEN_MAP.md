@@ -1,5 +1,8 @@
 # Approved reference screen map
 
+**12 September progress:** all 26 native screen routes are implemented and captured in successful run 34696177984. Paired reference/native sheets are generated with `scripts/compare-reference-screens.py`. The table below remains the original discovery audit, not a current missing-feature list. Current work refines composition: board environment/width, adult heading clearance, finale stage placement, larger cast/buttons, pack quartet artwork and keyboard tutorial removal. A further checkpoint at d44fcba includes eight-player lobby/backing captures. Literal visual parity is not yet established; actual localized prices and privacy wording follow the specification over the mockups.
+
+
 Read-only visual audit, 10 September 2026, before the current visual implementation pass. All six original sheets were inspected. This maps concepts to existing source, not completed acceptance checks. Reference labels below are transcribed from the sheets; names, scores and question text are examples. The written specification overrides mockup intensities, prices and privacy implications.
 
 Sheet keys (all in `design/references/`):

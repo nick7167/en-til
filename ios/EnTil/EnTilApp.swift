@@ -181,7 +181,9 @@ struct JoinView: View {
                         .focused($focused).onSubmit { if code.count == 4 { findRoom() } }
                         .accessibilityLabel("Spilkode, fire bogstaver eller tal").accessibilityValue(code)
                         .frame(height: 74)
-                }.padding(13).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18)).onTapGesture { focused = true }
+                }.padding(13).background(Color.lounge, in: RoundedRectangle(cornerRadius: 18))
+                    .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(codeError ? Color(hex: 0xFF9188) : Color.lilac.opacity(0.25), lineWidth: codeError ? 2 : 1))
+                    .onTapGesture { focused = true }
                 if codeError { Label("Vi kunne ikke finde et spil med den kode.", systemImage: "exclamationmark.circle.fill").font(.footnote).foregroundStyle(Color(hex: 0xFF9188)) }
                 Button(codeError ? "Prøv igen" : "Find spil") { findRoom() }.buttonStyle(LoungeButtonStyle()).disabled(code.count != 4 || client.busy)
             } else if step == 1 {

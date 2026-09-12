@@ -7,9 +7,9 @@ struct RoomView: View {
     let room: RoomSnapshot
     let showSetup: () -> Void
     let showProfile: () -> Void
-    var showRules: () -> Void = {}
-    var showPreferences: () -> Void = {}
-    var leave: () -> Void = {}
+    let showRules: () -> Void
+    let showPreferences: () -> Void
+    let leave: () -> Void
     @State private var answer: Int?
     @State private var privateAnswer: String?
     @State private var backedID: String?
@@ -199,7 +199,16 @@ struct RoomView: View {
             if room.phase == "finale" {
                 Text(room.winners.count > 1 ? "I deler sejren!" : "\(room.players.first { room.winners.contains($0.id) }?.name ?? "I") vinder!").font(.editorial(38)).padding(.horizontal, 28).multilineTextAlignment(.center)
                 Text("Den var åbenbart god nok.")
-                HStack { ForEach(room.players.filter { room.winners.contains($0.id) }) { CharacterView(index: $0.character, size: min(180, 300 / CGFloat(max(1, room.winners.count)))) } }.padding(.top, 24).padding(.bottom, 20).accessibilityHidden(true)
+                HStack { ForEach(room.players.filter { room.winners.contains($0.id) }) { CharacterView(index: $0.character, size: min(180, 300 / CGFloat(max(1, room.winners.count)))) } }
+                    .overlay(alignment: .trailing) {
+                        if room.winners.count == 1, let winner = room.players.first(where: { room.winners.contains($0.id) }) {
+                            VStack(spacing: 0) {
+                                Text(String(winner.score)).font(.editorial(42))
+                                Text("point").font(.caption.weight(.bold))
+                            }.foregroundStyle(Color.lime).padding(10).background(Color.violet, in: RoundedRectangle(cornerRadius: 5))
+                                .rotationEffect(.degrees(7)).offset(x: 65, y: 10)
+                        }
+                    }.padding(.top, 24).padding(.bottom, 20).accessibilityHidden(true)
                 standings
                 if room.isHost { Button("En til?") { send(.init(type: "rematch")) }.buttonStyle(LoungeButtonStyle()) }
                 else { Text("Værten kan starte en ny kamp.").foregroundStyle(Color.lilac) }
