@@ -60,7 +60,7 @@ print('Extracted 12 production scene backgrounds; six original sheets unchanged.
 
 # Reviewed reconstruction candidates replace crop fallbacks; original sheets stay untouched.
 import shutil
-for name, source in {'home':'home','question':'question','waiting':'waiting','ice':'ice','lobby':'lobby','privateRound':'privateRound','finale':'finale','board':'board','adult':'home','settings':'board'}.items():
+for name, source in {'home':'home','question':'question','waiting':'waiting','ice':'ice-reference','lobby':'lobby','privateRound':'privateRound','finale':'finale','board':'board','adult':'home','settings':'board'}.items():
     folder=ASSETS/f'Scene-{name}.imageset'
     folder.mkdir(exist_ok=True)
     shutil.copy2(ROOT/'design/artwork/scenes'/f'{source}.png', folder/'art.png')
