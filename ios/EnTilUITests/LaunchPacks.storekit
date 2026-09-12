@@ -1,0 +1,122 @@
+{
+  "identifier": "940f5de1-33c4-4bdb-84c1-84c4a8e3ba44",
+  "nonRenewingSubscriptions": [],
+  "products": [
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "c2c06d09-f672-4511-aa7e-ae94f24dbaed",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Danmark",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.danmark",
+      "referenceName": "Danmark",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "ab6eb1e2-0122-4d94-af0f-450bf7a3e002",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Film & TV",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.film-tv",
+      "referenceName": "Film & TV",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "6870378f-1c48-4642-a5ff-6ee0825f2e9c",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Isbryderen",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.isbryderen",
+      "referenceName": "Isbryderen",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "416419d9-10cc-4e3b-a4b4-619c01134c30",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Lidt for ærlig",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.lidt-for-aerlig",
+      "referenceName": "Lidt for ærlig",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "7b46990e-7bdb-4e53-bc9c-8d76cd87ddc9",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Efter midnat",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.efter-midnat",
+      "referenceName": "Efter midnat",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "29",
+      "familyShareable": false,
+      "internalID": "a89c0ce9-433d-48cd-a329-5cb53f09f85d",
+      "localizations": [
+        {
+          "description": "100 spørgsmål til jeres næste spil.",
+          "displayName": "Uden filter",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.uden-filter",
+      "referenceName": "Uden filter",
+      "type": "NonConsumable"
+    },
+    {
+      "displayPrice": "99",
+      "familyShareable": false,
+      "internalID": "303d705c-9905-445d-8967-c175531f7698",
+      "localizations": [
+        {
+          "description": "Alle seks lanceringspakker.",
+          "displayName": "Alle seks pakker",
+          "locale": "da_DK"
+        }
+      ],
+      "productID": "dev.adrez.entil.development.launch-bundle",
+      "referenceName": "Alle seks pakker",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "da_DK",
+    "_storefront": "DNK",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}
