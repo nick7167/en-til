@@ -21,10 +21,7 @@ targets:
     type: application
     platform: iOS
     supportedDestinations: [iOS]
-    sources:
-      - EnTil
-      - path: EnTilUITests/LaunchPacks.storekit
-        buildPhase: resources
+    sources: [EnTil]
     info:
       path: EnTil/Info.plist
       properties:
@@ -43,10 +40,6 @@ targets:
       configs:
         Debug:
           ENTIL_API_URL: http://127.0.0.1:8787
-          ENABLE_TESTING_SEARCH_PATHS: YES
-          LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "$(PLATFORM_DIR)/Developer/Library/Frameworks"]
-        Release:
-          EXCLUDED_SOURCE_FILE_NAMES: LaunchPacks.storekit
   EnTilTests:
     type: bundle.unit-test
     platform: iOS
@@ -69,4 +62,6 @@ schemes:
     run:
       storeKitConfiguration: EnTilUITests/LaunchPacks.storekit
     test:
-      targets: [EnTilTests, EnTilUITests]
+      testPlans:
+        - path: Native.xctestplan
+          defaultPlan: true

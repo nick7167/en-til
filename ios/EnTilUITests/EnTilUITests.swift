@@ -64,7 +64,9 @@ final class EnTilUITests: XCTestCase {
             if ["pack-detail", "bundle"].contains(route) {
                 let purchase = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", route == "bundle" ? "Køb alle seks " : "Køb for ")).firstMatch
                 XCTAssertTrue(purchase.waitForExistence(timeout: 10), "Local StoreKit price missing on \(route)")
-                XCTAssertTrue(purchase.label.contains(route == "bundle" ? "99" : "29"))
+                if purchase.exists {
+                    XCTAssertTrue(purchase.label.contains(route == "bundle" ? "99" : "29"))
+                }
             }
             if route == "answer" { app.buttons["Saturn"].tap() }
             if route == "backing" { app.buttons["back-p1"].tap() }

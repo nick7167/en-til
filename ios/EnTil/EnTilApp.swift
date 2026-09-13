@@ -1,7 +1,4 @@
 import SwiftUI
-#if DEBUG && targetEnvironment(simulator)
-import StoreKitTest
-#endif
 
 @main struct EnTilApp: App {
     @State private var client = GameClient()
@@ -15,12 +12,6 @@ import StoreKitTest
     }
 }
 struct RootView: View {
-#if DEBUG
-    @State private var fixtureReady = false
-#endif
-#if DEBUG && targetEnvironment(simulator)
-    @State private var storeTestSession: SKTestSession?
-#endif
     @Bindable var client: GameClient
     @Bindable var store: PackStore
     @Environment(\.scenePhase) private var scenePhase
@@ -33,10 +24,7 @@ struct RootView: View {
         NavigationStack {
             Group {
                 #if DEBUG
-                if let route = specialFixtureRoute {
-                    if fixtureReady { VisualFixtureView(name: route, client: client, store: store) }
-                    else { ProgressView("Henter skærmeksempel…") }
-                }
+                if let route = specialFixtureRoute { VisualFixtureView(name: route, client: client, store: store) }
                 else { liveContent }
                 #else
                 liveContent
@@ -72,23 +60,7 @@ struct RootView: View {
         .task {
             #if DEBUG
             if let fixture = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] {
-#if targetEnvironment(simulator)
-                do {
-                    let session = try SKTestSession(configurationFileNamed: "LaunchPacks")
-                    session.resetToDefaultState()
-                    session.clearTransactions()
-                    session.storefront = "DNK"
-                    session.disableDialogs = true
-                    storeTestSession = session
-                    await store.load()
-                } catch {
-                    client.problem = "StoreKit-skærmtest: \(error.localizedDescription)"
-                }
-#endif
-                client.loadFixture(fixture)
-                fixtureReady = true
-                if fixture == "reconnect" { client.reconnecting = true }
-                return
+                client.loadFixture(fixture); if fixture == "reconnect" { client.reconnecting = true }; return
             }
             #endif
             await client.restoreSeat()

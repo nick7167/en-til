@@ -27,9 +27,6 @@ import Observation
     func load() async {
         do { products = try await Product.products(for: Pack.all.filter { $0.id != "free" }.map { "\(prefix).\($0.id)" } + ["\(prefix).launch-bundle"]) }
         catch { message = "Priserne kunne ikke hentes. Prøv igen om lidt." }
-#if DEBUG
-        print("StoreKit catalogue: \(products.count) products for \(prefix)")
-#endif
     }
     func product(_ pack: String) -> Product? { products.first { $0.id == "\(prefix).\(pack)" } }
     func buy(_ pack: String) async {
