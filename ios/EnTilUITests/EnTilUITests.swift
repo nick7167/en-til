@@ -130,12 +130,14 @@ final class EnTilUITests: XCTestCase {
     }
 
     @MainActor private func launch(_ route: String, largeText: Bool = false) throws -> XCUIApplication {
-        let session = try SKTestSession(configurationFileNamed: "LaunchPacks")
+        if storeSession == nil {
+            storeSession = try SKTestSession(configurationFileNamed: "LaunchPacks")
+        }
+        let session = try XCTUnwrap(storeSession)
         session.resetToDefaultState()
         session.clearTransactions()
         session.storefront = "DNK"
         session.disableDialogs = true
-        storeSession = session
         let app = XCUIApplication()
         app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = route
         if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
