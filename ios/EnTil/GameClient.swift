@@ -55,6 +55,8 @@ import Observation
             let preview: JoinPreview = try await request("v1/lookup", method: "POST", data: JSONEncoder().encode(["code": code]))
             joinPreview = preview
             return true
+        } catch let error as APIProblem where ["not_found", "code_invalid"].contains(error.code) {
+            return false
         } catch { problem = error.localizedDescription; return false }
     }
     func join(code: String, name: String, character: Int, adult: Bool, drinking: Bool) async {

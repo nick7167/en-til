@@ -225,7 +225,7 @@ struct JoinView: View {
                     character = (0..<12).first { index in !(client.joinPreview?.characters.contains { $0.character == index } ?? false) } ?? character
                 }
                 step = 1; codeError = false
-            } else { codeError = true; client.problem = nil }
+            } else { codeError = client.problem == nil }
         }
     }
     private var validName: Bool { (1...24).contains(name.trimmingCharacters(in: .whitespacesAndNewlines).count) }

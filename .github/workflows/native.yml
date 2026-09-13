@@ -1,6 +1,12 @@
 name: Native checkpoint
 on:
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Native test scope
+        type: choice
+        options: [all, live]
+        default: all
 permissions:
   contents: read
 concurrency:
@@ -41,7 +47,11 @@ jobs:
             sleep 1
           done
           curl --silent --fail http://127.0.0.1:8787/health
-          xcodebuild test -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
+          test_args=()
+          if [ "${{ inputs.scope }}" = live ]; then
+            test_args+=('-only-testing:EnTilUITests/LiveMatchUITests')
+          fi
+          xcodebuild test "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
       - name: Export screenshot attachments
         if: always()
         run: |
