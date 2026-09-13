@@ -1,10 +1,8 @@
 import XCTest
-import StoreKitTest
 
 final class EnTilUITests: XCTestCase {
-    @MainActor private var storeSession: SKTestSession?
     @MainActor func testHomeAndKeyboard() throws {
-        let app = try launch("home")
+        let app = launch("home")
         XCTAssertTrue(app.buttons["Opret spil"].waitForExistence(timeout: 5))
         app.buttons["Deltag i spil"].tap()
         let code = app.textFields.firstMatch
@@ -50,7 +48,7 @@ final class EnTilUITests: XCTestCase {
             ("F04-pack-owned", "pack-owned", "Pakken er din")
         ]
         for (attachmentName, route, expected) in screens {
-            let app = try launch(route)
+            let app = launch(route)
             let marker = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", expected)).firstMatch
             XCTAssertTrue(marker.waitForExistence(timeout: 8), "Missing \(expected) on \(route)")
             XCTAssertFalse(app.staticTexts["Skærmeksemplet kunne ikke indlæses."].exists)
@@ -89,7 +87,7 @@ final class EnTilUITests: XCTestCase {
 
     @MainActor func testAdditionalServerSnapshotScreens() throws {
         for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
-            let app = try launch(route)
+            let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
             if route == "eight-backing" {
                 let lastFriend = app.buttons["back-p7"]
@@ -108,7 +106,7 @@ final class EnTilUITests: XCTestCase {
 
     @MainActor func testLargeTextLayouts() throws {
         for (route, action) in [("home", "Opret spil"), ("board", "Klar til næste runde"), ("eight-backing", "back-p7")] {
-            let app = try launch(route, largeText: true)
+            let app = launch(route, largeText: true)
             let button = app.buttons[action]
             XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))
             revealFully(button, in: app)
@@ -129,15 +127,7 @@ final class EnTilUITests: XCTestCase {
         XCTFail("Control is not fully visible: \(element.identifier)")
     }
 
-    @MainActor private func launch(_ route: String, largeText: Bool = false) throws -> XCUIApplication {
-        if storeSession == nil {
-            storeSession = try SKTestSession(configurationFileNamed: "LaunchPacks")
-        }
-        let session = try XCTUnwrap(storeSession)
-        session.resetToDefaultState()
-        session.clearTransactions()
-        session.storefront = "DNK"
-        session.disableDialogs = true
+    @MainActor private func launch(_ route: String, largeText: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["ENTIL_SCREENSHOT_FIXTURE"] = route
         if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }

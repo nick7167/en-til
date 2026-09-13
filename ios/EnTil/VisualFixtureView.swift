@@ -51,7 +51,6 @@ struct VisualFixtureView: View {
                 EmptyView()
             }
         }
-        .task { await store.load() }
         .onAppear {
             draft = client.room?.settings ?? GameSettings()
         }

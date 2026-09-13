@@ -21,7 +21,10 @@ targets:
     type: application
     platform: iOS
     supportedDestinations: [iOS]
-    sources: [EnTil]
+    sources:
+      - EnTil
+      - path: EnTilUITests/LaunchPacks.storekit
+        buildPhase: resources
     info:
       path: EnTil/Info.plist
       properties:
@@ -40,6 +43,8 @@ targets:
       configs:
         Debug:
           ENTIL_API_URL: http://127.0.0.1:8787
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: LaunchPacks.storekit
   EnTilTests:
     type: bundle.unit-test
     platform: iOS
