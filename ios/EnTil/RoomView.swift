@@ -186,7 +186,7 @@ struct RoomView: View {
     private var reveal: some View {
         Screen(scene: .backing, spacing: 9) {
             if let round = room.round {
-                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial(round.kind == "personal" ? 28 : 32)).padding(.horizontal, 28).multilineTextAlignment(.center)
+                Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial(round.kind == "personal" ? 28 : 32)).padding(.horizontal, 28).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                 Text(round.kind == "personal" ? "\(round.correct ?? 0) af \(round.responseCount ?? 0)" : round.correct.flatMap { round.options.indices.contains($0) ? round.options[$0] : nil } ?? "")
                     .font(.editorial(48)).foregroundStyle(Color.lime).multilineTextAlignment(.center)
                 if round.kind == "personal", let count = round.responseCount, let yes = round.correct {
@@ -266,7 +266,7 @@ struct RoomView: View {
     }
     private var paused: some View {
         Screen(scene: .paused) {
-            Text("Vi mangler en spiller").font(.editorial(30)).padding(.horizontal, 28).multilineTextAlignment(.center)
+            Text("Vi mangler en spiller").font(.editorial(30)).padding(.horizontal, 28).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
             Text("Spillet fortsætter, når mindst 3 er aktive.").font(.subheadline).multilineTextAlignment(.center)
             Color.clear.frame(height: 245)
             HStack(spacing: 7) { ForEach(room.players) { seat in SeatCard(seat: seat, host: seat.id == room.hostID, compact: true).opacity(seat.away ? 0.45 : 1) } }

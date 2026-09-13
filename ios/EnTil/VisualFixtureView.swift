@@ -51,6 +51,7 @@ struct VisualFixtureView: View {
                 EmptyView()
             }
         }
+        .task { await store.load() }
         .onAppear {
             draft = client.room?.settings ?? GameSettings()
         }
@@ -59,13 +60,18 @@ struct VisualFixtureView: View {
         }
     }
 
-    private func fixtureSheet<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        VStack(spacing: 0) {
-            Capsule().fill(Color.lilac.opacity(0.5)).frame(width: 38, height: 5).padding(.top, 12).padding(.bottom, 5)
-            content()
-        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(Color.lounge, in: UnevenRoundedRectangle(topLeadingRadius: 28, topTrailingRadius: 28))
-            .padding(.top, 34)
+    private func fixtureSheet<Content: View>(@ViewBuilder content: @escaping () -> Content) -> some View {
+        Group {
+            if let room = client.room {
+                RoomView(client: client, store: store, room: room, showSetup: {}, showProfile: {}, showRules: {}, showPreferences: {}, leave: {})
+            } else {
+                HomeView(client: client, show: { _ in }, join: {})
+            }
+        }
+        .sheet(isPresented: .constant(true)) {
+            NavigationStack { content() }
+                .presentationDragIndicator(.visible).preferredColorScheme(.dark).tint(.lime)
+        }
     }
 }
 #endif
