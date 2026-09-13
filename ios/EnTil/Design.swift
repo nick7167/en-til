@@ -22,7 +22,7 @@ struct SceneBackground: View {
         GeometryReader { geometry in
             ZStack {
                 Color.ink
-                Image("Scene-" + scene.rawValue).resizable().scaledToFill()
+                Image("Scene-" + scene.rawValue).resizable().aspectRatio(contentMode: scene == .ice ? .fit : .fill)
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .offset(y: scene == .adult ? geometry.size.height * 0.12 : 0)
                     .opacity(typeSize.isAccessibilitySize ? 0.25 : 1)

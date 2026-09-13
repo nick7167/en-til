@@ -59,9 +59,5 @@ schemes:
     build:
       targets:
         EnTil: all
-    run:
-      storeKitConfiguration: EnTilUITests/LaunchPacks.storekit
     test:
-      testPlans:
-        - path: Native.xctestplan
-          defaultPlan: true
+      targets: [EnTilTests, EnTilUITests]

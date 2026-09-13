@@ -15,6 +15,6 @@ Local integration checks (service running): `pnpm test:http`, `pnpm test:ws`, `p
 
 Content review starts at [batch 001](content/review/batch-001.md). The app remains a development implementation with a passing hosted iOS build and four native tests; pending full visual/accessibility/device review, Apple configuration, and the rest of the content.
 
-Local price previews use `ios/Native.xctestplan` and its explicit StoreKit configuration: six test packs at 29 DKK and a 99 DKK launch bundle. No StoreKitTest runtime is linked into the app. Production prices and ownership require real StoreKit products and backend verification. The test-plan setup awaits hosted verification.
+DEBUG screenshot fixtures display Danish target prices (29 DKK per pack, 99 DKK bundle) and disable purchase/restore calls. These are presentation fixtures, not StoreKit purchase tests. Production labels use actual StoreKit product prices; real purchase verification remains pending configuration. Experimental local StoreKit sessions/test plans were removed after hosted failures.
 
 For faster screenshot review, download the `native-review` artifact (full-resolution JPEGs/text diagnostics), then run `python3 scripts/compare-reference-screens.py <download-folder>`. Comparisons preserve proportions by default; `--stretch` reproduces old normalized sheets. Original PNGs and failure videos remain in `native-checkpoint`.

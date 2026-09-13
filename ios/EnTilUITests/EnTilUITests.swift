@@ -58,12 +58,12 @@ final class EnTilUITests: XCTestCase {
             }
             if route == "shop" {
                 let packPrices = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "29"))
-                XCTAssertTrue(packPrices.element(boundBy: 5).waitForExistence(timeout: 10), "All six local pack prices must load")
-                XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "99")).firstMatch.waitForExistence(timeout: 10), "Local bundle price must load")
+                XCTAssertTrue(packPrices.element(boundBy: 5).waitForExistence(timeout: 10), "All six fixture pack prices must appear")
+                XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "99")).firstMatch.waitForExistence(timeout: 10), "Fixture bundle price must appear")
             }
             if ["pack-detail", "bundle"].contains(route) {
                 let purchase = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", route == "bundle" ? "Køb alle seks " : "Køb for ")).firstMatch
-                XCTAssertTrue(purchase.waitForExistence(timeout: 10), "Local StoreKit price missing on \(route)")
+                XCTAssertTrue(purchase.waitForExistence(timeout: 10), "Fixture price missing on \(route)")
                 if purchase.exists {
                     XCTAssertTrue(purchase.label.contains(route == "bundle" ? "99" : "29"))
                 }

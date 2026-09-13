@@ -66,7 +66,7 @@ struct SetupView: View {
             }.buttonStyle(LoungeButtonStyle()).disabled(draft.packs.isEmpty || client.busy)
             Text("Når du gemmer, skal gæsterne melde sig klar igen.").font(.footnote).foregroundStyle(Color.lilac)
         }
-        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Luk") { if draft != original { discard = true } else { dismiss() } } } }
+        .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Luk", systemImage: "xmark") { if draft != original { discard = true } else { dismiss() } }.labelStyle(.iconOnly) } }
         .interactiveDismissDisabled(draft != original)
         .confirmationDialog("Kassér dine ændringer?", isPresented: $discard, titleVisibility: .visible) {
             Button("Kassér ændringer", role: .destructive) { dismiss() }; Button("Rediger videre", role: .cancel) {}
@@ -131,7 +131,7 @@ struct PackSelectionView: View {
                     } label: { PackRow(pack: pack, trailing: draft.packs.contains(pack.id) ? "Valgt ✓" : "Vælg") }
                         .buttonStyle(.plain).accessibilityAddTraits(draft.packs.contains(pack.id) ? .isSelected : [])
                 } else {
-                    NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: store.product(pack.id)?.displayPrice ?? "Se pakke") }.buttonStyle(.plain)
+                    NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: store.priceLabel(pack.id) ?? "Se pakke") }.buttonStyle(.plain)
                 }
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
@@ -181,10 +181,10 @@ struct ShopView: View {
         Screen(scene: .plain, spacing: 7) {
             Text("Mere på spil").font(.editorial())
             ForEach(Pack.all.filter { $0.id != "free" }) { pack in
-                NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "Se pakke", rowHeight: 86) }.buttonStyle(.plain)
+                NavigationLink { PackDetailView(pack: pack, client: client, store: store) } label: { PackRow(pack: pack, trailing: client.owned.contains(pack.id) ? "Købt ✓" : store.priceLabel(pack.id) ?? "Se pakke", rowHeight: 86) }.buttonStyle(.plain)
             }
             NavigationLink { BundleView(client: client, store: store) } label: {
-                Panel { HStack { Image("PackReference-launch-bundle").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.product("launch-bundle")?.displayPrice ?? "Se mere").font(.headline) } }
+                Panel { HStack { Image("PackReference-launch-bundle").resizable().scaledToFit().frame(width: 70, height: 70).accessibilityHidden(true); VStack(alignment: .leading) { Text("Alle seks pakker").font(.headline); Text("Mere at grine af. Mindre at tænke på.").font(.caption) }; Spacer(); Text(store.priceLabel("launch-bundle") ?? "Se mere").font(.headline) } }
             }.buttonStyle(.plain)
             if let route = store.cheapestRoute(owned: client.owned) { Text(route).font(.footnote).foregroundStyle(Color.lilac) }
             Button("Gendan køb") { Task { await store.restore() } }.padding(10)
@@ -229,8 +229,8 @@ struct PackDetailView: View {
                     if pack.id == "isbryderen" { Color.clear.frame(height: 380).accessibilityHidden(true) }
                     else { Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300).clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true) }
                     Text("Du køber pakken én gang.\nAlle i dit spil kan være med.").multilineTextAlignment(.center)
-                    if let product = store.product(pack.id) {
-                        Button("Køb for \(product.displayPrice)") {
+                    if let price = store.priceLabel(pack.id) {
+                        Button("Køb for \(price)") {
                             if pack.adult && !UserDefaults.standard.bool(forKey: "adult") { adultPrompt = true }
                             else { Task { await store.buy(pack.id) } }
                         }.buttonStyle(LoungeButtonStyle()).disabled(store.purchasing)
@@ -269,7 +269,7 @@ struct BundleView: View {
                         Text(pack.title).font(.subheadline.weight(.semibold))
                         if let intensity = pack.intensity { IntensityPill(title: intensity) }
                         Spacer(minLength: 0)
-                        Text(client.owned.contains(pack.id) ? "Købt ✓" : store.product(pack.id)?.displayPrice ?? "—").font(.subheadline).foregroundStyle(Color.lilac)
+                        Text(client.owned.contains(pack.id) ? "Købt ✓" : store.priceLabel(pack.id) ?? "—").font(.subheadline).foregroundStyle(Color.lilac)
                     }.padding(.horizontal, 12).padding(.vertical, 8)
                     if pack.id != "uden-filter" { Divider().padding(.horizontal, 12) }
                 }
@@ -277,8 +277,8 @@ struct BundleView: View {
             Text("Indeholder også frække og meget frække spørgsmål. De seks viste pakker følger med; fremtidige pakker sælges separat.").font(.footnote)
             if let route = store.cheapestRoute(owned: client.owned) { Panel { Text(route).font(.subheadline) } }
             Text("Tidligere køb modregnes ikke.").font(.footnote).foregroundStyle(Color.lilac)
-            if let product = store.product("launch-bundle") {
-                Button("Køb alle seks for \(product.displayPrice)") {
+            if let price = store.priceLabel("launch-bundle") {
+                Button("Køb alle seks for \(price)") {
                     if !UserDefaults.standard.bool(forKey: "adult") { adultPrompt = true }
                     else { Task { await store.buy("launch-bundle") } }
                 }.buttonStyle(LoungeButtonStyle()).disabled(store.purchasing || Pack.all.filter { $0.id != "free" }.allSatisfy { client.owned.contains($0.id) })

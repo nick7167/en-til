@@ -11,6 +11,21 @@ import Observation
     private var pending: [UInt64: VerificationResult<Transaction>] = [:]
     private var client: GameClient?
     var prefix: String { Bundle.main.bundleIdentifier ?? "dev.adrez.entil.development" }
+    private var isVisualFixture: Bool {
+#if DEBUG
+        ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] != nil
+#else
+        false
+#endif
+    }
+    func priceLabel(_ pack: String) -> String? {
+        // Presentation fixtures show target prices, never verified purchase access.
+        if isVisualFixture {
+            return (pack == "launch-bundle" ? 99 : 29).formatted(
+                .currency(code: "DKK").locale(Locale(identifier: "da_DK")).precision(.fractionLength(0)))
+        }
+        return product(pack)?.displayPrice
+    }
     func start(client: GameClient) async {
         guard updates == nil else { return }
         self.client = client
@@ -25,11 +40,13 @@ import Observation
         do { try await client.refreshOwnership() } catch { /* Previously verified access is retained by the server. */ }
     }
     func load() async {
+        guard !isVisualFixture else { return }
         do { products = try await Product.products(for: Pack.all.filter { $0.id != "free" }.map { "\(prefix).\($0.id)" } + ["\(prefix).launch-bundle"]) }
         catch { message = "Priserne kunne ikke hentes. Prøv igen om lidt." }
     }
     func product(_ pack: String) -> Product? { products.first { $0.id == "\(prefix).\(pack)" } }
     func buy(_ pack: String) async {
+        guard !isVisualFixture else { return }
         guard !purchasing, let product = product(pack) else { return }
         purchasing = true; message = nil
         defer { purchasing = false }
@@ -43,6 +60,7 @@ import Observation
         } catch { message = "Købet kunne ikke gennemføres. Prøv igen." }
     }
     func restore() async {
+        guard !isVisualFixture else { return }
         do {
             try await AppStore.sync()
             for await result in Transaction.currentEntitlements { await verify(result) }
@@ -80,6 +98,10 @@ import Observation
     }
     func cheapestRoute(owned: Set<String>) -> String? {
         let missing = Pack.all.filter { $0.id != "free" && !owned.contains($0.id) }
+        if isVisualFixture {
+            guard !missing.isEmpty else { return nil }
+            return 99 < missing.count * 29 ? "Samlepakken er billigst for de pakker, du mangler." : "De enkelte pakker er billigst for det, du mangler."
+        }
         guard !missing.isEmpty, let bundle = product("launch-bundle"), missing.allSatisfy({ product($0.id) != nil }) else { return nil }
         let total = missing.reduce(Decimal.zero) { $0 + (product($1.id)?.price ?? 0) }
         return bundle.price < total ? "Samlepakken er billigst for de pakker, du mangler." : "De enkelte pakker er billigst for det, du mangler."
