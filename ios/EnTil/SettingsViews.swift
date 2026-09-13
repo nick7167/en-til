@@ -6,6 +6,7 @@ struct SetupView: View {
     @Bindable var store: PackStore
     let original: GameSettings
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var draft: GameSettings
     @State private var discard = false
     @State private var adultPrompt = false
@@ -68,6 +69,7 @@ struct SetupView: View {
         }
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Luk", systemImage: "xmark") { if draft != original { discard = true } else { dismiss() } }.labelStyle(.iconOnly) } }
         .interactiveDismissDisabled(draft != original)
+        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.fraction(0.92), .large])
         .confirmationDialog("Kassér dine ændringer?", isPresented: $discard, titleVisibility: .visible) {
             Button("Kassér ændringer", role: .destructive) { dismiss() }; Button("Rediger videre", role: .cancel) {}
         }
@@ -387,7 +389,7 @@ struct ResultsView: View {
                 if typeSize.isAccessibilitySize {
                 ForEach(round.results) { result in
                     Panel { VStack(alignment: .leading, spacing: 8) {
-                        HStack { CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 40); Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller").font(.headline); Spacer(); Text("+\(result.points)").font(.title2.bold()).foregroundStyle(Color.lime) }
+                        HStack { CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 48); Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller").font(.headline); Spacer(); Text("+\(result.points)").font(.title2.bold()).foregroundStyle(Color.lime) }
                         Text("Svar: \(result.answer.map { round.kind == "personal" ? String($0) : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "—")")
                         Text("Satsede på: \(room.players.first { $0.id == result.back }?.name ?? "—")")
                         if room.settings.drinking { Text("Valgfrie slurke: \(result.sips.map(String.init) ?? "—")") }
@@ -403,14 +405,14 @@ struct ResultsView: View {
                         ForEach(round.results) { result in
                             GridRow {
                                 HStack(spacing: 2) {
-                                    CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 40).accessibilityHidden(true)
+                                    CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 48).accessibilityHidden(true)
                                     Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller")
                                 }
                                 Text(result.answer.map { round.kind == "personal" ? String($0) : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "—")
                                 Text(room.players.first { $0.id == result.back }?.name ?? "—")
                                 Text("+\(result.points)").font(.headline.bold()).foregroundStyle(Color.lime)
                                 if room.settings.drinking { Text(result.sips.map(String.init) ?? "—") }
-                            }.font(.subheadline).padding(.vertical, 13)
+                            }.font(.body).padding(.vertical, 10)
                             if result.id != round.results.last?.id { Divider() }
                         }
                     }.padding(.horizontal, 8).frame(maxWidth: .infinity).settingsSurface()
@@ -421,6 +423,7 @@ struct ResultsView: View {
             Spacer(minLength: 36)
             Button("Luk") { dismiss() }.buttonStyle(LoungeButtonStyle())
         }
+        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.fraction(0.86), .large])
     }
 }
 struct ReportView: View {

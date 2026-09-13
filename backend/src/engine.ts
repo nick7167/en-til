@@ -142,6 +142,9 @@ export function advance(r:Room,now:number) {
   if (r.phase==='reveal' && now>=r.round!.revealAt!+7800) {
     r.phase=r.winners.length ? 'finale' : 'board'; boundary(r);
   }
+  if (r.phase==='board' && active(r).length>=3 && active(r).every(p=>p.ready)) {
+    r.phase='countdown';r.countdownAt=now+3000;
+  }
 }
 function toLobby(r:Room) {
   r.phase='lobby';r.matchID=null;r.round=null;r.winners=[];r.countdownAt=undefined;
@@ -187,7 +190,6 @@ export function dispatch(source:Room,principal:Principal,command:Command,now:num
       case 'ready':
         requireGame(r.phase==='lobby' || r.phase==='board','phase','Vent til næste pause.');
         requireGame(!p.away && !p.late,'inactive','Du sidder over.');assertAdult(r,p);p.ready=a.value;
-        if(r.phase==='board' && active(r).length>=3 && active(r).every(x => x.ready)) {r.phase='countdown';r.countdownAt=now+3000;}
         break;
       case 'start':
         host(r,p.id);requireGame(r.phase==='lobby','phase','Spillet er allerede startet.');

@@ -14,6 +14,16 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Prepare local game database
+        run: pnpm exec wrangler d1 migrations apply en-til-local --local --config backend/wrangler.jsonc
       - name: Verify Xcode and simulator availability
         run: |
           python3 scripts/check-native-assets.py
@@ -23,6 +33,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
+          pnpm dev > build/backend.log 2>&1 &
+          backend_pid=$!
+          trap 'kill "$backend_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:8787/health; then break; fi
+            sleep 1
+          done
+          curl --silent --fail http://127.0.0.1:8787/health
           xcodebuild test -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
       - name: Export screenshot attachments
         if: always()
@@ -44,6 +62,7 @@ jobs:
           name: native-checkpoint
           path: |
             build/xcodebuild.log
+            build/backend.log
             build/screenshots/
           retention-days: 1
           if-no-files-found: warn

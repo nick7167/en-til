@@ -51,7 +51,10 @@ targets:
     type: bundle.ui-testing
     platform: iOS
     supportedDestinations: [iOS]
-    sources: [EnTilUITests]
+    sources:
+      - EnTilUITests
+      - path: ../content/catalogue.draft.json
+        buildPhase: resources
     dependencies:
       - target: EnTil
 schemes:

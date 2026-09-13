@@ -27,3 +27,5 @@ Latest continuation (13 September):
 - `native-review` exports full-resolution JPEGs/text diagnostics: locally verified 8 MB versus 104 MB with intact dimensions and manifest links. Original PNGs/videos remain in `native-checkpoint`. Compare using `python3 scripts/compare-reference-screens.py <folder>`; `--stretch` reproduces older distorted comparisons.
 - Price assertion failures now allow later captures to continue while failing the suite. No native run is pending.
 - Local Swift parsing, Danish price formatting, asset/exporter/comparison/diff checks pass. No deployment, TestFlight, live StoreKit configuration or human content approval occurred.
+
+14 September checkpoint in progress: terminal room recovery clears stale seats; board readiness is reevaluated after away/leave, with host sit-out controls on the board. Setup/results sheets and header spacing refined. Added a real native multiplayer test using the local Worker (three rounds, reopening, joint finale, rematch, leave/return); native verification pending. Backend checks and two-restart recovery passed locally.

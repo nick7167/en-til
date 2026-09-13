@@ -106,3 +106,18 @@ test('unjoined initialized rooms expire too',()=>{const r=createRoom('id','ABCD'
 test('deliberate host departure transfers as soon as an eligible connection returns',()=>{
   let r=start();r=send(r,'p1',{type:'presence',connected:false},2000);r=send(r,'p2',{type:'presence',connected:false},2000);r=send(r,'p0',{type:'leave'},2000);r=send(r,'p1',{type:'presence',connected:true},3000);assert.equal(r.hostID,'p1');
 });
+
+test('sitting out or leaving at the board releases ready players, but never starts below three',()=>{
+  for (const action of ['away','leave'] as const) {
+    let r=start(lobby(4));r=complete(r,Array(4).fill(r.round!.question.correct));advance(r,10000);
+    r=send(r,'p3',{type:'presence',connected:false},10000);
+    for(const id of ['p0','p1','p2'])r=send(r,id,{type:'ready',value:true},10000);
+    assert.equal(r.phase,'board');
+    r=action==='away'?send(r,'p0',{type:'away',playerID:'p3'},10001):send(r,'p3',{type:'leave'},10001);
+    assert.equal(r.phase,'countdown');assert.equal(r.countdownAt,13001);
+    advance(r,13001);assert.deepEqual(r.round!.participants,['p0','p1','p2']);
+  }
+  let r=start();r=complete(r,Array(3).fill(r.round!.question.correct));advance(r,10000);
+  for(const id of ['p0','p1'])r=send(r,id,{type:'ready',value:true},10000);
+  r=send(r,'p0',{type:'away',playerID:'p2'},10001);assert.equal(r.phase,'board');
+});

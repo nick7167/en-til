@@ -130,7 +130,15 @@ import Observation
         defer { busy = false }
         do { try await operation() }
         catch let error as APIProblem where error.code == "adult_required" { needsAdult = true }
-        catch { problem = error.localizedDescription }
+        catch { if !handleTerminalRoomError(error) { problem = error.localizedDescription } }
+    }
+    @discardableResult
+    func handleTerminalRoomError(_ error: any Error) -> Bool {
+        guard let error = error as? APIProblem, ["expired", "not_in_room"].contains(error.code) else { return false }
+        disconnect(); room = nil; pendingCommand = nil; pendingJoin = nil; needsAdult = false
+        UserDefaults.standard.removeObject(forKey: "roomID")
+        problem = error.localizedDescription
+        return true
     }
     private func sendReliable(_ path: String, command: GameCommand) async throws -> Acknowledgement {
         // The same request ID is retried after transport failures. Never manufacture another answer.
@@ -203,7 +211,9 @@ import Observation
                     let ack = try await self.sendReliable(path, command: pending); self.accept(ack.snapshot)
                 }
                 self.connect()
-            } catch { if !Task.isCancelled { self?.scheduleReconnect() } }
+            } catch {
+                if !Task.isCancelled, let self, !self.handleTerminalRoomError(error) { self.scheduleReconnect() }
+            }
         }
     }
     func disconnect() {

@@ -18,3 +18,5 @@ Content review starts at [batch 001](content/review/batch-001.md). The app remai
 DEBUG screenshot fixtures display Danish target prices (29 DKK per pack, 99 DKK bundle) and disable purchase/restore calls. These are presentation fixtures, not StoreKit purchase tests. Production labels use actual StoreKit product prices; real purchase verification remains pending configuration. Experimental local StoreKit sessions/test plans were removed after hosted failures.
 
 For faster screenshot review, download the `native-review` artifact (full-resolution JPEGs/text diagnostics), then run `python3 scripts/compare-reference-screens.py <download-folder>`. Comparisons preserve proportions by default; `--stretch` reproduces old normalized sheets. Original PNGs and failure videos remain in `native-checkpoint`.
+
+The native UI suite also runs a real three-player match against the local Worker, including app reopening, joint winners, rematch and seat restoration. Start the local database/service above before running the full suite locally; GitHub Actions starts it automatically. Screenshot prices remain presentation fixtures, not purchase verification.

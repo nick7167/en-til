@@ -76,6 +76,10 @@ struct RootView: View {
         .onChange(of: client.ageDeclined) { _, declined in
             if declined { joining = true; sheet = nil }
         }
+        .onChange(of: client.room?.roomID) { _, id in
+            if id != nil { joining = false }
+            else { sheet = nil; leaving = false }
+        }
         .onChange(of: client.room?.phase) { before, after in
             if after == "reveal" && before != "reveal" { Feedback.shared.play("reveal") }
             if after == "countdown" { Feedback.shared.play("ready") }
@@ -94,9 +98,18 @@ struct RootView: View {
                                     Menu {
                                         Button("Sådan spiller I") { sheet = .rules }
                                         Button("Dine indstillinger") { sheet = .settings }
-                                        if room.isHost { Button("Spilindstillinger") { sheet = .setup } }
+                            if room.isHost {
+                                if room.phase == "lobby" { Button("Spilindstillinger") { sheet = .setup } }
+                                if room.phase == "board" {
+                                    Section("Lad en spiller sidde over") {
+                                        ForEach(room.players.filter { $0.id != room.me && !$0.away && !$0.late }) { seat in
+                                            Button(seat.name) { Task { await client.command(.init(type: "away", playerID: seat.id)) } }
+                                        }
+                                    }
+                                }
+                            }
                                     } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }
-                                }.font(.system(size: 20)).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 18).padding(.top, 8)
+                    }.font(.system(size: 20)).foregroundStyle(Color.cream).buttonStyle(.plain).padding(.horizontal, 4).padding(.top, 8)
                                     .background(typeSize.isAccessibilitySize ? Color.ink : Color.clear)
                             }
                         }
