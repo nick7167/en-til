@@ -5,7 +5,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "c2c06d09-f672-4511-aa7e-ae94f24dbaed",
+      "internalID": "1000000001",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -20,7 +20,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "ab6eb1e2-0122-4d94-af0f-450bf7a3e002",
+      "internalID": "1000000002",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -35,7 +35,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "6870378f-1c48-4642-a5ff-6ee0825f2e9c",
+      "internalID": "1000000003",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -50,7 +50,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "416419d9-10cc-4e3b-a4b4-619c01134c30",
+      "internalID": "1000000004",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -65,7 +65,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "7b46990e-7bdb-4e53-bc9c-8d76cd87ddc9",
+      "internalID": "1000000005",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -80,7 +80,7 @@
     {
       "displayPrice": "29",
       "familyShareable": false,
-      "internalID": "a89c0ce9-433d-48cd-a329-5cb53f09f85d",
+      "internalID": "1000000006",
       "localizations": [
         {
           "description": "100 spørgsmål til jeres næste spil.",
@@ -95,7 +95,7 @@
     {
       "displayPrice": "99",
       "familyShareable": false,
-      "internalID": "303d705c-9905-445d-8967-c175531f7698",
+      "internalID": "1000000007",
       "localizations": [
         {
           "description": "Alle seks lanceringspakker.",

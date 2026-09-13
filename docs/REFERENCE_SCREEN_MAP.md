@@ -1,5 +1,9 @@
 # Approved reference screen map
 
+**13 September review:** use aspect-preserving comparisons by default; the older stretched sheets are useful only for normalized composition. Run `python3 scripts/compare-reference-screens.py build/visual-<checkpoint>` against downloaded XCTest attachments. The `--stretch` option reproduces the older comparisons. Neither mode is a pixel-difference acceptance test: the conceptual phones have different proportions.
+
+The current follow-up uses the original C03 ice hero and E03 pause artwork, one-column accessibility player cards, fully visible large-text actions, native sheet previews, and local Danish StoreKit products. Run 34726758184 passed keyboard/full-room/large-text tests but failed its first direct product-detail price assertion; direct preview product loading is fixed at a53655f. Run 34727285479 verifies that follow-up. Remaining visual review includes all resulting captures, small devices, long names, VoiceOver, and physical-device pacing; final fidelity approval remains open.
+
 **12 September progress:** all 26 native screen routes are implemented and captured in successful run 34696177984. Paired reference/native sheets are generated with `scripts/compare-reference-screens.py`. The table below remains the original discovery audit, not a current missing-feature list. Current work refines composition: board environment/width, adult heading clearance, finale stage placement, larger cast/buttons, pack quartet artwork and keyboard tutorial removal. A further checkpoint at d44fcba includes eight-player lobby/backing captures. Literal visual parity is not yet established; actual localized prices and privacy wording follow the specification over the mockups.
 
 
