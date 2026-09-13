@@ -44,3 +44,11 @@ Further green native checkpoints: 34697301308 (d44fcba), 34697872872 (eea9fa0), 
 
 ## 13 September visual/accessibility continuation
 Run 34712298330 passed four native tests at 108bcde in 309.444 seconds. This includes default-size full-room selection and accessibility XXXL captures. Manual review revealed that hittability can pass with a partially visible control; the tightened follow-up checks full control bounds and confirms backing at large text sizes. One-column accessibility player grids and separate navigation space address the reviewed wrapping/overlap. The reference-derived ice asset passes its original-hero preservation assertion. These follow-up changes await their hosted checkpoint.
+
+## Verified visual checkpoint — 13 September
+
+[Run 34770264528](https://github.com/nick7167/en-til/actions/runs/34770264528) passed all four native UI tests at 41f6de8 in 420.632 seconds. Captures cover all 26 concepts, six pack prices plus bundle price, eight-player interactions, keyboard normalization and fully visible actions at accessibility XXXL. Backend/content CI passed the same commit. C/D/E/F comparisons were manually inspected under ignored `build/visual-fifteenth/comparison`.
+
+The displayed prices are explicitly DEBUG presentation fixtures. They do not validate StoreKit loading, purchases or backend entitlements; production still uses StoreKit products. Failed experimental local StoreKit integrations were removed. Header-control spacing, sheet/table composition and the outstanding device/accessibility review prevent a pixel-perfect completion claim.
+
+The lightweight review exporter was tested on real attachments: manifest links and full image dimensions preserved; 8 MB versus 104 MB including original failure videos. Original PNG/video artifacts remain separately available.
