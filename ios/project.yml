@@ -43,6 +43,8 @@ targets:
       configs:
         Debug:
           ENTIL_API_URL: http://127.0.0.1:8787
+          ENABLE_TESTING_SEARCH_PATHS: YES
+          LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "$(PLATFORM_DIR)/Developer/Library/Frameworks"]
         Release:
           EXCLUDED_SOURCE_FILE_NAMES: LaunchPacks.storekit
   EnTilTests:
