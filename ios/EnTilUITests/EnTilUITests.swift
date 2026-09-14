@@ -107,7 +107,7 @@ final class EnTilUITests: XCTestCase {
     }
 
     @MainActor func testLargeTextLayouts() throws {
-        for (route, action) in [("home", "Opret spil"), ("board", "Klar til næste runde"), ("eight-backing", "back-p7")] {
+        for (route, action) in [("home", "Opret spil"), ("setup", "Gem ændringer"), ("board", "Klar til næste runde"), ("eight-backing", "back-p7")] {
             let app = launch(route, largeText: true)
             let button = app.buttons[action]
             XCTAssertTrue(app.scrollViews.firstMatch.waitForExistence(timeout: 5))

@@ -51,7 +51,7 @@ jobs:
           if [ "${{ inputs.scope }}" = live ]; then
             test_args+=('-only-testing:EnTilUITests/LiveMatchUITests')
           fi
-          xcodebuild test "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
+          xcodebuild test "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
       - name: Export screenshot attachments
         if: always()
         run: |

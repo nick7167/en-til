@@ -57,15 +57,19 @@ struct SetupView: View {
                     HStack { Text("Vælg pakker").font(.system(size: 18, weight: .semibold)); Spacer(); Text("\(draft.packs.count) valgt").foregroundStyle(Color.lilac); Image(systemName: "chevron.right") }.padding(.vertical, 8)
                 }.buttonStyle(.plain)
             }
-            Button("Gem ændringer") {
-                Task {
-                    await client.command(.init(type: "settings", settings: draft))
-                    if client.problem == nil && !client.needsAdult {
-                        UserDefaults.standard.set(draft.drinking, forKey: "hostDrinking"); dismiss()
+        }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 8) {
+                Text("Når du gemmer, skal gæsterne melde sig klar igen.").font(.footnote).foregroundStyle(Color.lilac)
+                Button("Gem ændringer") {
+                    Task {
+                        await client.command(.init(type: "settings", settings: draft))
+                        if client.problem == nil && !client.needsAdult {
+                            UserDefaults.standard.set(draft.drinking, forKey: "hostDrinking"); dismiss()
+                        }
                     }
-                }
-            }.buttonStyle(LoungeButtonStyle()).disabled(draft.packs.isEmpty || client.busy)
-            Text("Når du gemmer, skal gæsterne melde sig klar igen.").font(.footnote).foregroundStyle(Color.lilac)
+                }.buttonStyle(LoungeButtonStyle()).disabled(draft.packs.isEmpty || client.busy)
+            }.padding(.horizontal, 18).padding(.vertical, 12).background(Color.ink)
         }
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Luk", systemImage: "xmark") { if draft != original { discard = true } else { dismiss() } }.labelStyle(.iconOnly) } }
         .interactiveDismissDisabled(draft != original)

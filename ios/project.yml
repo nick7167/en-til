@@ -36,6 +36,7 @@ targets:
     settings:
       base:
         TARGETED_DEVICE_FAMILY: '1'
+        'CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]': EnTil/Simulator.entitlements
         ENTIL_API_URL: https://unconfigured.invalid
       configs:
         Debug:

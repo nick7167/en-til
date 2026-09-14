@@ -20,3 +20,5 @@ DEBUG screenshot fixtures display Danish target prices (29 DKK per pack, 99 DKK 
 For faster screenshot review, download the `native-review` artifact (full-resolution JPEGs/text diagnostics), then run `python3 scripts/compare-reference-screens.py <download-folder>`. Comparisons preserve proportions by default; `--stretch` reproduces old normalized sheets. Original PNGs and failure videos remain in `native-checkpoint`.
 
 The native UI suite also runs a real three-player match against the local Worker, including app reopening, joint winners, rematch and seat restoration. Start the local database/service above before running the full suite locally; GitHub Actions starts it automatically. Screenshot prices remain presentation fixtures, not purchase verification.
+
+Simulator checks use local ad-hoc signing and simulator-only Keychain entitlements so live sessions use real secure storage. No Apple signing account is needed. The manual native workflow supports `scope=live` for focused integration retries; its default runs the full suite.

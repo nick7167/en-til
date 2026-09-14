@@ -70,6 +70,7 @@
 		079F29B37FA8EFCB905E5532 /* finale.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = finale.json; sourceTree = "<group>"; };
 		093C646B261178791D654B13 /* backing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = backing.json; sourceTree = "<group>"; };
 		1B77F6204F929C3AB325DDE1 /* LiveMatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchUITests.swift; sourceTree = "<group>"; };
+		2343955E458989368B1AA15F /* Simulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Simulator.entitlements; sourceTree = "<group>"; };
 		28710E056E12A4A1AD6CEF08 /* Fraunces.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fraunces.ttf; sourceTree = "<group>"; };
 		2C3B8E90E6AD422402CD64F0 /* GameClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameClient.swift; sourceTree = "<group>"; };
 		369356B7A8977A178AC33348 /* VisualFixtureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualFixtureView.swift; sourceTree = "<group>"; };
@@ -129,6 +130,7 @@
 				C4B4E8FC3EA9261BB65A0BDA /* RoomView.swift */,
 				AB97755E2DB3E0E470CC51B5 /* SessionStore.swift */,
 				459D738F615C422CD8BED8C7 /* SettingsViews.swift */,
+				2343955E458989368B1AA15F /* Simulator.entitlements */,
 				D354F3BCEC571B053A003E18 /* Store.swift */,
 				369356B7A8977A178AC33348 /* VisualFixtureView.swift */,
 				CBD04BF4AF93F2719C3FBBB0 /* Resources */,
@@ -511,6 +513,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = EnTil/Simulator.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENTIL_API_URL = "http://127.0.0.1:8787";
 				INFOPLIST_FILE = EnTil/Info.plist;
@@ -550,6 +553,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = EnTil/Simulator.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENTIL_API_URL = "https://unconfigured.invalid";
 				INFOPLIST_FILE = EnTil/Info.plist;
