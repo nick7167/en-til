@@ -93,7 +93,9 @@ struct RootView: View {
                         .overlay(alignment: .top) {
                             if !["answer", "private"].contains(room.phase) {
                                 HStack {
-                                    Button("Forlad", systemImage: "chevron.left") { leaving = true }.labelStyle(.iconOnly).frame(width: 44, height: 44)
+                                    Button { leaving = true } label: {
+                            Image(systemName: "chevron.left").frame(width: 44, height: 44).contentShape(Rectangle())
+                        }.accessibilityLabel("Forlad")
                                     Spacer()
                                     Menu {
                                         Button("Sådan spiller I") { sheet = .rules }

@@ -76,10 +76,10 @@ import Foundation
                 try await command(["type": "back", "playerID": participant.id == host.id ? friend.id : host.id], by: participant)
             }
             XCTAssertEqual(room["phase"] as? String, "reveal")
+            try await waitForPhase([number == 3 ? "finale" : "board"], by: host)
             let results = try XCTUnwrap((room["round"] as? [String: Any])?["results"] as? [[String: Any]])
             XCTAssertEqual(results.count, 3)
             XCTAssertTrue(results.allSatisfy { $0["points"] as? Int == 2 })
-            try await waitForPhase([number == 3 ? "finale" : "board"], by: host)
             if number < 3 {
                 XCTAssertTrue(app.staticTexts["Sådan står I"].waitForExistence(timeout: 10))
                 if number == 1 {
@@ -88,7 +88,7 @@ import Foundation
                     XCTAssertTrue(app.staticTexts["Sådan står I"].waitForExistence(timeout: 10))
                 }
                 try tap(app.buttons["Klar til næste runde"], in: app)
-                XCTAssertTrue(app.buttons["Vent lige …"].waitForExistence(timeout: 5))
+                XCTAssertTrue(app.buttons["Vent, jeg er ikke klar"].waitForExistence(timeout: 5))
                 try await command(["type": "ready", "value": true], by: host)
                 try await command(["type": "ready", "value": true], by: friend)
             }
@@ -114,7 +114,7 @@ import Foundation
 
     private func tap(_ element: XCUIElement, in app: XCUIApplication) throws {
         guard element.waitForExistence(timeout: 10) else {
-            XCTFail("Missing live control: \(element.identifier)")
+            XCTFail("Missing live control")
             throw NSError(domain: "LiveMatchUITests", code: 1)
         }
         for _ in 0..<6 where !element.isHittable { app.swipeUp() }
