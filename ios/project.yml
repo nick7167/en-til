@@ -43,6 +43,9 @@ targets:
           ENTIL_API_URL: http://127.0.0.1:8787
   EnTilTests:
     type: bundle.unit-test
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     platform: iOS
     supportedDestinations: [iOS]
     sources: [EnTilTests]
@@ -50,6 +53,9 @@ targets:
       - target: EnTil
   EnTilUITests:
     type: bundle.ui-testing
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     platform: iOS
     supportedDestinations: [iOS]
     sources:
