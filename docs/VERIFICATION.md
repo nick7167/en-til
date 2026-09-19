@@ -52,3 +52,13 @@ Run 34712298330 passed four native tests at 108bcde in 309.444 seconds. This inc
 The displayed prices are explicitly DEBUG presentation fixtures. They do not validate StoreKit loading, purchases or backend entitlements; production still uses StoreKit products. Failed experimental local StoreKit integrations were removed. Header-control spacing, sheet/table composition and the outstanding device/accessibility review prevent a pixel-perfect completion claim.
 
 The lightweight review exporter was tested on real attachments: manifest links and full image dimensions preserved; 8 MB versus 104 MB including original failure videos. Original PNG/video artifacts remain separately available.
+
+## Real native multiplayer checkpoint — 19 September
+
+[Run 35446538527](https://github.com/nick7167/en-til/actions/runs/35446538527) passed at `689ce32`: two contract tests and five UI tests, with the UI suite completing in 431.730 seconds. This includes 26 reference captures, eight-player fixtures, keyboard, accessibility XXXL (including pinned settings save), and a live three-player match against the local Worker. The live test verifies factual/personal rounds, server scoring, relaunch, finish overshoot, joint winners with shared ranks, rematch, deliberate leave, restored seat, and return to active play.
+
+The native job uses local ad-hoc simulator signing and simulator-only Keychain entitlements; no Apple distribution account is needed. Runs 34839108876 and 35446456867 were false greens caused by macOS Bash rejecting an empty argument array. They are not test evidence. The corrected workflow requires a result bundle and an explicit TEST SUCCEEDED log entry.
+
+Remaining acceptance includes visual/motion refinement, small-device and VoiceOver review, physical-device testing, real StoreKit configuration, and human content review. Passing tests do not establish pixel-perfect parity or release readiness.
+
+Native review artifacts are saved under ignored `build/visual-nineteenth`; comparisons A–F were generated. C01 confirms the settings save action is pinned and fully visible; the live finale confirms three first-place ranks. Accessibility XXXL keeps the save action visible, but the long settings heading breaks awkwardly and the fixed explanatory footer occupies substantial height. Refine that composition in the next visual pass; do not call it pixel-perfect.
