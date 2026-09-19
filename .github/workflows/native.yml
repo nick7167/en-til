@@ -47,11 +47,13 @@ jobs:
             sleep 1
           done
           curl --silent --fail http://127.0.0.1:8787/health
-          test_args=()
+          test_args=(test)
           if [ "${{ inputs.scope }}" = live ]; then
             test_args+=('-only-testing:EnTilUITests/LiveMatchUITests')
           fi
-          xcodebuild test "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
+          xcodebuild "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
+          test -d build/EnTil.xcresult
+          grep -Fq "** TEST SUCCEEDED **" build/xcodebuild.log
       - name: Export screenshot attachments
         if: always()
         run: |
