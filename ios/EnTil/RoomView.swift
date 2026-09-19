@@ -256,8 +256,8 @@ struct RoomView: View {
     }
     private var standings: some View {
         VStack(spacing: 6) {
-            ForEach(Array(room.players.sorted { $0.score > $1.score }.enumerated()), id: \.element.id) { rank, seat in
-                HStack(spacing: 12) { Text("\(rank + 1)").font(.headline).frame(width: 18); CharacterView(index: seat.character, size: 44); Text(seat.name).font(.subheadline.weight(.semibold)); Spacer(); Text("\(seat.score)").font(.headline) }
+            ForEach(room.players.sorted { $0.score > $1.score }) { seat in
+                HStack(spacing: 12) { Text("\(room.players.filter { $0.score > seat.score }.count + 1)").font(.headline).frame(width: 18); CharacterView(index: seat.character, size: 44); Text(seat.name).font(.subheadline.weight(.semibold)); Spacer(); Text("\(seat.score)").font(.headline) }
                     .foregroundStyle(room.winners.contains(seat.id) ? Color.lime : Color.cream)
                     .padding(.horizontal, 13).padding(.vertical, 5).background(Color.lounge.opacity(0.9), in: RoundedRectangle(cornerRadius: 10))
                     .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(room.winners.contains(seat.id) ? Color.lime : Color.lilac.opacity(0.25), lineWidth: room.winners.contains(seat.id) ? 2 : 1))

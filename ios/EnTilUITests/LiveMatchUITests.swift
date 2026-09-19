@@ -94,6 +94,7 @@ import Foundation
             }
         }
         XCTAssertTrue(app.staticTexts["I deler sejren!"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "1")).count, 3)
         XCTAssertEqual((room["winners"] as? [String])?.count, 3)
         XCTAssertTrue((room["players"] as? [[String: Any]])?.allSatisfy { $0["score"] as? Int == 6 } == true)
         let capture = XCTAttachment(screenshot: app.screenshot())
@@ -107,8 +108,12 @@ import Foundation
         XCTAssertTrue(app.buttons["Opret spil"].waitForExistence(timeout: 10))
         try tap(app.buttons["Tilbage til dit spil"], in: app)
         XCTAssertTrue(app.staticTexts["Vi samler holdet"].waitForExistence(timeout: 10))
+        try tap(app.buttons["Jeg er tilbage"], in: app)
+        XCTAssertTrue(app.buttons["Jeg er klar"].waitForExistence(timeout: 5))
         room = try await call("/v1/rooms/\(roomID)", token: host.token)
-        XCTAssertEqual((room["players"] as? [[String: Any]])?.count, 3)
+        let returnedPlayers = try XCTUnwrap(room["players"] as? [[String: Any]])
+        XCTAssertEqual(returnedPlayers.count, 3)
+        XCTAssertTrue(returnedPlayers.allSatisfy { $0["away"] as? Bool == false })
         app.terminate()
     }
 
