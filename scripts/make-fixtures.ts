@@ -25,7 +25,7 @@ r.players.forEach((player,index)=>{player.score=[5,7,5,5][index]!;});
 r.round!.number=4;save('answer',r);
 r=send(r,0,{type:'answer',value:3});save('backing',r);r=send(r,0,{type:'back',playerID:'p1'});save('waiting',r);
 for(let i=1;i<4;i++){r=send(r,i,{type:'answer',value:r.round!.question.correct!});r=send(r,i,{type:'back',playerID:`p${(i+1)%4}`});}
-now+=4000;save('reveal',r);now+=4000;advance(r,now);save('board',r);
+now+=4000;save('reveal',r);now+=2000;save('movement',r);now+=2000;advance(r,now);save('board',r);
 let paused=send(r,2,{type:'leave'});paused=send(paused,3,{type:'leave'});save('paused',paused);
 r.phase='finale';r.winners=['p1'];r.players.forEach((player,index)=>{player.score=[18,20,17,15][index]!;});save('finale',r);
 let away=start(lobby());away=send(away,1,{type:'leave'});save('away',away,'p1');away=send(away,4,{type:'join',name:'Sofie',character:4,adult:true,drinking:false});save('late',away,'p4');

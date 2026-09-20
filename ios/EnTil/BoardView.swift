@@ -2,6 +2,16 @@ import SwiftUI
 
 struct WindingBoard: View {
     let room: RoomSnapshot
+    var animateRound = false
+    @State private var movementFinished = false
+    @Namespace private var tokens
+
+    private func displayedScore(_ seat: Seat) -> Int {
+        guard animateRound, !movementFinished, !reduceMotion, !textSize.isAccessibilitySize else { return seat.score }
+        return seat.score - (room.round?.results.first { $0.playerID == seat.id }?.points ?? 0)
+    }
+
+    private var ownDisplayedScore: Int { room.ownSeat.map(displayedScore) ?? 0 }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var textSize
     private let spaceHeight: CGFloat = 60
@@ -46,7 +56,7 @@ struct WindingBoard: View {
                         VStack(spacing: 0) {
                             Color.clear.frame(height: 42)
                             ForEach(Array((0...maximum).reversed()), id: \.self) { space in
-                                let occupants = room.players.filter { $0.score == space }
+                                let occupants = room.players.filter { displayedScore($0) == space }
                                 let x = point(at: Double(space), centerX: centerX, amplitude: amplitude).x - geometry.size.width / 2
                                 ZStack {
                                     Text(space == room.settings.finish ? "MÅL" : "\(space)")
@@ -77,14 +87,19 @@ struct WindingBoard: View {
                     }.frame(height: boardHeight)
                 }
             }.defaultScrollAnchor(.bottom)
-                .onAppear {
+                .task {
+                guard animateRound, !reduceMotion, !textSize.isAccessibilitySize else { return }
+                do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
+                withAnimation(.easeInOut(duration: 0.85)) { movementFinished = true }
+            }
+            .onAppear {
                     if textSize.isAccessibilitySize { proxy.scrollTo(room.me, anchor: .center) }
-                    else { proxy.scrollTo(room.ownSeat?.score ?? 0, anchor: UnitPoint(x: 0.5, y: 0.7)) }
+                    else { proxy.scrollTo(ownDisplayedScore, anchor: UnitPoint(x: 0.5, y: 0.7)) }
                 }
-                .onChange(of: room.ownSeat?.score) { _, score in
+                .onChange(of: ownDisplayedScore) { _, score in
                     withAnimation(reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 1)) {
                         if textSize.isAccessibilitySize { proxy.scrollTo(room.me, anchor: .center) }
-                        else { proxy.scrollTo(score ?? 0, anchor: UnitPoint(x: 0.5, y: 0.7)) }
+                        else { proxy.scrollTo(score, anchor: UnitPoint(x: 0.5, y: 0.7)) }
                     }
                 }
         }
@@ -128,5 +143,6 @@ struct WindingBoard: View {
                 .foregroundStyle(seat.id == room.me ? Color.ink : Color.cream)
                 .background(seat.id == room.me ? Color.lime : Color.violet, in: Capsule())
         }.frame(width: crowded ? 60 : 72)
+        .matchedGeometryEffect(id: seat.id, in: tokens)
     }
 }

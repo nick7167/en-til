@@ -185,8 +185,13 @@ struct RoomView: View {
         }
     }
     private var reveal: some View {
-        Screen(scene: .backing, spacing: 9) {
+        Screen(scene: room.round?.revealStage == 3 ? .board : .backing, spacing: 9) {
             if let round = room.round {
+                if round.revealStage >= 3 {
+                    Text("Sådan rykker I").font(.editorial(32))
+                    WindingBoard(room: room, animateRound: true).frame(height: 420).padding(.horizontal, -18)
+                    Text("Videre til brættet …").font(.headline)
+                } else {
                 Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial(round.kind == "personal" ? 28 : 32)).padding(.horizontal, 28).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                 Text(round.kind == "personal" ? "\(round.correct ?? 0) af \(round.responseCount ?? 0)" : round.correct.flatMap { round.options.indices.contains($0) ? round.options[$0] : nil } ?? "")
                     .font(.editorial(48)).foregroundStyle(Color.lime).multilineTextAlignment(.center)
@@ -197,7 +202,7 @@ struct RoomView: View {
                 if round.revealStage >= 1 {
                     ForEach(round.results) { result in resultRow(result, round: round, showPoints: round.revealStage >= 2) }
                 } else { CharacterView(index: 1, size: 190) }
-                if round.revealStage >= 3 { Text("Videre til brættet …").font(.headline); WindingBoard(room: room).frame(height: 370) }
+                }
             }
         }
     }

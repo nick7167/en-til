@@ -96,9 +96,14 @@ final class EnTilUITests: XCTestCase {
     }
 
     @MainActor func testAdditionalServerSnapshotScreens() throws {
-        for (route, text) in [("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
+        for (route, text) in [("movement", "Sådan rykker I"), ("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
             let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
+            if route == "movement" {
+                let position = app.otherElements["board-own-position"]
+                let arrived = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label BEGINSWITH %@", "Felt 6:"), object: position)
+                XCTAssertEqual(XCTWaiter.wait(for: [arrived], timeout: 3), .completed)
+            }
             if route == "eight-backing" {
                 let lastFriend = app.buttons["back-p7"]
                 XCTAssertTrue(lastFriend.isHittable)
