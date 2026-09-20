@@ -45,7 +45,7 @@ struct RoomView: View {
                         }
                 }
             }
-            Button(action: showSetup) {
+            setupLink {
                 Panel {
                     HStack(alignment: .top) {
                         Image(systemName: "gearshape.fill").font(.title2)
@@ -56,8 +56,8 @@ struct RoomView: View {
                         Spacer(); Image(systemName: "chevron.right")
                     }
                 }
-            }.buttonStyle(.plain).disabled(!room.isHost)
-            Button(action: showSetup) {
+            }
+            setupLink {
                 Panel { HStack(spacing: 12) {
                     Image(systemName: "square.3.layers.3d").font(.title2)
                     VStack(alignment: .leading, spacing: 5) {
@@ -66,7 +66,7 @@ struct RoomView: View {
                             .font(.caption.weight(.semibold)).padding(.horizontal, 9).padding(.vertical, 4).background(Color.violet, in: RoundedRectangle(cornerRadius: 6))
                     }; Spacer(); Image(systemName: "chevron.right")
                 } }
-            }.buttonStyle(.plain).disabled(!room.isHost)
+            }
             if room.ownSeat?.away == true {
                 Button("Jeg er tilbage") { send(.init(type: "return")) }.buttonStyle(LoungeButtonStyle())
             } else if room.isHost {
@@ -78,6 +78,11 @@ struct RoomView: View {
             }
         }
     }
+    @ViewBuilder private func setupLink<Content: View>(@ViewBuilder label: () -> Content) -> some View {
+        if room.isHost { Button(action: showSetup, label: label).buttonStyle(.plain) }
+        else { label() }
+    }
+
     private var questionScene: SceneArtwork {
         guard let round = room.round else { return .lounge }
         if round.backLocked || (room.phase == "private" && round.privateLocked) { return .waiting }
