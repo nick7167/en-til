@@ -29,6 +29,7 @@
 		9789FD363AD1942E5C77F347 /* eight-backing.json in Resources */ = {isa = PBXBuildFile; fileRef = FDDCDE694DF44E8AD3A9FDAE /* eight-backing.json */; };
 		987A63B3770109B7D8E11C6A /* private-waiting.json in Resources */ = {isa = PBXBuildFile; fileRef = BE9A62F500F70F99123E9E55 /* private-waiting.json */; };
 		A0266CF352742C19A4E410F8 /* lock.wav in Resources */ = {isa = PBXBuildFile; fileRef = 460F4476219C169C0CFC0C63 /* lock.wav */; };
+		AAFD32C15CDA8D5F2F134036 /* movement.json in Resources */ = {isa = PBXBuildFile; fileRef = B7678D6865F136E1E60E291E /* movement.json */; };
 		AC73B9DA1CF9EF11A9FF12F0 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE0BE733B6B1084D2F89DA1 /* Feedback.swift */; };
 		AF7E2324CE195173DEAE8BB4 /* eight-lobby.json in Resources */ = {isa = PBXBuildFile; fileRef = C2345D38E58D8396BFEC17B7 /* eight-lobby.json */; };
 		B33152C690540F77AC0EFBFA /* guess.json in Resources */ = {isa = PBXBuildFile; fileRef = 4E17EA41BDFE46FC14344B3C /* guess.json */; };
@@ -98,6 +99,7 @@
 		9A7F8AD59E1644D28890EEB0 /* paused.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = paused.json; sourceTree = "<group>"; };
 		A48FF4F902504254484F7F71 /* late.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = late.json; sourceTree = "<group>"; };
 		AB97755E2DB3E0E470CC51B5 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		B7678D6865F136E1E60E291E /* movement.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = movement.json; sourceTree = "<group>"; };
 		B8D2780D74571C609A99B733 /* EnTilApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnTilApp.swift; sourceTree = "<group>"; };
 		BE9A62F500F70F99123E9E55 /* private-waiting.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "private-waiting.json"; sourceTree = "<group>"; };
 		C06C8BBAE94996EDA0D3181C /* away.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = away.json; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				8EF0A40A64D41022E854B588 /* guest-lobby.json */,
 				A48FF4F902504254484F7F71 /* late.json */,
 				E63511A5A894B91CEC39A4FD /* lobby.json */,
+				B7678D6865F136E1E60E291E /* movement.json */,
 				9A7F8AD59E1644D28890EEB0 /* paused.json */,
 				E2F0EAC1941257776EB4E2CE /* personal-reveal.json */,
 				BE9A62F500F70F99123E9E55 /* private-waiting.json */,
@@ -352,6 +355,7 @@
 				FEA9A43CC367714629575E97 /* late.json in Resources */,
 				C59D102066F41812626FC6AA /* lobby.json in Resources */,
 				A0266CF352742C19A4E410F8 /* lock.wav in Resources */,
+				AAFD32C15CDA8D5F2F134036 /* movement.json in Resources */,
 				0A2CD3CC55138F4E5E4C0ED8 /* paused.json in Resources */,
 				B4415614E712E2A78B67FEC4 /* personal-reveal.json in Resources */,
 				987A63B3770109B7D8E11C6A /* private-waiting.json in Resources */,
