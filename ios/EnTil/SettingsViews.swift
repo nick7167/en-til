@@ -203,12 +203,12 @@ struct PackOwnedView: View {
     let pack: Pack
     @Environment(\.dismiss) private var dismiss
     var body: some View {
-        Screen(scene: pack.id == "isbryderen" ? .ice : .plain, packID: pack.id == "isbryderen" ? nil : pack.id) {
+        Screen(scene: pack.id == "isbryderen" ? .ice : .plain, packID: pack.id == "isbryderen" ? nil : pack.id, packArtworkPosition: 0.59) {
             Text("Pakken er din").font(.editorial(43)).multilineTextAlignment(.center)
             Image(systemName: "checkmark.circle.fill").font(.system(size: 42)).foregroundStyle(Color.lime).accessibilityHidden(true)
             Text(pack.title).font(.editorial(32)).multilineTextAlignment(.center)
             Text("Alle i dit spil kan være med.\nVælg pakken under spilindstillinger.").multilineTextAlignment(.center)
-            Color.clear.frame(height: 380).accessibilityHidden(true)
+            Color.clear.frame(height: 260).accessibilityHidden(true)
             Button("Tilbage til pakker") { dismiss() }.buttonStyle(LoungeButtonStyle())
         }
     }
