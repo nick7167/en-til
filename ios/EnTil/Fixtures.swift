@@ -7,7 +7,7 @@ extension GameClient {
         problem = nil
         room = nil
         let routesWithoutRoom: Set<String> = ["home", "join", "name", "characters", "code-error", "settings", "shop", "pack-detail", "bundle", "pack-owned"]
-        guard !routesWithoutRoom.contains(name) else { return }
+        guard !routesWithoutRoom.contains(name), !name.hasPrefix("pack-detail-"), !name.hasPrefix("pack-owned-") else { return }
         let underlying = ["setup": "lobby", "pack-selection": "lobby", "results": "board", "reconnect": "answer", "adult": "lobby"][name] ?? name
         let url = Bundle.main.url(forResource: underlying, withExtension: "json", subdirectory: "Fixtures") ?? Bundle.main.url(forResource: underlying, withExtension: "json")
         guard let url, let data = try? Data(contentsOf: url), let snapshot = try? JSONDecoder().decode(RoomSnapshot.self, from: data) else {

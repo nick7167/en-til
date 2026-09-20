@@ -48,7 +48,11 @@ struct VisualFixtureView: View {
                     else { ProgressView("Henter rundens resultat…").frame(maxWidth: .infinity, maxHeight: .infinity) }
                 }
             default:
-                EmptyView()
+                if let pack = Pack.all.first(where: { name == "pack-detail-" + $0.id }) {
+                    PackDetailView(pack: pack, client: client, store: store)
+                } else if let pack = Pack.all.first(where: { name == "pack-owned-" + $0.id }) {
+                    PackOwnedView(pack: pack)
+                }
             }
         }
         .task { await store.load() }

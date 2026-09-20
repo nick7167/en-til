@@ -122,9 +122,9 @@ struct RootView: View {
     }
     #if DEBUG
     private var specialFixtureRoute: String? {
-        guard let name = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"],
-              ["join", "name", "characters", "code-error", "settings", "setup", "pack-selection", "shop", "pack-detail", "bundle", "adult", "results", "pack-owned"].contains(name) else { return nil }
-        return name
+        guard let name = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] else { return nil }
+        if name.hasPrefix("pack-detail-") || name.hasPrefix("pack-owned-") { return name }
+        return ["join", "name", "characters", "code-error", "settings", "setup", "pack-selection", "shop", "pack-detail", "bundle", "adult", "results", "pack-owned"].contains(name) ? name : nil
     }
     #endif
 

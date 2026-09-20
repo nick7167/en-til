@@ -17,16 +17,26 @@ enum SceneArtwork: String {
 }
 struct SceneBackground: View {
     var scene: SceneArtwork = .lounge
+    var packID: String? = nil
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.ink
+                if let packID {
+                    LinearGradient(colors: [Color(hex: Pack.all.first { $0.id == packID }?.color ?? 0x4B3B76).opacity(0.24), .ink], startPoint: .top, endPoint: .bottom)
+                    Image("Pack-" + packID).resizable().scaledToFit()
+                        .frame(width: geometry.size.width)
+                        .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.13), .init(color: .black, location: 0.82), .init(color: .clear, location: 1)], startPoint: .top, endPoint: .bottom))
+                        .opacity(typeSize.isAccessibilitySize ? 0.25 : 1)
+                        .position(x: geometry.size.width / 2, y: geometry.size.height * 0.48)
+                } else {
                 Image("Scene-" + scene.rawValue).resizable().aspectRatio(contentMode: scene == .ice ? .fit : .fill)
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .offset(y: scene == .adult ? geometry.size.height * 0.12 : 0)
                     .opacity(typeSize.isAccessibilitySize ? 0.25 : 1)
                     .clipped()
+                }
                 if scene == .settings {
                     LinearGradient(stops: [.init(color: .clear, location: 0.14), .init(color: .ink, location: 0.34)], startPoint: .top, endPoint: .bottom)
                 }
@@ -64,6 +74,7 @@ struct Panel<Content: View>: View {
 }
 struct Screen<Content: View>: View {
     var scene: SceneArtwork = .lounge
+    var packID: String? = nil
     var spacing: CGFloat = 12
     @ViewBuilder var content: Content
     var body: some View {
@@ -73,7 +84,7 @@ struct Screen<Content: View>: View {
                     .padding(.horizontal, 18).padding(.top, 10).padding(.bottom, 12)
                     .frame(maxWidth: 560).frame(minHeight: geometry.size.height, alignment: .top).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively)
-        }.background { SceneBackground(scene: scene) }.foregroundStyle(Color.cream)
+        }.background { SceneBackground(scene: scene, packID: packID) }.foregroundStyle(Color.cream)
     }
 }
 struct CodePlaque: View {

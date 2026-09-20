@@ -89,7 +89,7 @@ struct RoomView: View {
         Screen(scene: questionScene, spacing: 12) {
             if let round = room.round {
                 roundHeader(round)
-                if round.kind == "personal" { Text(Pack.all.first { $0.id == round.pack }?.title ?? "Gratis mix").font(.caption.weight(.semibold)).padding(.horizontal, 16).padding(.vertical, 6).background(Color.violet.opacity(0.75), in: Capsule()) }
+                if round.kind == "personal" { Text(Pack.all.first { $0.id == round.pack }?.title ?? "Gratis mix").font(.caption.weight(.semibold)).padding(.horizontal, 16).padding(.vertical, 6).background(Color.violet.opacity(0.75), in: Capsule()).accessibilityIdentifier("round-pack-label") }
                 if !round.backLocked && !(room.phase == "private" && round.privateLocked) {
                     Text(round.prompt).font(.editorial(round.answerLocked ? 28 : (round.kind == "personal" && room.phase != "private") ? 24 : 32)).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                 }
@@ -140,24 +140,25 @@ struct RoomView: View {
         }
     }
     private func roundHeader(_ round: RoundSnapshot) -> some View {
-        HStack {
+        HStack(spacing: 12) {
             Menu {
                 Button("Sådan spiller I", action: showRules)
                 Button("Dine indstillinger", action: showPreferences)
                 Button("Forlad spillet", role: .destructive, action: leave)
             } label: {
                 Label("Runde \(round.number)", systemImage: "ellipsis.circle").font(.subheadline)
-            }.foregroundStyle(Color.cream)
-            Spacer()
+            }.foregroundStyle(Color.cream).frame(maxWidth: .infinity, alignment: .leading)
             if let deadline = round.deadline, !round.backLocked && !(room.phase == "private" && round.privateLocked) {
                 TimelineView(.periodic(from: .now, by: 0.25)) { _ in
                     let seconds = max(0, Int(ceil((deadline - client.serverNow) / 1000)))
                     Text("\(seconds)").font(.title2.bold().monospacedDigit()).frame(width: 58, height: 58)
                         .background(Circle().stroke(Color.violet.opacity(0.6), lineWidth: 6))
-                        .overlay(Circle().trim(from: 0, to: min(1, max(0, Double(seconds) / Double(round.answerLocked ? room.settings.backingSeconds : room.settings.answerSeconds)))).stroke(Color.lime, style: StrokeStyle(lineWidth: 6, lineCap: .round)).rotationEffect(.degrees(-90))).accessibilityLabel("\(seconds) sekunder tilbage")
+                        .overlay(Circle().trim(from: 0, to: min(1, max(0, Double(seconds) / Double(round.answerLocked ? room.settings.backingSeconds : room.settings.answerSeconds)))).stroke(Color.lime, style: StrokeStyle(lineWidth: 6, lineCap: .round)).rotationEffect(.degrees(-90))).accessibilityLabel("\(seconds) sekunder tilbage").accessibilityIdentifier("round-timer")
                 }
+            } else {
+                Color.clear.frame(width: 58, height: 58).accessibilityHidden(true)
             }
-            Spacer(); Text("\(room.ownSeat?.score ?? 0) / \(room.settings.finish)").font(.subheadline.monospacedDigit())
+            Text("\(room.ownSeat?.score ?? 0) / \(room.settings.finish)").font(.subheadline.monospacedDigit()).frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
     private func waiting(privateStep: Bool) -> some View {

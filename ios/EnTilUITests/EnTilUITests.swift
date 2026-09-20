@@ -68,6 +68,13 @@ final class EnTilUITests: XCTestCase {
                     XCTAssertTrue(purchase.label.contains(route == "bundle" ? "99" : "29"))
                 }
             }
+            if ["answer", "backing", "private", "guess"].contains(route) {
+                let timer = app.staticTexts["round-timer"]
+                XCTAssertTrue(timer.exists)
+                XCTAssertEqual(timer.frame.midX, app.frame.midX, accuracy: 1, "Timer must stay centred")
+                let pack = app.staticTexts["round-pack-label"]
+                if pack.exists { XCTAssertEqual(timer.frame.midX, pack.frame.midX, accuracy: 1) }
+            }
             if route == "answer" { app.buttons["Saturn"].tap() }
             if route == "backing" { app.buttons["back-p1"].tap() }
             if route == "private" { app.buttons["Ja"].tap() }
@@ -103,6 +110,20 @@ final class EnTilUITests: XCTestCase {
             }
             attach(app, "extra-\(route)")
             app.terminate()
+        }
+    }
+
+    @MainActor func testAllPackArtwork() throws {
+        for pack in ["danmark", "film-tv", "isbryderen", "lidt-for-aerlig", "efter-midnat", "uden-filter"] {
+            for state in ["pack-detail", "pack-owned"] {
+                let route = state + "-" + pack
+                let app = launch(route)
+                let button = state == "pack-owned" ? app.buttons["Tilbage til pakker"] : app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Køb for")).firstMatch
+                XCTAssertTrue(button.waitForExistence(timeout: 8))
+                revealFully(button, in: app)
+                attach(app, route)
+                app.terminate()
+            }
         }
     }
 

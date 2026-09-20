@@ -16,7 +16,7 @@ struct SetupView: View {
     }
     var body: some View {
         Screen(scene: .plain, spacing: 12) {
-            Text("Spilindstillinger").font(.editorial()).multilineTextAlignment(.center)
+            Text(typeSize.isAccessibilitySize ? "Indstil spillet" : "Spilindstillinger").font(.editorial()).multilineTextAlignment(.center)
             VStack(alignment: .leading, spacing: 12) {
                 Divider()
                 Text("Mållinje").font(.system(size: 18, weight: .semibold))
@@ -56,11 +56,11 @@ struct SetupView: View {
                 } label: {
                     HStack { Text("Vælg pakker").font(.system(size: 18, weight: .semibold)); Spacer(); Text("\(draft.packs.count) valgt").foregroundStyle(Color.lilac); Image(systemName: "chevron.right") }.padding(.vertical, 8)
                 }.buttonStyle(.plain)
+                Text("Når du gemmer, skal gæsterne melde sig klar igen.").font(.footnote).foregroundStyle(Color.lilac)
             }
         }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
-                Text("Når du gemmer, skal gæsterne melde sig klar igen.").font(.footnote).foregroundStyle(Color.lilac)
                 Button("Gem ændringer") {
                     Task {
                         await client.command(.init(type: "settings", settings: draft))
@@ -203,17 +203,12 @@ struct PackOwnedView: View {
     let pack: Pack
     @Environment(\.dismiss) private var dismiss
     var body: some View {
-        Screen(scene: pack.id == "isbryderen" ? .ice : .plain) {
+        Screen(scene: pack.id == "isbryderen" ? .ice : .plain, packID: pack.id == "isbryderen" ? nil : pack.id) {
             Text("Pakken er din").font(.editorial(43)).multilineTextAlignment(.center)
             Image(systemName: "checkmark.circle.fill").font(.system(size: 42)).foregroundStyle(Color.lime).accessibilityHidden(true)
             Text(pack.title).font(.editorial(32)).multilineTextAlignment(.center)
             Text("Alle i dit spil kan være med.\nVælg pakken under spilindstillinger.").multilineTextAlignment(.center)
-            if pack.id == "isbryderen" {
-                Color.clear.frame(height: 380).accessibilityHidden(true)
-            } else {
-                Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300)
-                    .clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true)
-            }
+            Color.clear.frame(height: 380).accessibilityHidden(true)
             Button("Tilbage til pakker") { dismiss() }.buttonStyle(LoungeButtonStyle())
         }
     }
@@ -228,12 +223,11 @@ struct PackDetailView: View {
             if client.owned.contains(pack.id) {
                 PackOwnedView(pack: pack)
             } else {
-                Screen(scene: pack.id == "isbryderen" ? .ice : .plain) {
+                Screen(scene: pack.id == "isbryderen" ? .ice : .plain, packID: pack.id == "isbryderen" ? nil : pack.id) {
                     Text(pack.title).font(.editorial(43)).multilineTextAlignment(.center)
                     if let intensity = pack.intensity { IntensityPill(title: intensity) }
                     Text(pack.subtitle).multilineTextAlignment(.center)
-                    if pack.id == "isbryderen" { Color.clear.frame(height: 380).accessibilityHidden(true) }
-                    else { Image("PackReference-\(pack.id)").resizable().scaledToFit().frame(maxHeight: 300).clipShape(RoundedRectangle(cornerRadius: 19)).accessibilityHidden(true) }
+                    Color.clear.frame(height: 380).accessibilityHidden(true)
                     Text("Du køber pakken én gang.\nAlle i dit spil kan være med.").multilineTextAlignment(.center)
                     if let price = store.priceLabel(pack.id) {
                         Button("Køb for \(price)") {
