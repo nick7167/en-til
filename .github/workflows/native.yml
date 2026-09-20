@@ -5,7 +5,7 @@ on:
       scope:
         description: Native test scope
         type: choice
-        options: [all, live]
+        options: [all, live, keyboard]
         default: all
 permissions:
   contents: read
@@ -50,6 +50,8 @@ jobs:
           test_args=(test)
           if [ "${{ inputs.scope }}" = live ]; then
             test_args+=('-only-testing:EnTilUITests/LiveMatchUITests')
+          elif [ "${{ inputs.scope }}" = keyboard ]; then
+            test_args+=('-only-testing:EnTilUITests/EnTilUITests/testHomeAndKeyboard')
           fi
           xcodebuild "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
           test -d build/EnTil.xcresult
