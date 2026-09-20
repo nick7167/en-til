@@ -19,6 +19,9 @@ struct VisualFixtureView: View {
                 JoinView(client: client, close: {}, initialStep: 2, initialCode: "K7MX")
             case "code-error":
                 JoinView(client: client, close: {}, initialStep: 0, initialCode: "K7MZ", initialError: true)
+            case "rules": RulesView()
+            case "privacy": PrivacyView()
+            case "profile": ProfileView(client: client)
             case "settings":
                 PreferencesView(client: client, store: store)
             case "setup":

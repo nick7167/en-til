@@ -33,6 +33,7 @@ jobs:
       - name: Verify Xcode and simulator availability
         run: |
           python3 scripts/check-native-assets.py
+          python3 scripts/check-text-contrast.py
           xcodebuild -version
           xcrun simctl list devices available
       - name: Build and test native app

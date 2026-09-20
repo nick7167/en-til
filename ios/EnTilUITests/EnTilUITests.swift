@@ -96,7 +96,7 @@ final class EnTilUITests: XCTestCase {
     }
 
     @MainActor func testAdditionalServerSnapshotScreens() throws {
-        for (route, text) in [("movement", "Sådan rykker I"), ("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
+        for (route, text) in [("rules", "Samme fjollede hold"), ("privacy", "Privatliv"), ("profile", "Dit navn. Din figur."), ("movement", "Sådan rykker I"), ("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
             let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
             if route == "movement" {

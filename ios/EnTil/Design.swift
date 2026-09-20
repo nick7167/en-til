@@ -38,13 +38,28 @@ struct SceneBackground: View {
                     .opacity(typeSize.isAccessibilitySize ? 0.25 : 1)
                     .clipped()
                 }
-                if scene == .settings {
+                LinearGradient(stops: [.init(color: .ink.opacity(0.8), location: 0),
+                                   .init(color: .ink.opacity(0.8), location: 0.12),
+                                   .init(color: .clear, location: 0.35)], startPoint: .top, endPoint: .bottom)
+            if scene == .settings {
                     LinearGradient(stops: [.init(color: .clear, location: 0.14), .init(color: .ink, location: 0.34)], startPoint: .top, endPoint: .bottom)
                 }
             }
         }.ignoresSafeArea().accessibilityHidden(true)
     }
 }
+extension View {
+    /// Keeps artwork from crossing letterforms without dimming the whole scene.
+    func readingSurface() -> some View {
+        fixedSize(horizontal: false, vertical: true)
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.ink)
+                    .padding(.horizontal, -6).padding(.vertical, -3)
+            }
+    }
+}
+
 struct BrandLogo: View {
     var body: some View {
         Image("BrandLogo").resizable().scaledToFit().accessibilityLabel("En til?").accessibilityAddTraits(.isHeader)
@@ -57,11 +72,11 @@ struct LoungeButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(.system(.headline, design: .rounded).weight(.heavy)).multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, minHeight: 28).padding(.vertical, 16).padding(.horizontal, 12)
-            .foregroundStyle(primary ? Color.ink : Color.cream)
-            .background(LinearGradient(colors: primary ? [Color(hex: 0xDEF989), .lime, Color(hex: 0xE6FF95)] : [Color(hex: 0x453765), Color(hex: 0x362B53), Color(hex: 0x504073)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
+            .foregroundStyle(!isEnabled ? Color.lilac : primary ? Color.ink : Color.cream)
+            .background(LinearGradient(colors: !isEnabled ? [.lounge, .lounge] : primary ? [Color(hex: 0xDEF989), .lime, Color(hex: 0xE6FF95)] : [Color(hex: 0x453765), Color(hex: 0x362B53), Color(hex: 0x504073)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
             .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(primary ? Color.lime.opacity(0.7) : Color.lilac.opacity(0.3)))
             .scaleEffect(configuration.isPressed && !reducedMotion ? 0.975 : 1)
-            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.85 : 1)
+            .opacity(configuration.isPressed ? 0.95 : 1)
             .animation(reducedMotion ? nil : .spring(response: 0.25, dampingFraction: 1), value: configuration.isPressed)
     }
 }
@@ -69,7 +84,7 @@ struct Panel<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
         content.padding(13).frame(maxWidth: .infinity)
-            .background(LinearGradient(colors: [Color(hex: 0x232036).opacity(0.97), Color(hex: 0x161523).opacity(0.96)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 14))
+            .background(LinearGradient(colors: [Color(hex: 0x232036), Color(hex: 0x161523)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 14))
             .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Color.lilac.opacity(0.26)))
     }
 }
@@ -115,7 +130,7 @@ struct Choice: View {
                 Spacer(minLength: 8)
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle").foregroundStyle(selected ? Color.lime : Color.lilac)
             }.padding(22).frame(minHeight: 66).frame(maxWidth: .infinity)
-                .background(selected ? Color.lime.opacity(0.1) : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
+                .background(selected ? Color(hex: 0x343B2C) : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                 .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
         }.buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])
     }
@@ -158,7 +173,7 @@ struct SeatCard: View {
             if seat.away { Text("Væk").font(.caption2).foregroundStyle(Color.lilac) }
             if seat.late { Text("Næste spil").font(.caption2).foregroundStyle(Color.lilac) }
         }.frame(maxWidth: .infinity, minHeight: tall ? 190 : nil).padding(.vertical, 7).padding(.horizontal, 4)
-            .background(LinearGradient(colors: [.lounge.opacity(0.86), .ink.opacity(0.88)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
+            .background(LinearGradient(colors: [.lounge, .ink], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 13))
             .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
             .overlay(alignment: .topTrailing) { if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime).font(.title3).padding(7) } }
             .accessibilityElement(children: .combine)
@@ -193,7 +208,7 @@ struct PersonalChoice: View {
     var body: some View {
         Button(action: action) {
             Text(title).font(.editorial(29)).frame(maxWidth: .infinity, minHeight: 100)
-                .background(selected ? Color.lime.opacity(0.1) : Color.lounge.opacity(0.95), in: RoundedRectangle(cornerRadius: 13))
+                .background(selected ? Color(hex: 0x343B2C) : Color.lounge, in: RoundedRectangle(cornerRadius: 13))
                 .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
                 .overlay(alignment: .topTrailing) { if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime).font(.title2).padding(9) } }
         }.buttonStyle(.plain).accessibilityAddTraits(selected ? .isSelected : [])

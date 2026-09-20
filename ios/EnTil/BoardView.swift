@@ -61,7 +61,7 @@ struct WindingBoard: View {
                                 ZStack {
                                     Text(space == room.settings.finish ? "MÅL" : "\(space)")
                                         .font(.system(size: 17, weight: .semibold, design: .rounded).monospacedDigit())
-                                        .foregroundStyle(space == room.settings.finish ? Color.lime : Color.cream.opacity(0.7))
+                                        .foregroundStyle(space == room.settings.finish ? Color.lime : Color.cream)
                                         .rotationEffect(.degrees(-5))
                                         .offset(x: x - (occupants.isEmpty ? 0 : 25), y: 2)
                                         .accessibilityHidden(true)

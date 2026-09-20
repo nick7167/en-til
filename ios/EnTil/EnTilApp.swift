@@ -124,7 +124,7 @@ struct RootView: View {
     private var specialFixtureRoute: String? {
         guard let name = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] else { return nil }
         if name.hasPrefix("pack-detail-") || name.hasPrefix("pack-owned-") { return name }
-        return ["join", "name", "characters", "code-error", "settings", "setup", "pack-selection", "shop", "pack-detail", "bundle", "adult", "results", "pack-owned"].contains(name) ? name : nil
+        return ["join", "name", "characters", "code-error", "settings", "setup", "pack-selection", "shop", "pack-detail", "bundle", "adult", "results", "pack-owned", "rules", "privacy", "profile"].contains(name) ? name : nil
     }
     #endif
 
@@ -142,7 +142,7 @@ struct HomeView: View {
             HStack { Spacer(); Button("Indstillinger", systemImage: "gearshape") { show(.settings) }.labelStyle(.iconOnly).font(.title2).frame(width: 36, height: 32) }.foregroundStyle(Color.cream)
             BrandLogo().frame(height: 144).padding(.horizontal, 8)
             Spacer(minLength: 166)
-            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 21, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0)
+            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 21, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0).readingSurface()
             Button { show(.profile) } label: {
                 Panel { HStack(spacing: 10) { CharacterView(index: character, size: 32); Text(name.isEmpty ? "Vælg navn og figur" : name).font(.subheadline); Spacer(); Image(systemName: "chevron.right") } }
             }.buttonStyle(.plain)
@@ -151,7 +151,7 @@ struct HomeView: View {
                 else { Task { await client.create(name: name, character: character, adult: adult, drinking: drinking) } }
             }.buttonStyle(LoungeButtonStyle()).disabled(client.busy)
             Button("Deltag i spil", action: join).buttonStyle(LoungeButtonStyle(primary: false))
-            Button("Se pakker ›") { show(.packs) }.font(.footnote).padding(.vertical, 8).foregroundStyle(Color.cream)
+            Button("Se pakker ›") { show(.packs) }.font(.footnote).padding(.vertical, 8).foregroundStyle(Color.cream).readingSurface()
             if UserDefaults.standard.string(forKey: "roomID") != nil {
                 Button("Tilbage til dit spil") { Task { await client.restoreSeat() } }.font(.footnote)
             }
@@ -209,11 +209,11 @@ struct JoinView: View {
                 Button("Vælg figur") { step = 2; focused = false }.buttonStyle(LoungeButtonStyle()).disabled(!validName)
             } else {
                 Text(name).font(.subheadline).padding(.horizontal, 18).padding(.vertical, 5).background(Color.violet, in: Capsule())
-                Text("Figurer med navn er allerede valgt.").font(.footnote)
+                Text("Figurer med navn er allerede valgt.").font(.footnote).readingSurface()
                 CharacterPicker(selection: $character, seats: client.joinPreview?.seats ?? [])
                 Button("Deltag i spil") { Task { await client.join(code: code, name: name, character: character, adult: adult, drinking: drinking) } }
                     .buttonStyle(LoungeButtonStyle()).disabled(client.busy)
-                Text("Hvis figuren allerede er valgt, kan du vælge en anden.").font(.footnote).foregroundStyle(Color.lilac)
+                Text("Hvis figuren allerede er valgt, kan du vælge en anden.").font(.footnote).foregroundStyle(Color.lilac).readingSurface()
             }
         }.task { focused = true; if client.ageDeclined { step = 0; client.ageDeclined = false } }
             .onChange(of: client.ageDeclined) { _, declined in
@@ -248,7 +248,7 @@ struct CharacterPicker: View {
                     }.frame(maxWidth: .infinity, minHeight: 105).padding(5)
                         .background(Color.lounge, in: RoundedRectangle(cornerRadius: 15))
                         .overlay(RoundedRectangle(cornerRadius: 15).strokeBorder(selection == index ? Color.lime : Color.lilac.opacity(0.2), lineWidth: selection == index ? 2 : 1))
-                        .opacity(occupant == nil ? 1 : 0.5)
+                        
                 }.buttonStyle(.plain).disabled(occupant != nil).accessibilityAddTraits(selection == index ? .isSelected : [])
             }
         }
@@ -283,12 +283,12 @@ struct AdultView: View {
             BrandLogo().frame(height: 108)
             if let code = client.room?.code { CodePlaque(code: code) }
             Text("Er du fyldt 18 år?").font(.editorial()).multilineTextAlignment(.center)
-            Text("Dette spil indeholder voksenindhold eller valgfrie drikkeregler.").multilineTextAlignment(.center)
+            Text("Dette spil indeholder voksenindhold eller valgfrie drikkeregler.").multilineTextAlignment(.center).readingSurface()
             Spacer(minLength: 200)
-            Text("Vi husker dit svar på denne iPhone.").font(.footnote).foregroundStyle(Color.lilac)
+            Text("Vi husker dit svar på denne iPhone.").font(.footnote).foregroundStyle(Color.lilac).readingSurface()
             Button("Ja, jeg er fyldt 18 år") { Task { await client.confirmAdult() } }.buttonStyle(LoungeButtonStyle())
             Button("Nej, gå tilbage") { Task { await client.declineAdult() } }.buttonStyle(LoungeButtonStyle(primary: false))
-            Text("Du kan stadig deltage i spil uden voksenindhold og drikkeregler.").font(.footnote).multilineTextAlignment(.center)
+            Text("Du kan stadig deltage i spil uden voksenindhold og drikkeregler.").font(.footnote).multilineTextAlignment(.center).readingSurface()
         }.preferredColorScheme(.dark).interactiveDismissDisabled()
     }
 }

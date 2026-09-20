@@ -6,7 +6,7 @@ extension GameClient {
         UserDefaults.standard.set(0, forKey: "character")
         problem = nil
         room = nil
-        let routesWithoutRoom: Set<String> = ["home", "join", "name", "characters", "code-error", "settings", "shop", "pack-detail", "bundle", "pack-owned"]
+        let routesWithoutRoom: Set<String> = ["home", "join", "name", "characters", "code-error", "settings", "shop", "pack-detail", "bundle", "pack-owned", "rules", "privacy", "profile"]
         guard !routesWithoutRoom.contains(name), !name.hasPrefix("pack-detail-"), !name.hasPrefix("pack-owned-") else { return }
         let underlying = ["setup": "lobby", "pack-selection": "lobby", "results": "board", "reconnect": "answer", "adult": "lobby"][name] ?? name
         let url = Bundle.main.url(forResource: underlying, withExtension: "json", subdirectory: "Fixtures") ?? Bundle.main.url(forResource: underlying, withExtension: "json")
