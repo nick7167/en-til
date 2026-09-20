@@ -8,11 +8,10 @@ The final reveal stage now presents a dedicated visible board instead of appendi
 
 Reduce Motion and accessibility text sizes show final positions immediately. Cancelling the view cancels the pending delay; the regular board always uses authoritative positions. The movement snapshot fixture checks that the local player reaches field 6.
 
-Native verification: pending run 35524844518 at 8a0ff4d.
+Native verification: app compiled at 8a0ff4d in run 35524844518; five existing UI tests and both contract tests passed. The new fixture was absent from Xcode resources; regeneration fixed it. Focused run 35525670758 at 8e7744d passed the additional-screen test (82.395 seconds), including the final field-6 assertion. The movement screenshot was inspected in build/visual-twentythird.
 
 ## Still open
 
-- Inspect the new movement screenshot and native test results.
 - Review movement on a physical phone, including interruption and late-stage reconnection.
 - Review result-stage insertions and perceived pacing before adding more transitions.
 
