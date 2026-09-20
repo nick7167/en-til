@@ -7,6 +7,7 @@ import SwiftUI
         WindowGroup {
             RootView(client: client, store: store)
                 .preferredColorScheme(.dark).tint(.lime)
+                .fontDesign(.rounded)
                 .environment(\.locale, Locale(identifier: "da_DK"))
         }
     }
@@ -142,7 +143,7 @@ struct HomeView: View {
             HStack { Spacer(); Button("Indstillinger", systemImage: "gearshape") { show(.settings) }.labelStyle(.iconOnly).font(.title2).frame(width: 36, height: 32) }.foregroundStyle(Color.cream)
             BrandLogo().frame(height: 144).padding(.horizontal, 8)
             Spacer(minLength: 166)
-            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.custom("Fraunces-Regular", size: 21, relativeTo: .body)).italic().multilineTextAlignment(.center).lineSpacing(0).readingSurface()
+            Text("Gode venner.\nDårlige svar.\nEndnu en runde?").font(.system(.title3, design: .rounded).weight(.bold)).multilineTextAlignment(.center).lineSpacing(0).readingSurface()
             Button { show(.profile) } label: {
                 Panel { HStack(spacing: 10) { CharacterView(index: character, size: 32); Text(name.isEmpty ? "Vælg navn og figur" : name).font(.subheadline); Spacer(); Image(systemName: "chevron.right") } }
             }.buttonStyle(.plain)

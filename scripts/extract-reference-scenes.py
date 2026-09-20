@@ -25,6 +25,10 @@ def art(canvas,sheet,box,xy,width,fade=20):
  if fade:
   ramp=np.minimum(np.arange(height),np.arange(height)[::-1])/fade
   alpha*=np.clip(ramp,0,1)[:,None]
+ if width < W:
+  horizontal=np.arange(width,dtype=float)/max(fade,1)
+  if xy[0]==0:horizontal=horizontal[::-1]
+  alpha*=np.clip(horizontal,0,1)[None,:]
  patch.putalpha(Image.fromarray(alpha.astype('uint8')))
  canvas.alpha_composite(patch,xy)
 
@@ -60,7 +64,7 @@ print('Extracted 12 production scene backgrounds; six original sheets unchanged.
 
 # Reviewed reconstruction candidates replace crop fallbacks; original sheets stay untouched.
 import shutil
-for name, source in {'home':'home','question':'question','waiting':'waiting','ice':'ice-reference','lobby':'lobby','privateRound':'privateRound','finale':'finale','board':'board','adult':'home','settings':'board'}.items():
+for name, source in {'lounge':'lounge','plain':'lounge','backing':'lounge','home':'home','question':'question','waiting':'waiting','ice':'ice-reference','lobby':'lobby','privateRound':'privateRound','finale':'finale','board':'board','adult':'home','settings':'board'}.items():
     folder=ASSETS/f'Scene-{name}.imageset'
     folder.mkdir(exist_ok=True)
     shutil.copy2(ROOT/'design/artwork/scenes'/f'{source}.png', folder/'art.png')

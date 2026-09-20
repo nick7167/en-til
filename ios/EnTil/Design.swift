@@ -49,20 +49,21 @@ struct SceneBackground: View {
     }
 }
 extension View {
-    /// Keeps artwork from crossing letterforms without dimming the whole scene.
+    /// Soft local shading keeps letters readable without a visible text box.
     func readingSurface() -> some View {
         fixedSize(horizontal: false, vertical: true)
             .background {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 18)
                     .fill(Color.ink)
-                    .padding(.horizontal, -6).padding(.vertical, -3)
+                    .padding(.horizontal, -24).padding(.vertical, -18)
+                    .blur(radius: 12)
             }
     }
 }
 
 struct BrandLogo: View {
     var body: some View {
-        Image("BrandLogo").resizable().scaledToFit().accessibilityLabel("En til?").accessibilityAddTraits(.isHeader)
+        Image("BrandLogo").resizable().interpolation(.high).scaledToFit().accessibilityLabel("En til?").accessibilityAddTraits(.isHeader)
     }
 }
 struct LoungeButtonStyle: ButtonStyle {
@@ -147,7 +148,7 @@ struct CharacterView: View {
     static let names = ["Den afslappede", "Den begejstrede", "Den skeptiske", "Den generte", "Kløveren", "Stjernen", "Hjertet", "Den kantede", "Den cool", "Blomsten", "Solen", "Den høje"]
     static let colors: [UInt] = [0xD9F477, 0xFF978B, 0xB999EC, 0xFFC18E, 0x71D4C8, 0xF7D66B, 0xF19CC6, 0x9CD967, 0x7EABEF, 0xBB9ADD, 0xFFBB55, 0xEF9BC7]
     var body: some View {
-        Image("Character-\(min(max(index, 0), 11))").resizable().scaledToFit()
+        Image("Character-\(min(max(index, 0), 11))").resizable().interpolation(.high).scaledToFit()
             .frame(width: size, height: size).accessibilityLabel(Self.names[min(max(index, 0), 11)])
     }
 }

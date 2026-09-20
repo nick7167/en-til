@@ -32,3 +32,16 @@ Pause scene: original E03 two-character lounge crop `(98,970,487,1114)`, assembl
 Ice scene refinement: `scripts/extract-reference-ice.py` derives `design/artwork/scenes/ice-reference.png` directly from C03. It removes mockup lettering/chip/status/footer, protects the left mountain contour, and checks that the central hero region is unchanged. This preserves the approved lime character, hat and pickaxe; the earlier generated reconstruction remains in design/artwork for provenance. Regenerating this one derived source requires build-only Pillow/numpy/OpenCV; ordinary scene assembly and native builds simply use the checked-in image. This narrow lettering cleanup differs from the rejected broad rectangle inpainting experiment.
 
 20 September 2026: all six pack detail/owned screens now use immersive backgrounds. Isbryderen retains the reference-derived Scene-ice; the other five reuse the existing Pack cover assets with native colour gradients and edge fades. No new artwork generated. Final owned-screen composition inspected from native run 35524368558.
+
+## Playful polish — 21 September 2026
+
+User identified pixelated sprites/logo, hard background cutoffs and overly formal supporting typography. Built-in image generation restored the wordmark and cast from existing approved references. Originals remain in Codex generated folder `01a08935-5b1c-7b30-9eb8-298443c5a11b`; local sources are `design/artwork/production`.
+
+- Logo: `exec-e5f2cb84-ed22-4589-8541-6124ce350364.png`; extracted 1704×857 cream/lime lettering.
+- Cast: `exec-7f2d5ebe-1235-41fb-a495-a89069d77385.png`; flatter 2D restoration after rejecting the puffy rendering in `exec-394ab26a-c281-4027-87f9-b5177d2d2031.png`. Shapes/colours retain the twelve cast identities; this is a new rendering candidate, not an identical pixel copy of the references.
+- Coral hero: `exec-423c2d00-285c-4bfe-afd6-6faccfcd0538.png`; separately restored for large finale/join usage, extracted 1196×984.
+- Continuous lounge: `exec-85a3f653-5076-4a15-9b5b-96bb5f6059fe.png`, preserved as `design/artwork/scenes/lounge.png`. Replaces cut-off corner patches for lounge/plain/backing scenes.
+
+`python3 scripts/extract-production-art.py` extracts transparent sprites and removes detached alpha residue; it uses the user's existing authorization for direct artwork extraction. Run it after the legacy reference-cast extractor if regenerating all art. `extract-reference-scenes.py` installs the continuous lounge and feathers any remaining side-crop edges. Source resolution checks prevent the old thumbnail-sized sprites from returning.
+
+Supporting system text uses the native rounded design; the home tagline is rounded/bold instead of italic Fraunces. Existing expressive display headings remain. Local text shading now has feathered edges instead of a hard rectangular plate. Native verification pending.
