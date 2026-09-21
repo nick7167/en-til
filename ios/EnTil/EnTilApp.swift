@@ -178,7 +178,7 @@ struct JoinView: View {
     var body: some View {
         Screen(scene: step < 2 ? .lounge : .plain, spacing: 10) {
             HStack { Button("Tilbage", systemImage: "chevron.left") { if step > 0 { step -= 1 } else { close() } }.labelStyle(.iconOnly).frame(width: 44, height: 44); Spacer(); if step > 0 { Text(code).font(.headline.monospaced()).tracking(4) } }
-            Text(step == 0 ? "Deltag i spil" : step == 1 ? "Hvad skal vi kalde dig?" : "Find din figur").font(.editorial()).multilineTextAlignment(.center)
+            Text(step == 0 ? "Deltag i spil" : step == 1 ? "Hvad skal vi kalde dig?" : "Find din figur").font(.editorial()).fontDesign(nil).multilineTextAlignment(.center)
             Text(step == 0 ? "Indtast koden fra værten." : step == 1 ? "Dit navn bliver vist til de andre." : "Vælg den, der ligner dit humør.").multilineTextAlignment(.center)
             if step < 2 { CharacterView(index: 1, size: 116).padding(.bottom, -18).zIndex(1) }
             if step == 0 {
@@ -262,7 +262,7 @@ struct ProfileView: View {
     @State private var character = UserDefaults.standard.integer(forKey: "character")
     var body: some View {
         Screen {
-            Text("Dit navn. Din figur.").font(.editorial())
+            Text("Dit navn. Din figur.").font(.editorial()).fontDesign(nil)
             TextField("Dit navn", text: $name).textContentType(.nickname).padding(18).background(Color.lounge, in: RoundedRectangle(cornerRadius: 15))
             CharacterPicker(selection: $character, seats: client.room?.players ?? [], me: client.room?.me)
             Button("Gem profil") {
@@ -283,7 +283,7 @@ struct AdultView: View {
         Screen(scene: .adult) {
             BrandLogo().frame(height: 108)
             if let code = client.room?.code { CodePlaque(code: code) }
-            Text("Er du fyldt 18 år?").font(.editorial()).multilineTextAlignment(.center)
+            Text("Er du fyldt 18 år?").font(.editorial()).fontDesign(nil).multilineTextAlignment(.center)
             Text("Dette spil indeholder voksenindhold eller valgfrie drikkeregler.").multilineTextAlignment(.center).readingSurface()
             Spacer(minLength: 200)
             Text("Vi husker dit svar på denne iPhone.").font(.footnote).foregroundStyle(Color.lilac).readingSurface()
@@ -303,7 +303,7 @@ struct ReconnectingView: View {
                 CharacterView(index: 2, size: 95).frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 30).padding(.bottom, -28).zIndex(1)
                 Panel {
                     VStack(spacing: 24) {
-                        Text("Forbindelsen blev afbrudt").font(.editorial(30)).multilineTextAlignment(.center)
+                        Text("Forbindelsen blev afbrudt").font(.editorial(30)).fontDesign(nil).multilineTextAlignment(.center)
                         Text("Vi prøver at forbinde dig igen.").multilineTextAlignment(.center)
                         ProgressView().controlSize(.large).tint(.lilac).padding(8)
                         Text("Tiden løber videre.").font(.footnote)

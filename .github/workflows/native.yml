@@ -5,7 +5,7 @@ on:
       scope:
         description: Native test scope
         type: choice
-        options: [all, live, keyboard, packs, additional]
+        options: [all, live, keyboard, packs, additional, reference]
         default: all
 permissions:
   contents: read
@@ -53,6 +53,8 @@ jobs:
             test_args+=('-only-testing:EnTilUITests/LiveMatchUITests')
           elif [ "${{ inputs.scope }}" = keyboard ]; then
             test_args+=('-only-testing:EnTilUITests/EnTilUITests/testHomeAndKeyboard')
+          elif [ "${{ inputs.scope }}" = reference ]; then
+            test_args+=('-only-testing:EnTilUITests/EnTilUITests/testAllApprovedReferenceScreens' '-only-testing:EnTilUITests/EnTilUITests/testLargeTextLayouts')
           elif [ "${{ inputs.scope }}" = additional ]; then
             test_args+=('-only-testing:EnTilUITests/EnTilUITests/testAdditionalServerSnapshotScreens')
           elif [ "${{ inputs.scope }}" = packs ]; then

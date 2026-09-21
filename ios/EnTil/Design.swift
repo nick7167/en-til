@@ -49,15 +49,11 @@ struct SceneBackground: View {
     }
 }
 extension View {
-    /// Soft local shading keeps letters readable without a visible text box.
+    /// Glyph shadows separate copy from artwork without boxes or spill onto nearby controls.
     func readingSurface() -> some View {
         fixedSize(horizontal: false, vertical: true)
-            .background {
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(Color.ink)
-                    .padding(.horizontal, -24).padding(.vertical, -18)
-                    .blur(radius: 12)
-            }
+            .shadow(color: .ink, radius: 1)
+            .shadow(color: .ink, radius: 3)
     }
 }
 
@@ -187,7 +183,7 @@ struct NumberChoice: View {
     let action: () -> Void
     var body: some View {
         Button(action: action) {
-            Text(String(number)).font(.editorial(42)).monospacedDigit()
+            Text(String(number)).font(.editorial(42)).fontDesign(nil).monospacedDigit()
                 .frame(maxWidth: .infinity, minHeight: 100)
                 .foregroundStyle(selected ? Color.ink : Color.cream)
                 .background(selected ? Color.lime : Color.lounge, in: RoundedRectangle(cornerRadius: 15))
@@ -208,7 +204,7 @@ struct PersonalChoice: View {
     let action: () -> Void
     var body: some View {
         Button(action: action) {
-            Text(title).font(.editorial(29)).frame(maxWidth: .infinity, minHeight: 100)
+            Text(title).font(.editorial(29)).fontDesign(nil).frame(maxWidth: .infinity, minHeight: 100)
                 .background(selected ? Color(hex: 0x343B2C) : Color.lounge, in: RoundedRectangle(cornerRadius: 13))
                 .overlay(RoundedRectangle(cornerRadius: 13).strokeBorder(selected ? Color.lime : Color.lilac.opacity(0.3), lineWidth: selected ? 2 : 1))
                 .overlay(alignment: .topTrailing) { if selected { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.lime).font(.title2).padding(9) } }
