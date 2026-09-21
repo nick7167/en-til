@@ -1,6 +1,6 @@
 # En til?
 
-Native Danish iPhone party board game, iOS 18+. Implementation in progress from the approved [specification](docs/SPECIFICATION.md); historical discovery is archived. Source is hosted publicly at https://github.com/nick7167/en-til. No backend is deployed. GitHub Actions runs backend checks; the native simulator checkpoint is manual.
+Native Danish iPhone party board game, iOS 18+. Implementation in progress from the approved [specification](docs/SPECIFICATION.md); historical discovery is archived. Source is hosted publicly at https://github.com/nick7167/en-til. The isolated TestFlight beta backend is deployed at https://en-til-beta.nicklas-andreasen2000.workers.dev. It serves the 20 draft questions; this is not the release catalogue. GitHub Actions runs backend checks; the native simulator checkpoint is manual.
 
 - `ios/`: SwiftUI app, native controls, secure guest session, StoreKit client and XcodeGen project.
 - `backend/`: TypeScript Worker, SQLite Durable Object per room, versioned commands, private snapshots, D1 migrations and tests.

@@ -13,7 +13,9 @@ settings:
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: '0.1.0'
     CURRENT_PROJECT_VERSION: '1'
-    PRODUCT_BUNDLE_IDENTIFIER: dev.adrez.entil.development
+    VERSIONING_SYSTEM: apple-generic
+    PRODUCT_BUNDLE_IDENTIFIER: dev.adrez.entil
+    DEVELOPMENT_TEAM: JDW2B73SS5
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     GENERATE_INFOPLIST_FILE: NO
 targets:
@@ -31,13 +33,14 @@ targets:
         UILaunchScreen: {}
         UIAppFonts: [Fraunces.ttf, EnTilHeadings-Bold.ttf]
         EnTilAPIURL: $(ENTIL_API_URL)
+        ITSAppUsesNonExemptEncryption: false
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
     settings:
       base:
         TARGETED_DEVICE_FAMILY: '1'
         'CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]': EnTil/Simulator.entitlements
-        ENTIL_API_URL: https://unconfigured.invalid
+        ENTIL_API_URL: https://en-til-beta.nicklas-andreasen2000.workers.dev
       configs:
         Debug:
           ENTIL_API_URL: http://127.0.0.1:8787

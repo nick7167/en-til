@@ -22,6 +22,8 @@
 	<string>1</string>
 	<key>EnTilAPIURL</key>
 	<string>$(ENTIL_API_URL)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

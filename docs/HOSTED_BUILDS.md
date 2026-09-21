@@ -13,3 +13,13 @@ Screenshot fixture mode is DEBUG-only and loads public server snapshots generate
 Remaining native matrix: small iPhone plus larger device, iOS 18 minimum runtime, accessibility text sizes, VoiceOver, reduced motion, mute, real hardware haptics/audio, eight-player/long-name layouts, and comparison against every approved concept. No test result is established until the hosted run completes.
 
 Signing/TestFlight workflow must be finalized after a real bundle identifier, Apple team, App Store record, backend endpoint and explicit upload permission are provided. No placeholder production resources are created by this repository.
+
+## TestFlight beta — 21 September 2026
+
+The owner authorized deployment and TestFlight upload. App: 6814572975; bundle: dev.adrez.entil; team: JDW2B73SS5. Codemagic app: 6ab1556209e0fc685fccc2b2. Manual workflow `testflight-beta` uses Xcode 26.6 and the existing `vildsvar-app-store-connect` integration. The app-scoped `en_til_signing` group holds an encrypted certificate private key. No credentials are committed. Publishing uploads to App Store Connect; external beta review and public App Store submission are disabled. Internal TestFlight access is configured after processing.
+
+Release builds point to the dedicated beta Worker; Debug keeps localhost for simulator tests. `backend/wrangler.beta.jsonc` owns a fresh D1 database and Durable Object namespace, separate from all other apps. Its development environment deliberately permits the 20 unapproved drafts and selects Apple's sandbox purchase environment. No draft is marked approved. Apple purchase-verification credentials and launch products are not configured yet; free matches are the first device-testing scope.
+
+Deploy: `pnpm exec wrangler deploy --config backend/wrangler.beta.jsonc`. Apply schema: `pnpm exec wrangler d1 migrations apply DB --remote --config backend/wrangler.beta.jsonc`. Emergency game disable: set DISABLED to true in that beta configuration and redeploy; /health remains a liveness check.
+
+Live integration checks require both ENTIL_TEST_URL set to the exact beta URL and ENTIL_ALLOW_REMOTE_BETA=1. They intentionally create test seats/rooms, which expire after inactivity. Local-only remains the default. The signed build and Apple processing are pending; do not describe the app as available in TestFlight until confirmed.

@@ -10,3 +10,5 @@ Read PROJECT_HANDOFF.md and README.md before project work. The user's implementa
 - Do not delegate unless explicitly authorized.
 - Review original Danish questions with Nicklas in batches of about 20; automation cannot grant human approval.
 - Record limitations and unfinished acceptance checks honestly.
+
+- On 21 September 2026 the user explicitly authorized deploying the En til backend and signing/uploading this app to TestFlight. Apple team JDW2B73SS5, bundle dev.adrez.entil, App Store Connect app 6814572975. Use the existing Codemagic integration vildsvar-app-store-connect. This does not authorize public App Store submission, paid upgrades, or modifying other apps.

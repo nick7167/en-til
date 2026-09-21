@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import WebSocket from 'ws';
-const base='http://127.0.0.1:8787';
+const base=process.env.ENTIL_TEST_URL ?? 'http://127.0.0.1:8787';
+if(!['127.0.0.1','localhost'].includes(new URL(base).hostname) && !(process.env.ENTIL_ALLOW_REMOTE_BETA==='1' && new URL(base).origin==='https://en-til-beta.nicklas-andreasen2000.workers.dev'))throw new Error('Room creation requires local service or explicit En til beta opt-in.');
 interface Guest{id:string;token:string}
-async function call(path:string,g?:Guest,body?:unknown){const response=await fetch(base+path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.61',...(g?{Authorization:`Bearer ${g.token}`}:{})},body:body===undefined?undefined:JSON.stringify(body)});const data=await response.json() as any;assert.ok(response.ok,JSON.stringify(data));return data;}
+async function call(path:string,g?:Guest,body?:unknown){const response=await fetch(base+path,{method:body===undefined?'GET':'POST',headers:{'Content-Type':'application/json',...(g?{Authorization:`Bearer ${g.token}`}:{})},body:body===undefined?undefined:JSON.stringify(body)});const data=await response.json() as any;assert.ok(response.ok,JSON.stringify(data));return data;}
 let room:any;
 function command(action:unknown){return {v:1,requestID:randomUUID(),matchID:room?.matchID ?? null,roundID:room?.round?.id ?? null,action};}
 const host:Guest=await call('/v1/sessions',undefined,{});

@@ -1,4 +1,4 @@
-# Manual checkpoints only. No triggers, signing, uploads or publication enabled.
+# Manual workflows only. TestFlight deployment authorized by the project owner.
 workflows:
   native-checkpoint:
     name: Native build, tests and screenshots
@@ -19,3 +19,46 @@ workflows:
     artifacts:
       - build/EnTil.xcresult
       - build/screenshots/**
+
+  testflight-beta:
+    name: En til — TestFlight beta
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    integrations:
+      app_store_connect: vildsvar-app-store-connect
+    environment:
+      xcode: '26.6'
+      groups:
+        - en_til_signing
+      vars:
+        BUNDLE_ID: dev.adrez.entil
+        APP_STORE_APPLE_ID: '6814572975'
+    scripts:
+      - name: Check beta backend and native resources
+        script: |
+          set -euo pipefail
+          curl --fail --silent --show-error https://en-til-beta.nicklas-andreasen2000.workers.dev/health
+          python3 scripts/check-native-assets.py
+          python3 scripts/check-text-contrast.py
+      - name: Prepare signing
+        script: |
+          set -euo pipefail
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Build signed beta
+        script: |
+          set -euo pipefail
+          cd ios
+          agvtool new-version -all "$((BUILD_NUMBER + 1))"
+          cd ..
+          xcode-project build-ipa --project ios/EnTil.xcodeproj --scheme EnTil
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
