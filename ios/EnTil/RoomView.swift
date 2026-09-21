@@ -102,8 +102,8 @@ struct RoomView: View {
                 if room.phase == "private" {
                     if round.privateLocked { waiting(privateStep: true) }
                     else {
-                        Text("Kun det samlede antal ja-svar bliver vist. I små grupper kan man stadig gætte, hvem der svarede hvad.").font(.footnote).multilineTextAlignment(.center).foregroundStyle(Color.lilac).readingSurface()
                         Color.clear.frame(height: 175)
+                        Text("Kun det samlede antal ja-svar bliver vist. I små grupper kan man stadig gætte, hvem der svarede hvad.").font(.footnote).multilineTextAlignment(.center).foregroundStyle(Color.lilac).readingSurface()
                         HStack(spacing: 12) {
                             PersonalChoice(title: "Ja", selected: privateAnswer == "yes") { privateAnswer = "yes" }
                             PersonalChoice(title: "Nej", selected: privateAnswer == "no") { privateAnswer = "no" }
