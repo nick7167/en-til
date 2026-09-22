@@ -12,7 +12,7 @@ function cmd(r:Room,action:Command['action']):Command {return {v:1,requestID:cry
 function send(r:Room,id:string,action:Command['action'],now=1000){return dispatch(r,{id,owned},cmd(r,action),now);}
 function lobby(count=3,pool=facts){let r=createRoom('room','K7MX',pool);for(let i=0;i<count;i++)r=send(r,`p${i}`,{type:'join',name:i<2?'Nicklas':`Ven ${i}`,character:i,adult:true,drinking:true},i);return r;}
 function start(r=lobby()){for(const p of r.players.slice(1))r=send(r,p.id,{type:'ready',value:true});return send(r,'p0',{type:'start'});}
-function complete(r:Room,values:number[],now=2000){for(const [i,p] of r.round!.participants.entries()){r=send(r,p,{type:'answer',value:values[i]!},now);r=send(r,p,{type:'back',playerID:r.round!.participants[(i+1)%values.length]!},now);}return r;}
+function complete(r:Room,values:number[],now=2000){for(const [i,p] of r.round!.participants.entries()){r=send(r,p,{type:'answer',value:values[i]!},now);if(r.round!.question.kind==='factual')r=send(r,p,{type:'back',playerID:r.round!.participants[(i+1)%values.length]!},now);}return r;}
 
 test('all four independent scoring combinations and no recursive backing',()=>{
   let r=start(lobby(4));const correct=r.round!.question.correct!,wrong=(correct+1)%r.round!.question.options!.length;
@@ -48,11 +48,14 @@ test('personal closest ties, own response included, private data deleted before 
   assert.equal(r.phase,'answer');assert.equal(r.round!.yesCount,2);assert.deepEqual(r.round!.privateResponses,{});
   assert.equal(snapshot(r,'p0',2000).round!.correct,null);r=complete(r,[1,3,0,4],3000);
   assert.deepEqual(r.round!.results!.map(x=>x.own),[1,1,0,0]);
+  assert.deepEqual(r.round!.results!.map(x=>x.points),[1,1,0,0]);
+  assert.ok(r.round!.results!.every(x=>x.back===null && x.backing===0));
+  assert.ok(Object.values(r.round!.turns).every(t=>t.backClosed && t.backingDeadline===undefined));
 });
 test('private skip still scores and is not attributed; fallback works personal-only',()=>{
   let r=lobby(4,personal);r=send(r,'p0',{type:'settings',settings:{...defaults,packs:['isbryderen']}});r=start(r);
   for(let i=0;i<4;i++)r=send(r,`p${i}`,{type:'private',value:i===0?'skip':'yes'},2000);
-  assert.equal(r.round!.responseCount,3);r=complete(r,[3,3,3,3],3000);assert.equal(r.round!.results![0]!.points,2);
+  assert.equal(r.round!.responseCount,3);r=complete(r,[3,3,3,3],3000);assert.equal(r.round!.results![0]!.points,1);
   let f=lobby(3,personal);f=send(f,'p0',{type:'settings',settings:{...defaults,packs:['isbryderen']}});f=start(f);
   for(let i=0;i<3;i++)f=send(f,`p${i}`,{type:'private',value:i===0?'skip':'yes'},2000);
   assert.equal(f.phase,'answer');assert.equal(f.round!.question.pack,'free');assert.equal(f.round!.question.kind,'factual');assert.equal(f.round!.yesCount,undefined);assert.ok(f.fallbackNotice);
@@ -120,4 +123,31 @@ test('sitting out or leaving at the board releases ready players, but never star
   let r=start();r=complete(r,Array(3).fill(r.round!.question.correct));advance(r,10000);
   for(const id of ['p0','p1'])r=send(r,id,{type:'ready',value:true},10000);
   r=send(r,'p0',{type:'away',playerID:'p2'},10001);assert.equal(r.phase,'board');
+});
+
+test('personal guesses skip backing, recover older beta turns and time out without an extra phase',()=>{
+  let r=lobby(3,personal);r=send(r,'p0',{type:'settings',settings:{...defaults,packs:['isbryderen'],drinking:true}});r=start(r);
+  for(let i=0;i<3;i++)r=send(r,`p${i}`,{type:'private',value:'yes'},2000);
+  r=send(r,'p0',{type:'answer',value:2},3000);
+  assert.ok(r.round!.turns.p0!.backClosed);
+  assert.equal(r.round!.turns.p0!.backingDeadline,undefined);
+  assert.equal(snapshot(r,'p0',3000).round!.backLocked,true);
+  assert.throws(()=>send(r,'p0',{type:'back',playerID:'p1'},3000),{code:'locked'});
+  r.round!.turns.p0!.backClosed=false;r.round!.turns.p0!.backingDeadline=13000;
+  advance(r,3001);
+  assert.ok(r.round!.turns.p0!.backClosed);assert.equal(r.round!.turns.p0!.backingDeadline,undefined);
+  advance(r,22000);
+  assert.equal(r.phase,'reveal');
+  assert.deepEqual(r.round!.results!.map(x=>x.points),[1,0,0]);
+  assert.deepEqual(r.round!.results!.map(x=>x.sips),[0,null,null]);
+});
+
+test('points arrive with the first result rows; board scores still wait for movement',()=>{
+  let r=start();r=complete(r,Array(3).fill(r.round!.question.correct),2000);
+  assert.equal(snapshot(r,'p0',3799).round!.results.length,0);
+  const first=snapshot(r,'p0',3800);
+  assert.equal(first.round!.revealStage,1);
+  assert.ok(first.round!.results.every(x=>x.points===2));
+  assert.ok(first.players.every(p=>p.score===0));
+  assert.ok(snapshot(r,'p0',7800).players.every(p=>p.score===2));
 });

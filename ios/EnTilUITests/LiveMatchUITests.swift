@@ -46,12 +46,15 @@ import Foundation
         let catalogueURL = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "catalogue.draft", withExtension: "json"))
         let catalogue = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: catalogueURL)) as? [String: Any])
         let questions = try XCTUnwrap(catalogue["questions"] as? [[String: Any]])
-        for number in 1...3 {
+        var expectedScore = 0
+        for number in 1...4 {
             try await waitForPhase(["private", "answer"], by: host)
             let round = try XCTUnwrap(room["round"] as? [String: Any])
             XCTAssertEqual(round["number"] as? Int, number)
             XCTAssertTrue(round["correct"] is NSNull)
             let personal = round["kind"] as? String == "personal"
+            let expectedPoints = personal ? 1 : 2
+            expectedScore += expectedPoints
             if personal {
                 try tap(app.buttons["Ja"], in: app)
                 try tap(app.buttons["Lås dit svar"], in: app)
@@ -68,21 +71,29 @@ import Foundation
                 try tap(app.buttons[options[answer]], in: app)
             }
             try tap(app.buttons[personal ? "Lås dit gæt" : "Lås dit svar"], in: app)
-            try tap(app.buttons["back-\(host.id)"], in: app)
-            try tap(app.buttons["Sats på Freja"], in: app)
+            if !personal {
+                try tap(app.buttons["back-\(host.id)"], in: app)
+                try tap(app.buttons["Sats på Freja"], in: app)
+            }
             XCTAssertTrue(app.staticTexts["1 har valgt færdigt"].waitForExistence(timeout: 5))
+            if personal { XCTAssertFalse(app.buttons["back-\(host.id)"].exists) }
             for participant in [host, friend] {
                 try await command(["type": "answer", "value": answer], by: participant)
-                try await command(["type": "back", "playerID": participant.id == host.id ? friend.id : host.id], by: participant)
+                if !personal { try await command(["type": "back", "playerID": participant.id == host.id ? friend.id : host.id], by: participant) }
             }
             XCTAssertEqual(room["phase"] as? String, "reveal")
-            try await waitForPhase([number == 3 ? "finale" : "board"], by: host)
+            try await waitForPhase([expectedScore >= 5 ? "finale" : "board"], by: host)
             let results = try XCTUnwrap((room["round"] as? [String: Any])?["results"] as? [[String: Any]])
             XCTAssertEqual(results.count, 3)
-            XCTAssertTrue(results.allSatisfy { $0["points"] as? Int == 2 })
-            if number < 3 {
+            XCTAssertTrue(results.allSatisfy { $0["points"] as? Int == expectedPoints })
+            if personal { XCTAssertTrue(results.allSatisfy { $0["back"] is NSNull && $0["backing"] as? Int == 0 }) }
+            if expectedScore < 5 {
                 XCTAssertTrue(app.staticTexts["Sådan står I"].waitForExistence(timeout: 10))
                 if number == 1 {
+                    try await command(["type": "reaction", "value": "laughter"], by: host)
+                    try await Task.sleep(for: .milliseconds(700))
+                    let reactionCapture = XCTAttachment(screenshot: app.screenshot())
+                    reactionCapture.name = "live-character-reaction"; reactionCapture.lifetime = .keepAlways; add(reactionCapture)
                     app.terminate()
                     app.launch()
                     XCTAssertTrue(app.staticTexts["Sådan står I"].waitForExistence(timeout: 10))
@@ -91,12 +102,12 @@ import Foundation
                 XCTAssertTrue(app.buttons["Vent, jeg er ikke klar"].waitForExistence(timeout: 5))
                 try await command(["type": "ready", "value": true], by: host)
                 try await command(["type": "ready", "value": true], by: friend)
-            }
+            } else { break }
         }
         XCTAssertTrue(app.staticTexts["I deler sejren!"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "1")).count, 3)
         XCTAssertEqual((room["winners"] as? [String])?.count, 3)
-        XCTAssertTrue((room["players"] as? [[String: Any]])?.allSatisfy { $0["score"] as? Int == 6 } == true)
+        XCTAssertTrue((room["players"] as? [[String: Any]])?.allSatisfy { $0["score"] as? Int == expectedScore } == true)
         let capture = XCTAttachment(screenshot: app.screenshot())
         capture.name = "live-joint-finale"; capture.lifetime = .keepAlways; add(capture)
         try await command(["type": "rematch"], by: host)

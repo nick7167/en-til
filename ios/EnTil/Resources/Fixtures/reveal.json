@@ -4,7 +4,7 @@
   "code": "K7MX",
   "hostID": "p0",
   "me": "p0",
-  "serverTime": 5000,
+  "serverTime": 2800,
   "phase": "reveal",
   "matchID": "5c4a4591-2fc3-4d86-9c96-7042f20cfea2",
   "settings": {
@@ -88,7 +88,7 @@
     "fact": "Jupiter er solsystemets største planet.",
     "source": "https://science.nasa.gov/jupiter/facts/",
     "revealAt": 1000,
-    "revealStage": 2,
+    "revealStage": 1,
     "results": [
       {
         "playerID": "p0",

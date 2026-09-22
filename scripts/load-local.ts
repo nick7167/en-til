@@ -29,7 +29,7 @@ async function run(index:number){
   if(room.phase==='private')for(let i=0;i<8;i++)room=(await call(path+'/commands',ip,guests[i],command({type:'private',value:i%2?'yes':'no'}))).snapshot;
   for(let i=0;i<8;i++){
     room=(await call(path+'/commands',ip,guests[i],command({type:'answer',value:0}))).snapshot;
-    room=(await call(path+'/commands',ip,guests[i],command({type:'back',playerID:guests[(i+1)%8]!.id}))).snapshot;
+    if(room.round.kind==='factual')room=(await call(path+'/commands',ip,guests[i],command({type:'back',playerID:guests[(i+1)%8]!.id}))).snapshot;
   }
   assert.equal(room.phase,'reveal');
 }

@@ -356,7 +356,7 @@ struct RulesView: View {
             rule("1", "Svar selv", "Alle ser det samme spørgsmål. Vælg et svar, og lås det. Når spillet har bekræftet dit valg, kan det ikke ændres.")
             rule("2", "Sats på en ven", "Vælg en anden spiller, du tror svarer rigtigt. I må gerne satse på den samme.")
             rule("3", "Ryk frem", "Du får 1 point for dit eget rigtige svar og 1 point, hvis din ven svarer rigtigt. Din vens satsning ændrer ikke dine point.")
-            rule("?", "Personlige runder", "Svar privat ja eller nej, eller spring over. Så gætter alle på antallet af ja-svar. De nærmeste gæt tæller som rigtige, også ved lighed. Dit eget svar tæller med.")
+            rule("?", "Personlige runder", "Svar privat ja eller nej, eller spring over. Så gætter alle på antallet af ja-svar. De nærmeste gæt får 1 point, også ved lighed. Her satser I ikke på andre. Dit eget svar tæller med.")
             Text("Kun det samlede antal private svar vises. I små grupper kan I stadig drage slutninger om hinanden. Hvis færre end 3 svarer, får I et andet spørgsmål.").font(.footnote).foregroundStyle(Color.lilac).readingSurface()
             rule("★", "Først i mål", "Hele runden tælles færdig. Den, der er længst fremme, vinder. Står flere lige længst fremme, deler de sejren.")
             Text("Tiden løber videre, hvis forbindelsen ryger. Et ubekræftet valg tæller ikke. Du kan stadig satse, selv om du ikke nåede dit svar. Drikkeregler er altid valgfrie.").font(.footnote).readingSurface()
@@ -390,14 +390,14 @@ struct ResultsView: View {
                     Panel { VStack(alignment: .leading, spacing: 8) {
                         HStack { CharacterView(index: room.players.first { $0.id == result.playerID }?.character ?? 0, size: 48); Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller").font(.headline); Spacer(); Text("+\(result.points)").font(.title2.bold()).foregroundStyle(Color.lime) }
                         Text("Svar: \(result.answer.map { round.kind == "personal" ? String($0) : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "—")")
-                        Text("Satsede på: \(room.players.first { $0.id == result.back }?.name ?? "—")")
+                                if round.kind != "personal" { Text("Satsede på: \(room.players.first { $0.id == result.back }?.name ?? "—")") }
                         if room.settings.drinking { Text("Valgfrie slurke: \(result.sips.map(String.init) ?? "—")") }
                     }.font(.subheadline) }
                 }
                 } else {
                     Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 0) {
                         GridRow {
-                            Text("Spiller"); Text("Svar"); Text("Satsede på"); Text("Point")
+                            Text("Spiller"); Text("Svar"); if round.kind != "personal" { Text("Satsede på") }; Text("Point")
                             if room.settings.drinking { Text("Valgfrie slurke") }
                         }.font(.caption).foregroundStyle(Color.lilac).padding(.vertical, 14)
                         Divider()
@@ -408,7 +408,7 @@ struct ResultsView: View {
                                     Text(room.players.first { $0.id == result.playerID }?.name ?? "Spiller")
                                 }
                                 Text(result.answer.map { round.kind == "personal" ? String($0) : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "—")
-                                Text(room.players.first { $0.id == result.back }?.name ?? "—")
+                                if round.kind != "personal" { Text(room.players.first { $0.id == result.back }?.name ?? "—") }
                                 Text("+\(result.points)").font(.headline.bold()).foregroundStyle(Color.lime)
                                 if room.settings.drinking { Text(result.sips.map(String.init) ?? "—") }
                             }.font(.body).padding(.vertical, 10)

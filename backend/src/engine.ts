@@ -67,7 +67,8 @@ function beginRound(r:Room,now:number,forced?:Question) {
 function closeAnswer(r:Room,t:Turn,at:number) {
   if (t.answerClosed) return;
   t.answerClosed=true;
-  if (r.settings.timed) t.backingDeadline=at+r.settings.backingSeconds*1000;
+  if (r.round!.question.kind==='personal') t.backClosed=true;
+  else if (r.settings.timed) t.backingDeadline=at+r.settings.backingSeconds*1000;
 }
 function finishPrivate(r:Room,now:number) {
   const round=r.round!;
@@ -97,12 +98,13 @@ function scoreRound(r:Room,now:number) {
   };
   round.results=round.participants.map(id => {
     const p=player(r,id),t=round.turns[id]!;
-    const own=Number(correct(id)),backing=Number(t.back !== undefined && correct(t.back));
+    const personal=round.question.kind==='personal';
+    const own=Number(correct(id)),backing=Number(!personal && t.back !== undefined && correct(t.back));
     const points=own+backing;
     p.score+=points;
     if (r.settings.timed) p.missed=t.submitted ? 0 : p.missed+1;
     if (p.missed>=2) p.away=true;
-    return {playerID:id,answer:t.answer ?? null,back:t.back ?? null,own,backing,points,score:p.score,sips:r.settings.drinking && p.drinking && t.answer!==undefined && t.back!==undefined ? 2-points : null};
+    return {playerID:id,answer:t.answer ?? null,back:personal ? null : t.back ?? null,own,backing,points,score:p.score,sips:r.settings.drinking && p.drinking && t.answer!==undefined && (personal || t.back!==undefined) ? (personal ? 1 : 2)-points : null};
   });
   round.privateResponses={};
   round.revealAt=now; r.phase='reveal';
@@ -131,6 +133,8 @@ export function advance(r:Room,now:number) {
   if (r.phase==='answer') {
     const current=r.round!;
     for (const t of Object.values(current.turns)) {
+      // Older beta rooms may already be waiting for backing on a personal guess.
+      if(current.question.kind==='personal' && t.answerClosed){t.backClosed=true;delete t.backingDeadline;}
       if (current.answerDeadline!==undefined && now>=current.answerDeadline) closeAnswer(r,t,current.answerDeadline);
       if (t.backingDeadline!==undefined && now>=t.backingDeadline) t.backClosed=true;
     }
@@ -276,7 +280,7 @@ export function snapshot(r:Room,id:string,now:number) {
       correct:revealed ? (round.question.kind==='personal' ? round.yesCount : round.question.correct) ?? null : null,
       fact:revealed ? round.question.fact ?? null : null,source:revealed ? round.question.source ?? null : null,
       revealAt:round.revealAt ?? null,revealStage:stage,
-      results:revealed && stage>=1 ? (round.results ?? []).map(x => stage>=2 ? x : {...x,own:0,backing:0,points:0,score:x.score-x.points,sips:null}) : [],
+      results:revealed && stage>=1 ? round.results ?? [] : [],
     } : null,
     countdownAt:r.countdownAt ?? null,winners:revealed && stage>=3 ? r.winners : [],
     reactions:r.reactions.filter(x => now-x.at<4000),fallbackNotice:r.fallbackNotice,

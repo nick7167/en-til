@@ -34,7 +34,7 @@ await call(`${path}/commands`,host,command({type:'answer',value:1}),409);
 await call(`${path}/commands`,host,command({type:'back',playerID:host.id}),409);
 for(let i=0;i<8;i++){
   if(i>0)room=(await call(`${path}/commands`,guests[i],command({type:'answer',value:0}))).snapshot;
-  room=(await call(`${path}/commands`,guests[i],command({type:'back',playerID:guests[(i+1)%8]!.id}))).snapshot;
+  if(room.round.kind==='factual')room=(await call(`${path}/commands`,guests[i],command({type:'back',playerID:guests[(i+1)%8]!.id}))).snapshot;
 }
 assert.equal(room.phase,'reveal');assert.notEqual(room.round.correct,null);
 const seen=await call(path,host);assert.equal(seen.round.id,room.round.id);

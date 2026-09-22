@@ -25,8 +25,8 @@ try{
   if(room.phase==='private')for(let i=0;i<3;i++)room=(await call(path+'/commands',guests[i],command({type:'private',value:'yes'}))).snapshot;
   let finalCommand;
   for(let i=0;i<3;i++){
-    room=(await call(path+'/commands',guests[i],command({type:'answer',value:0}))).snapshot;
-    finalCommand=command({type:'back',playerID:guests[(i+1)%3]!.id});room=(await call(path+'/commands',guests[i],finalCommand)).snapshot;
+    finalCommand=command({type:'answer',value:0});room=(await call(path+'/commands',guests[i],finalCommand)).snapshot;
+    if(room.round.kind==='factual'){finalCommand=command({type:'back',playerID:guests[(i+1)%3]!.id});room=(await call(path+'/commands',guests[i],finalCommand)).snapshot;}
   }
   assert.equal(room.phase,'reveal');const roundID=room.round.id;
   await stop();await start();

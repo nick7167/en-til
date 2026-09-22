@@ -89,7 +89,11 @@ final class EnTilUITests: XCTestCase {
                 XCTAssertTrue(position.waitForExistence(timeout: 5))
                 XCTAssertTrue(position.isHittable)
             }
-            if route == "personal-reveal" { XCTAssertTrue(app.staticTexts["2 af 4"].exists) }
+            if route == "personal-reveal" {
+                XCTAssertTrue(app.staticTexts["2 af 4"].exists)
+                XCTAssertTrue(app.staticTexts["+1"].firstMatch.exists)
+                XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "Satsede på")).firstMatch.exists)
+            }
             attach(app, attachmentName)
             app.terminate()
         }
@@ -99,6 +103,7 @@ final class EnTilUITests: XCTestCase {
         for (route, text) in [("rules", "Samme fjollede hold"), ("privacy", "Privatliv"), ("profile", "Dit navn. Din figur."), ("movement", "Sådan rykker I"), ("waiting", "Vi venter på de sidste …"), ("reveal", "Det rigtige svar"), ("away", "Du sidder over"), ("late", "Du er med næste gang"), ("eight-lobby", "Dit spil"), ("eight-backing", "Hvem satser du på?")] {
             let app = launch(route)
             XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 5))
+            if route == "reveal" { XCTAssertTrue(app.staticTexts["+1"].firstMatch.exists) }
             if route == "movement" {
                 let position = app.otherElements["board-own-position"]
                 let arrived = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label BEGINSWITH %@", "Felt 6:"), object: position)

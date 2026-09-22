@@ -88,37 +88,37 @@
       {
         "playerID": "p0",
         "answer": 2,
-        "back": "p1",
+        "back": null,
         "own": 1,
-        "backing": 1,
-        "points": 2,
-        "score": 2,
-        "sips": null
-      },
-      {
-        "playerID": "p1",
-        "answer": 2,
-        "back": "p0",
-        "own": 1,
-        "backing": 1,
-        "points": 2,
-        "score": 2,
-        "sips": null
-      },
-      {
-        "playerID": "p2",
-        "answer": 3,
-        "back": "p1",
-        "own": 0,
-        "backing": 1,
+        "backing": 0,
         "points": 1,
         "score": 1,
         "sips": null
       },
       {
+        "playerID": "p1",
+        "answer": 2,
+        "back": null,
+        "own": 1,
+        "backing": 0,
+        "points": 1,
+        "score": 1,
+        "sips": null
+      },
+      {
+        "playerID": "p2",
+        "answer": 3,
+        "back": null,
+        "own": 0,
+        "backing": 0,
+        "points": 0,
+        "score": 0,
+        "sips": null
+      },
+      {
         "playerID": "p3",
         "answer": 1,
-        "back": "p2",
+        "back": null,
         "own": 0,
         "backing": 0,
         "points": 0,

@@ -26,6 +26,7 @@ struct WindingBoard: View {
                         ForEach(room.players.sorted { $0.score > $1.score }) { seat in
                             HStack {
                                 CharacterView(index: seat.character, size: 44).accessibilityHidden(true)
+                                    .overlay(alignment: .top) { reaction(for: seat) }
                                 Text(seat.name)
                                 Spacer()
                                 Text("\(seat.score) point").foregroundStyle(Color.lime)
@@ -138,11 +139,45 @@ struct WindingBoard: View {
     private func boardPlayer(_ seat: Seat, crowded: Bool) -> some View {
         VStack(spacing: -5) {
             CharacterView(index: seat.character, size: crowded ? 42 : 64).accessibilityHidden(true)
+                .overlay(alignment: .top) { reaction(for: seat) }
             Text(seat.name).font(.system(size: crowded ? 11 : 12, weight: .semibold))
                 .lineLimit(1).padding(.horizontal, 6).padding(.vertical, 3)
                 .foregroundStyle(seat.id == room.me ? Color.ink : Color.cream)
                 .background(seat.id == room.me ? Color.lime : Color.violet, in: Capsule())
         }.frame(width: crowded ? 60 : 72)
         .matchedGeometryEffect(id: seat.id, in: tokens)
+    }
+
+    @ViewBuilder private func reaction(for seat: Seat) -> some View {
+        if let reaction = room.reactions.last(where: { $0.playerID == seat.id }) {
+            CharacterReaction(reaction: reaction, name: seat.name, serverTime: room.serverTime).id(reaction.at)
+        }
+    }
+}
+
+private struct CharacterReaction: View {
+    let reaction: Reaction
+    let name: String
+    let serverTime: Double
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var risen = false
+    @State private var expired = false
+
+    private var emoji: String { ["applause": "👏", "laughter": "😂", "surprise": "😮", "side-eye": "😏"][reaction.value] ?? "" }
+    private var label: String { ["applause": "klapper", "laughter": "griner", "surprise": "er overrasket", "side-eye": "sender et sideblik"][reaction.value] ?? "reagerer" }
+
+    var body: some View {
+        Text(emoji).font(.system(size: 32)).padding(6)
+            .background(Color.cream, in: Capsule()).shadow(color: .ink.opacity(0.3), radius: 4, y: 2)
+            .offset(y: reduceMotion ? -28 : risen ? -38 : -4)
+            .opacity(expired ? 0 : 1).allowsHitTesting(false).accessibilityHidden(true)
+            .task {
+                let remaining = max(0, 4 - (serverTime - reaction.at) / 1000)
+                guard remaining > 0 else { expired = true; return }
+                AccessibilityNotification.Announcement("\(name) \(label)").post()
+                withAnimation(reduceMotion ? nil : .easeOut(duration: 0.4)) { risen = true }
+                do { try await Task.sleep(for: .seconds(max(0, remaining - 0.2))) } catch { return }
+                withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { expired = true }
+            }
     }
 }
