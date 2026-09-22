@@ -14,6 +14,7 @@
     "test:recovery": "tsx scripts/recovery-check.ts",
     "test:load": "tsx scripts/load-local.ts",
     "test:rates": "tsx scripts/rate-check.ts",
+    "test:bots": "tsx scripts/bots.ts",
     "fixtures": "tsx scripts/make-fixtures.ts"
   },
   "devDependencies": {

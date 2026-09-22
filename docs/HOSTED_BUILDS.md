@@ -29,3 +29,7 @@ Live integration checks require both ENTIL_TEST_URL set to the exact beta URL an
 [Codemagic build 6ab1a6e7bf3071e76e8ab256](https://codemagic.io/app/6ab1556209e0fc685fccc2b2/build/6ab1a6e7bf3071e76e8ab256) passed at ce8897c. Publishing log confirms `UPLOAD SUCCEEDED with no errors` (21 September 22:01:52 UTC). Packaged version is **1.0 (2)**. Local IPA inspection confirmed bundle dev.adrez.entil, iOS 18 minimum, beta endpoint, and distribution profile for JDW2B73SS5 with debugging disabled.
 
 Apple processing/internal TestFlight visibility remain unverified. `submit_to_testflight: false` disables automatic beta review submission; the App Store Connect publisher still uploads the IPA. No public App Store submission or external invitations occurred.
+
+### Device installation confirmed — 22 September 2026
+
+The owner confirmed that the newer **1.0 (3)** build is installed on their iPhone through TestFlight. Codemagic build `6ab1ac457757cf538570841a` at `80f3ec5` uploaded successfully; its later distribution task timed out waiting for Apple's processed build. That timeout is not evidence that delivery ultimately failed. Device confirmation supersedes the earlier visibility limitation; no replacement upload was needed. Public App Store submission remains disabled.

@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import WebSocket from 'ws';
 import {writeFileSync,mkdirSync} from 'node:fs';
-const base='http://127.0.0.1:8787';
+const base=process.env.ENTIL_TEST_URL ?? 'http://127.0.0.1:8787';
+assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname),'Load tests are local only.');
 const roomCount=Number(process.env.ENTIL_LOAD_ROOMS ?? 100);
 interface Guest{id:string;token:string}
 const durations:number[]=[];

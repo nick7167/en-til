@@ -74,3 +74,21 @@ Movement verification complete: focused native run 35525670758 at 8e7744d passed
 21 September playful-artwork checkpoint: a8f1f5a passed focused native run 35588640948 (all 26 references and four accessibility XXXL captures; executed-test log confirms TEST SUCCEEDED). All 30 captures inspected under build/visual-playful-final, with proportion-preserving reference comparisons. Higher-resolution logo/cast, continuous lounge/backing art, rounded supporting text and preserved Fraunces headings replace the rejected pixelated/boxed treatment. Solid control surfaces remain; standalone copy uses glyph shadows. Full run 35545264745 previously passed both contract tests and six UI tests including live multiplayer. Final review found private guidance crossing the bright hero; eb40493 moves it below the illustration, verified in native run 35590245122 attempt 2. Asset resolution and 13 palette contrast checks pass locally; palette checks do not prove contrast over art. Exact character-rendering approval, physical-device/VoiceOver checks, content approval and configured StoreKit remain open. No release-readiness or pixel-perfect claim.
 
 Native run 35590245122 attempt 1 compiled but timed out launching the app in the reference test; the following large-text test stalled until the 30-minute job cancellation. No completed result bundle was exported. This is not passing evidence. Attempt 2 passed on the same eb40493 commit: reference test 395.731 seconds, large-text test 43.481 seconds, and TEST SUCCEEDED confirmed in the executed log. Final private-round capture inspected under build/visual-private-final/review/D01-private.jpg: guidance sits below the bright character, above the answer buttons, without a backplate.
+
+## Phone companions and regression checks — 22 September 2026
+
+The owner confirmed TestFlight **1.0 (3)** is installed on their iPhone. Two explicitly labelled bot guests joined the owner's room on the dedicated beta service using normal authenticated WebSockets. Server snapshots confirmed a complete 12-round match with alternating factual/personal rounds, backing, reveal, board, finale and rematch back to the lobby. No private answers were logged. This is an assisted physical-device multiplayer test, not a completed physical-device/accessibility acceptance pass.
+
+Executed again locally:
+- `pnpm check`: strict TypeScript, 20 structurally valid draft questions (zero approved), all 30 engine/RPC tests passing.
+- `pnpm test:bots --self-test`: bot decisions complete a match through factual/personal answers, backing, reveal, board, countdown and finale; adult-blocked/away players stay idle.
+- HTTP integration: eight-player admission, authorization, create/command retries, ready/start, privacy, locked/invalid choices, full round and restored snapshot pass.
+- WebSocket integration: authenticated upgrade, snapshot, acknowledgement and reconnect to the same seat pass.
+- `pnpm test:recovery`: two real Worker process restarts, persisted sessions/results and scoring replay without duplicate points pass.
+- Bot transport smoke check: real clients join/ready/play to board, survive heartbeat replies and leave cleanly on shutdown.
+- Rate limiter rejects five excess session requests above the 30-per-minute threshold.
+- Local load: 100 rooms, 800 simultaneous sockets, 4,492 HTTP requests, 60.71 seconds; p50 109.42ms, p95 184.04ms, p99 239.58ms. This is local Miniflare, not Cloudflare production capacity or cost.
+
+Port 8787 was occupied by the local Headroom proxy, so the HTTP/WebSocket/load/rate tests ran against an isolated Worker on port 8792. Initial attempts against 8787 are not app test results. Load/rate scripts now accept a local `ENTIL_TEST_URL` override and reject remote targets.
+
+Full native simulator run [35780079970](https://github.com/nick7167/en-til/actions/runs/35780079970) at `493261e` was started; its result is pending. Actual StoreKit purchase/restore/refund checks remain blocked on product/credential configuration. iOS 18 runtime, small-device layout, VoiceOver, hardware sound/haptics and human question review remain open.

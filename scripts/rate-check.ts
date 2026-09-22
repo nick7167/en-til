@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-const base='http://127.0.0.1:8787';
+const base=process.env.ENTIL_TEST_URL ?? 'http://127.0.0.1:8787';
+assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname),'Rate-limit tests are local only.');
 const ip='203.0.113.244';
 let rejected=0;
 for(let i=0;i<35;i++){

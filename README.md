@@ -22,3 +22,13 @@ For faster screenshot review, download the `native-review` artifact (full-resolu
 The native UI suite also runs a real three-player match against the local Worker, including app reopening, joint winners, rematch and seat restoration. Start the local database/service above before running the full suite locally; GitHub Actions starts it automatically. Screenshot prices remain presentation fixtures, not purchase verification.
 
 Simulator checks use local ad-hoc signing and simulator-only Keychain entitlements so live sessions use real secure storage. No Apple signing account is needed. The manual native workflow supports `scope=live` for focused integration retries; its default runs the full suite.
+
+To play a TestFlight match without other people, create a room on your phone, then run:
+
+```sh
+ENTIL_TEST_URL=https://en-til-beta.nicklas-andreasen2000.workers.dev ENTIL_ALLOW_REMOTE_BETA=1 pnpm test:bots ROOM_CODE 2
+```
+
+Replace `ROOM_CODE` with its four-character code. Two visibly named test bots join, ready up, make synthetic answers, and back other players. The human host controls starting/rematches; bots do not buy packs, alter settings, or read hidden answers. Private answers are not logged. Leave them running while playing; Ctrl-C removes them, and they stop automatically after one hour. Up to seven bots are supported within the eight-player room limit. Run `pnpm test:bots --self-test` for their complete-match decision check. These companions test multiplayer behavior, not human question quality, purchases, or physical-device accessibility/audio/haptics.
+
+For local checks, `ENTIL_TEST_URL` also supports another local port for HTTP, WebSocket, load, rate-limit, and bot scripts. For example, start `pnpm dev --port 8792` if port 8787 is occupied, and run `ENTIL_TEST_URL=http://127.0.0.1:8792 pnpm test:http`. Load/rate-limit checks reject remote targets.
