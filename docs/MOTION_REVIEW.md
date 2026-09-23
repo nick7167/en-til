@@ -16,3 +16,6 @@ Native verification: app compiled at 8a0ff4d in run 35524844518; five existing U
 - Review result-stage insertions and perceived pacing before adding more transitions.
 
 Overall motion approval remains open. Existing button press feedback and scrolling respect Reduce Motion. Web-specific CSS guidance was not treated as a SwiftUI requirement.
+
+
+23 September phone feedback: points now appear with the first result rows at 1.8 seconds instead of 3.8 seconds. Expiring reactions originate above the sending board character; Reduce Motion uses a static presentation and VoiceOver announces the sender. Full native run 35782119718 passed; inspected live-character-reaction capture confirms sender placement. Physical-device pacing remains for owner verification in the updated TestFlight build.

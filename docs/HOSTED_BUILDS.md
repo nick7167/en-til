@@ -33,3 +33,10 @@ Apple processing/internal TestFlight visibility remain unverified. `submit_to_te
 ### Device installation confirmed — 22 September 2026
 
 The owner confirmed that the newer **1.0 (3)** build is installed on their iPhone through TestFlight. Codemagic build `6ab1ac457757cf538570841a` at `80f3ec5` uploaded successfully; its later distribution task timed out waiting for Apple's processed build. That timeout is not evidence that delivery ultimately failed. Device confirmation supersedes the earlier visibility limitation; no replacement upload was needed. Public App Store submission remains disabled.
+
+
+### Phone feedback build — 23 September 2026
+
+Codemagic [6ab32a1ddd7b534b9b07bbb7](https://codemagic.io/app/6ab1556209e0fc685fccc2b2/build/6ab32a1ddd7b534b9b07bbb7) built commit `e5c6935` and uploaded **1.0 (4)** successfully. Publishing log confirms `UPLOAD SUCCEEDED no errors` at 01:26:19 UTC, bundle `dev.adrez.entil`, minimum iOS 18.0. Full native verification passed before upload (run 35782119718).
+
+Includes character-origin reaction emoji, personal rounds without backing (+1 to every closest guess), and point labels appearing with the first result rows. Existing beta backend was deployed and smoke-tested with real bot clients. Apple processing/internal-group distribution is pending; successful upload alone does not prove TestFlight availability. No public submission or external invitations.

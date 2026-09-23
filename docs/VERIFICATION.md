@@ -92,3 +92,12 @@ Executed again locally:
 Port 8787 was occupied by the local Headroom proxy, so the HTTP/WebSocket/load/rate tests ran against an isolated Worker on port 8792. Initial attempts against 8787 are not app test results. Load/rate scripts now accept a local `ENTIL_TEST_URL` override and reject remote targets.
 
 Full native simulator run [35780079970](https://github.com/nick7167/en-til/actions/runs/35780079970) at `493261e` was started; its result is pending. Actual StoreKit purchase/restore/refund checks remain blocked on product/credential configuration. iOS 18 runtime, small-device layout, VoiceOver, hardware sound/haptics and human question review remain open.
+
+
+## Phone feedback verification — 23 September 2026
+
+Commit `e5c6935` passed backend CI [35782094463](https://github.com/nick7167/en-til/actions/runs/35782094463) and full native run [35782119718](https://github.com/nick7167/en-til/actions/runs/35782119718): two contract tests and six UI tests, with `TEST SUCCEEDED` confirmed in the executed log. Local `pnpm check` passed all 32 tests; bot self-test, HTTP, WebSocket, process-restart recovery, Swift syntax and native asset checks also passed.
+
+Inspected native screenshots under ignored `build/visual-phone-feedback`: reaction emoji above Freja's character, tied personal guesses each +1 without backing copy, and factual point labels present with the first result rows. The live UI test covers mixed rounds, relaunch, finale, rematch and seat return. Screenshots establish placement, not physical-device animation feel.
+
+Deployed the same backend to the existing beta Worker, version `418a3648-ef29-4048-8417-a14d6be202c3`. Health returned 200; remote real-bot smoke passed factual/personal rounds, skipped personal backing, personal points capped at one, heartbeat and clean departure. Updated app pacing and reactions still need owner feedback on the new TestFlight build.
