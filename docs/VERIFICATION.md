@@ -101,3 +101,8 @@ Commit `e5c6935` passed backend CI [35782094463](https://github.com/nick7167/en-
 Inspected native screenshots under ignored `build/visual-phone-feedback`: reaction emoji above Freja's character, tied personal guesses each +1 without backing copy, and factual point labels present with the first result rows. The live UI test covers mixed rounds, relaunch, finale, rematch and seat return. Screenshots establish placement, not physical-device animation feel.
 
 Deployed the same backend to the existing beta Worker, version `418a3648-ef29-4048-8417-a14d6be202c3`. Health returned 200; remote real-bot smoke passed factual/personal rounds, skipped personal backing, personal points capped at one, heartbeat and clean departure. Updated app pacing and reactions still need owner feedback on the new TestFlight build.
+
+
+## Recorded gameplay review — 23 September 2026
+
+Native run 35806878909 at 4ff514b passed the live match UI test in 198.826 seconds (`TEST SUCCEEDED`). Optional simctl recording exported successfully. The full app session was reviewed through frame samples and finer movement/reaction samples; original recording and a preparation-trimmed 2:36.665 version are stored under ignored `build/gameplay-ux-review`. No audio track. The match uses three players, five points and no timer; it is not a human-fun or physical-device acceptance test. All 32 local tests, HTTP, WebSocket, two-restart recovery, bot self-test and rate-limit checks passed again. Local 100-room/800-socket load passed: 4,100 requests, 51.51 seconds, p95 160.65ms, p99 218.48ms. See GAMEPLAY_UX_REVIEW.md for coverage, limitations, timestamps and proposals. Gameplay/UI implementation was not modified.
