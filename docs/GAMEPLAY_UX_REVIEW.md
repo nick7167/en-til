@@ -87,3 +87,19 @@ I would not begin with power-ups, stealing points, elaborate comeback multiplier
 First address readiness, board continuity and launch/recovery presentation. Compare the current and revised flow with the same scripted checks and recording. Then run short human sessions with three and six players, using the existing ten-point setting: one baseline game and one with a single ordering round. Alternate which version goes first between groups.
 
 Observe whether people know who is holding up progression, can explain their points, talk during the reveal, and choose to rematch. Ask which moment dragged and whether they want the mini-game again. Record time spent waiting after everyone finishes, rather than penalizing voluntary conversation. Do not infer human enjoyment or boredom from bot success.
+
+
+## Four approved polish improvements — 23 September 2026
+
+Implemented at `d75ae27`: board readiness counts and waiting names with undo; continuous movement/board composition (movement at 4.8s, board ready at 6s, then a 2s countdown after everyone is ready); reactions on revealed result avatars; dark native launch color and explicit saved-seat restoration. Points remain visible from 1.8s. Personal scoring remains +1 for all closest guesses, without backing. No mini-games were added.
+
+Full native run [35871203213](https://github.com/nick7167/en-til/actions/runs/35871203213) passed three contract tests and six UI tests, including a real three-player match, readiness undo, reveal reactions, reopening, joint finale, rematch and leave/return. The executed log confirms `TEST SUCCEEDED`. Reviewed full-resolution result/reaction/readiness/movement and accessibility XXXL captures under ignored `build/polish-review`. Waiting names, ready count, undo and reaction controls are visible; large text remains scrollable with the primary action accessible.
+
+Local backend checks pass 34 tests, HTTP/WebSocket integration, two process restarts and bot self-test. Backend CI 35871197178 passed. Beta version `0a26aca1-b019-4c4d-97f7-572194067f8f` is deployed; remote bots verified factual/personal scoring, reveal reactions, reveal duration, heartbeat and clean departure.
+
+This is simulator and automated-client evidence. Physical-device pacing, audio/haptics, VoiceOver and human enjoyment still need device/group feedback.
+
+
+Recording review completed: inspected the complete live session at one-second intervals and movement/reopening at 0.1-second intervals. Session-only silent video: ignored `build/polish-review/en-til-polish-session.mp4` (source starts at 774s; original full-suite recording retained in `build/polish-review/video/gameplay-session.mp4`). It shows joining, four rounds (personal/factual), character-origin reactions, readiness undo/countdown, termination/reopening, shared victory, rematch, leave and return. Movement retains the board/control geometry; readiness enables after movement. Reopening stays dark, displays saved-seat restoration and returns to the board without an app-home flash. A brief reconnect overlay remains while the socket reconnects. This frame review does not measure real-device frame rate or startup speed; the simulator recording has no audio.
+
+Build **1.0 (5)** uploaded and Apple processing completed. The configured `Internal Testing` group was not found; see [hosted builds](HOSTED_BUILDS.md) for delivery evidence and the remaining group-assignment limitation.
