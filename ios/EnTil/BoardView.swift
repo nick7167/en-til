@@ -155,7 +155,7 @@ struct WindingBoard: View {
     }
 }
 
-private struct CharacterReaction: View {
+struct CharacterReaction: View {
     let reaction: Reaction
     let name: String
     let serverTime: Double

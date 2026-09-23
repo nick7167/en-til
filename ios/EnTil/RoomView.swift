@@ -21,7 +21,7 @@ struct RoomView: View {
             if room.phase == "lobby" { lobby }
             else if room.ownSeat?.late == true { waitingForMatch }
             else if room.phase == "board" && room.players.filter({ !$0.away && !$0.late }).count < 3 { paused }
-            else if ["board", "countdown", "finale"].contains(room.phase) { board }
+            else if ["board", "countdown", "finale"].contains(room.phase) || (room.phase == "reveal" && (room.round?.revealStage ?? 0) >= 3) { board }
             else if room.phase == "reveal" { reveal }
             else if room.ownSeat?.away == true { sittingOut }
             else { question }
@@ -191,13 +191,8 @@ struct RoomView: View {
         }
     }
     private var reveal: some View {
-        Screen(scene: room.round?.revealStage == 3 ? .board : .backing, spacing: 9) {
+        Screen(scene: .backing, spacing: 9) {
             if let round = room.round {
-                if round.revealStage >= 3 {
-                    Text("Sådan rykker I").font(.editorial(32)).fontDesign(nil)
-                    WindingBoard(room: room, animateRound: true).frame(height: 420).padding(.horizontal, -18)
-                    Text("Videre til brættet …").font(.headline).readingSurface()
-                } else {
                 Text(round.kind == "personal" ? "Så mange svarede ja" : "Det rigtige svar").font(.editorial(round.kind == "personal" ? 28 : 32)).fontDesign(nil).padding(.horizontal, 28).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                 Text(round.kind == "personal" ? "\(round.correct ?? 0) af \(round.responseCount ?? 0)" : round.correct.flatMap { round.options.indices.contains($0) ? round.options[$0] : nil } ?? "")
                     .font(.editorial(48)).fontDesign(nil).foregroundStyle(Color.lime).multilineTextAlignment(.center)
@@ -207,8 +202,8 @@ struct RoomView: View {
                 }
                 if round.revealStage >= 1 {
                     ForEach(round.results) { result in resultRow(result, round: round, showPoints: true) }
+                    reactions
                 } else { CharacterView(index: 1, size: 190) }
-                }
             }
         }
     }
@@ -233,7 +228,7 @@ struct RoomView: View {
             } else {
                 Text(room.players.filter { !$0.away && !$0.late }.count < 3 ? "Vi mangler en spiller" : "Sådan står I").font(.editorial()).fontDesign(nil).multilineTextAlignment(.center)
                 if room.players.filter({ !$0.away && !$0.late }).count < 3 { Text("Spillet fortsætter, når mindst 3 er aktive.").multilineTextAlignment(.center).readingSurface() }
-                WindingBoard(room: room).frame(height: 420).padding(.horizontal, -18)
+                WindingBoard(room: room, animateRound: room.phase == "reveal").frame(height: typeSize.isAccessibilitySize ? 420 : 380).padding(.horizontal, -18)
                 if let own = room.round?.results.first(where: { $0.playerID == room.me }) {
                     Panel {
                         HStack(alignment: .top) {
@@ -246,20 +241,40 @@ struct RoomView: View {
                     }
                 }
                 Button("Se alle svar") { allResults = true }.font(.subheadline).padding(8).readingSurface()
-                HStack(spacing: 10) {
-                    reaction("applause", "👏", "Klapsalve"); reaction("laughter", "😂", "Grin"); reaction("surprise", "😮", "Overraskelse"); reaction("side-eye", "😏", "Sideblik")
-                }
+                reactions
+                readiness
                 if room.phase == "countdown" {
                     TimelineView(.periodic(from: .now, by: 0.2)) { _ in Text("Næste runde om \(max(0, Int(ceil(((room.countdownAt ?? client.serverNow) - client.serverNow)/1000))))").font(.headline).frame(maxWidth: .infinity).padding(18).background(Color.violet, in: RoundedRectangle(cornerRadius: 17)) }
                 } else if room.ownSeat?.away == true {
                     Button("Jeg er tilbage") { send(.init(type: "return")) }.buttonStyle(LoungeButtonStyle())
                 } else {
-                    Button(room.ownSeat?.ready == true ? "Vent, jeg er ikke klar" : "Klar til næste runde") { send(.init(type: "ready", value: .bool(!(room.ownSeat?.ready ?? false)))) }.buttonStyle(LoungeButtonStyle()).disabled(client.busy)
+                    if room.ownSeat?.ready == true {
+                        Button("Fortryd klar") { send(.init(type: "ready", value: .bool(false))) }
+                            .buttonStyle(LoungeButtonStyle(primary: false)).disabled(client.busy)
+                    } else {
+                        Button("Klar til næste runde") { send(.init(type: "ready", value: .bool(true))) }
+                            .buttonStyle(LoungeButtonStyle()).disabled(client.busy || room.phase == "reveal")
+                    }
                 }
                 if room.settings.drinking {
                     Text("Drikkeregler er valgfrie. Du kan altid springe over.").font(.footnote).foregroundStyle(Color.lilac).multilineTextAlignment(.center).readingSurface()
                 }
             }
+        }
+    }
+    private var readiness: some View {
+        let players = room.players.filter { !$0.away && !$0.late }
+        let waiting = players.filter { !$0.ready }.map { $0.id == room.me ? "dig" : $0.name }
+        return VStack(spacing: 4) {
+            Text("\(room.ownSeat?.ready == true ? "Du er klar · " : "")\(players.filter(\.ready).count)/\(players.count) klar")
+                .font(.subheadline.weight(.semibold)).accessibilityIdentifier("board-readiness")
+            Text(waiting.isEmpty ? "Alle er klar" : "Venter på \(waiting.joined(separator: ", "))")
+                .font(.caption).foregroundStyle(Color.lilac).fixedSize(horizontal: false, vertical: true)
+        }.multilineTextAlignment(.center).readingSurface()
+    }
+    private var reactions: some View {
+        HStack(spacing: 10) {
+            reaction("applause", "👏", "Klapsalve"); reaction("laughter", "😂", "Grin"); reaction("surprise", "😮", "Overraskelse"); reaction("side-eye", "😏", "Sideblik")
         }
     }
     private var standings: some View {
@@ -294,6 +309,11 @@ struct RoomView: View {
         return Panel {
             HStack {
                 CharacterView(index: seat?.character ?? 0, size: 60).accessibilityHidden(true)
+                    .overlay(alignment: .top) {
+                        if let seat, let reaction = room.reactions.last(where: { $0.playerID == seat.id }) {
+                            CharacterReaction(reaction: reaction, name: seat.name, serverTime: room.serverTime).id(reaction.at)
+                        }
+                    }
                 VStack(alignment: .leading, spacing: 4) {
                     Text(seat?.name ?? "Spiller").font(.headline)
                     Text(result.answer.map { round.kind == "personal" ? "Gæt: \($0)" : round.options.indices.contains($0) ? round.options[$0] : "—" } ?? "Intet svar").font(.caption)

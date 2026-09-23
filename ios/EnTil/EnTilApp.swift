@@ -61,7 +61,7 @@ struct RootView: View {
         .task {
             #if DEBUG
             if let fixture = ProcessInfo.processInfo.environment["ENTIL_SCREENSHOT_FIXTURE"] {
-                client.loadFixture(fixture); if fixture == "reconnect" { client.reconnecting = true }; return
+                client.loadFixture(fixture); client.restoring = false; if fixture == "reconnect" { client.reconnecting = true }; return
             }
             #endif
             await client.restoreSeat()
@@ -88,7 +88,15 @@ struct RootView: View {
     }
     @ViewBuilder private var liveContent: some View {
 
-                if let room = client.room {
+                if client.restoring {
+                    Screen(scene: .plain) {
+                        Spacer(minLength: 80)
+                        BrandLogo().frame(height: 120)
+                        ProgressView().controlSize(.large).tint(.lime)
+                        Text("Henter dit spil …").font(.headline).readingSurface()
+                        Text("Din plads og dine point bliver hentet.").font(.subheadline).multilineTextAlignment(.center).readingSurface()
+                    }.accessibilityIdentifier("restoring-game")
+                } else if let room = client.room {
                     RoomView(client: client, store: store, room: room, showSetup: { sheet = .setup }, showProfile: { sheet = .profile }, showRules: { sheet = .rules }, showPreferences: { sheet = .settings }, leave: { leaving = true })
                         .padding(.top, typeSize.isAccessibilitySize && !["answer", "private"].contains(room.phase) ? 52 : 0)
                         .overlay(alignment: .top) {

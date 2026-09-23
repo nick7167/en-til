@@ -36,3 +36,8 @@ Acceptance covers scoring/ties/overshoot/winners; every timeout/duplicate/stale/
 Physical-device feedback supersedes the original backing rule for personal questions: private yes/no/skip → guess the total → reveal. Every closest guess earns exactly 1 point, including ties; no backing choice or backing bonus. Factual rounds retain independent answer/backing points (maximum 2). Optional drinking scoring follows the round maximum (personal: 0–1; factual: 0–2), excluding missing guesses and opted-out players as before. Original personal-answer privacy, fallback and skip guarantees still apply.
 
 Reaction emoji should rise from the sending player's character, with a static presentation under Reduce Motion and accessible announcement. Result rows should show point awards together at reveal stage 1 (1.8 seconds), rather than waiting for stage 2 (3.8 seconds). Board movement and the existing reveal-to-board deadline remain unchanged.
+
+
+### Owner-authorized polish — 23 September 2026
+
+Board readiness shows the active ready count, waiting names and a separate undo-ready action. All active players must still explicitly ready up. Reveal points remain available at 1.8 seconds; board movement begins at 4.8 seconds in the same board composition used afterward, and the board becomes ready at 6 seconds. The subsequent countdown is 2 seconds. Reactions are accepted during reveal, board, countdown and finale (existing rate limits preserved); result-row reactions originate at the sender avatar. Launch uses the dark app background and saved-seat restoration has an explicit loading presentation. Scoring and personal-answer privacy are unchanged.

@@ -30,7 +30,8 @@ targets:
         CFBundleDisplayName: En til?
         LSRequiresIPhoneOS: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        UILaunchScreen: {}
+        UILaunchScreen:
+        UIColorName: LaunchBackground
         UIAppFonts: [Fraunces.ttf, EnTilHeadings-Bold.ttf]
         EnTilAPIURL: $(ENTIL_API_URL)
         ITSAppUsesNonExemptEncryption: false

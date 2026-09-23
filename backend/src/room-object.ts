@@ -1,5 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
-import { advance, createRoom, dispatch, nextAlarm, snapshot, type Room } from './engine.ts';
+import { advance, createRoom, dispatch, nextAlarm, snapshot, revealStages, type Room } from './engine.ts';
 import { commandSchema, GameError, adultPacks, type Principal, type Command } from './protocol.ts';
 import type { Catalogue } from './content.ts';
 import { rpcResult } from './rpc.ts';
@@ -100,7 +100,7 @@ export class RoomObject extends DurableObject<Env> {
     let at=nextAlarm(room,now);
     // Reveal stages need synchronized snapshots even if no player sends a command.
     if(room.phase==='reveal') {
-      const stages=[1800,3800,5800,7800].map(ms => room.round!.revealAt!+ms).filter(t => t>now);
+      const stages=revealStages.map(ms => room.round!.revealAt!+ms).filter(t => t>now);
       if(stages.length)at=Math.min(at ?? Infinity,...stages);
     }
     if(at!==undefined)await this.ctx.storage.setAlarm(at);else await this.ctx.storage.deleteAlarm();

@@ -1,6 +1,8 @@
 import { defaults, adultPacks, requireGame, type Command, type Settings, type Principal, type PackID } from './protocol.ts';
 import { chooseQuestion, type Catalogue, type Question } from './content.ts';
 
+export const revealStages = [1800, 3800, 4800, 6000] as const;
+
 export interface Player {
   id:string; name:string; character:number; joined:number; connected:boolean; disconnectedAt?:number;
   departed?:boolean; away:boolean; late:boolean; returnRequested:boolean; ready:boolean; adult:boolean; drinking:boolean;
@@ -143,11 +145,11 @@ export function advance(r:Room,now:number) {
     }
     if (Object.values(current.turns).every(t => t.answerClosed && t.backClosed)) scoreRound(r,now);
   }
-  if (r.phase==='reveal' && now>=r.round!.revealAt!+7800) {
+  if (r.phase==='reveal' && now>=r.round!.revealAt!+revealStages[3]) {
     r.phase=r.winners.length ? 'finale' : 'board'; boundary(r);
   }
   if (r.phase==='board' && active(r).length>=3 && active(r).every(p=>p.ready)) {
-    r.phase='countdown';r.countdownAt=now+3000;
+    r.phase='countdown';r.countdownAt=now+2000;
   }
 }
 function toLobby(r:Room) {
@@ -226,7 +228,7 @@ export function dispatch(source:Room,principal:Principal,command:Command,now:num
         requireGame(a.playerID!==p.id && r.round!.participants.includes(a.playerID) && !player(r,a.playerID).away,'back_invalid','Vælg en anden aktiv spiller.');
         t.back=a.playerID;t.backClosed=true;t.submitted=true;break;}
       case 'reaction':
-        requireGame(r.phase==='board' || r.phase==='finale','phase','Reaktioner kommer efter afsløringen.');
+        requireGame(['reveal','board','countdown','finale'].includes(r.phase),'phase','Reaktioner kommer ved afsløringen.');
         r.reactions=r.reactions.filter(x => now-x.at<4000);
         requireGame(!r.reactions.some(x => x.playerID===p.id && now-x.at<2000) && r.reactions.length<4,'rate_limited','Giv lige de andre plads.');
         r.reactions.push({playerID:p.id,value:a.value,at:now});break;
@@ -250,7 +252,7 @@ export function nextAlarm(r:Room,now:number):number|undefined {
   const h=r.players.find(p => p.id===r.hostID);
   if(h && !h.connected && h.disconnectedAt!==undefined && h.disconnectedAt+30_000>now)times.push(h.disconnectedAt+30_000);
   if(r.phase==='countdown' && r.countdownAt)times.push(r.countdownAt);
-  if(r.phase==='reveal')times.push(r.round!.revealAt!+7800);
+  if(r.phase==='reveal')times.push(r.round!.revealAt!+revealStages[3]);
   if(r.phase==='private' || r.phase==='answer') {
     if(r.round?.answerDeadline && r.round.answerDeadline>now)times.push(r.round.answerDeadline);
     for(const t of Object.values(r.round?.turns ?? {})) if(!t.backClosed && t.backingDeadline)times.push(t.backingDeadline);
@@ -264,7 +266,7 @@ export function snapshot(r:Room,id:string,now:number) {
   const round=adultBlocked ? null : r.round,t=round?.turns[id];
   const revealed=['reveal','board','countdown','finale'].includes(r.phase);
   const elapsed=round?.revealAt===undefined ? 0 : now-round.revealAt;
-  const stage=r.phase!=='reveal' ? 4 : elapsed<1800 ? 0 : elapsed<3800 ? 1 : elapsed<5800 ? 2 : 3;
+  const stage=r.phase!=='reveal' ? 4 : elapsed<revealStages[0] ? 0 : elapsed<revealStages[1] ? 1 : elapsed<revealStages[2] ? 2 : 3;
   return {
     v:1,roomID:r.id,code:r.code,hostID:r.hostID,me:id,serverTime:now,phase:r.phase,matchID:r.matchID,settings:r.settings,
     adultRequired:requiresAdult(r.settings) && !me.adult,contentVersion:r.catalogue.version,

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { advance, createRoom, dispatch, snapshot, nextAlarm, type Room } from '../src/engine.ts';
+import { advance, createRoom, dispatch, snapshot, nextAlarm, revealStages, type Room } from '../src/engine.ts';
 import { commandSchema, type Command, defaults, type PackID } from '../src/protocol.ts';
 import { validateCatalogue, type Catalogue } from '../src/content.ts';
 import draft from '../../content/catalogue.draft.json';
@@ -75,7 +75,7 @@ test('readiness can reverse until countdown; countdown lasts three seconds',()=>
   let r=start();r=complete(r,[0,0,0]);advance(r,9800);
   r=send(r,'p0',{type:'ready',value:true},9900);r=send(r,'p0',{type:'ready',value:false},9901);assert.equal(r.players[0]!.ready,false);
   for(let i=0;i<3;i++)r=send(r,`p${i}`,{type:'ready',value:true},10000);
-  assert.equal(r.phase,'countdown');assert.equal(nextAlarm(r,10000),13000);assert.throws(()=>send(r,'p0',{type:'ready',value:false},11000),/pause/);advance(r,13000);assert.equal(r.phase,'answer');assert.equal(r.round!.number,2);
+  assert.equal(r.phase,'countdown');assert.equal(nextAlarm(r,10000),12000);assert.throws(()=>send(r,'p0',{type:'ready',value:false},11000),/pause/);advance(r,13000);assert.equal(r.phase,'answer');assert.equal(r.round!.number,2);
 });
 test('host sitting out preserves confirmed choices; return at boundary',()=>{
   let r=start(lobby(4));r=send(r,'p1',{type:'answer',value:0});r=send(r,'p0',{type:'away',playerID:'p1'});assert.equal(r.round!.turns.p1!.answer,0);assert.ok(r.round!.turns.p1!.backClosed);
@@ -117,7 +117,7 @@ test('sitting out or leaving at the board releases ready players, but never star
     for(const id of ['p0','p1','p2'])r=send(r,id,{type:'ready',value:true},10000);
     assert.equal(r.phase,'board');
     r=action==='away'?send(r,'p0',{type:'away',playerID:'p3'},10001):send(r,'p3',{type:'leave'},10001);
-    assert.equal(r.phase,'countdown');assert.equal(r.countdownAt,13001);
+    assert.equal(r.phase,'countdown');assert.equal(r.countdownAt,12001);
     advance(r,13001);assert.deepEqual(r.round!.participants,['p0','p1','p2']);
   }
   let r=start();r=complete(r,Array(3).fill(r.round!.question.correct));advance(r,10000);
@@ -150,4 +150,30 @@ test('points arrive with the first result rows; board scores still wait for move
   assert.ok(first.round!.results.every(x=>x.points===2));
   assert.ok(first.players.every(p=>p.score===0));
   assert.ok(snapshot(r,'p0',7800).players.every(p=>p.score===2));
+});
+
+
+test('polished reveal timing keeps results before movement and requires readiness',()=>{
+  let r=start();const correct=r.round!.question.correct!;r=complete(r,[correct,correct,correct],2000);
+  assert.deepEqual(revealStages,[1800,3800,4800,6000]);
+  assert.equal(snapshot(r,'p0',6799).round!.revealStage,2);
+  assert.ok(snapshot(r,'p0',6799).players.every(p=>p.score===0));
+  assert.equal(snapshot(r,'p0',6800).round!.revealStage,3);
+  assert.ok(snapshot(r,'p0',6800).players.every(p=>p.score===2));
+  assert.equal(nextAlarm(r,6800),8000);
+  advance(r,7999);assert.equal(r.phase,'reveal');advance(r,8000);assert.equal(r.phase,'board');
+  advance(r,15000);assert.equal(r.phase,'board');
+  for(const p of r.players)r=send(r,p.id,{type:'ready',value:true},15000);
+  assert.equal(nextAlarm(r,15000),17000);advance(r,16999);assert.equal(r.phase,'countdown');
+  advance(r,17000);assert.equal(r.phase,'answer');assert.equal(r.round!.number,2);
+});
+test('reveal and countdown reactions retain phase guards and rate limits',()=>{
+  let r=start();assert.throws(()=>send(r,'p0',{type:'reaction',value:'laughter'},1500),{code:'phase'});
+  r=complete(r,[0,0,0],2000);
+  r=send(r,'p0',{type:'reaction',value:'laughter'},2100);
+  assert.equal(snapshot(r,'p1',2100).reactions[0]!.playerID,'p0');
+  assert.throws(()=>send(r,'p0',{type:'reaction',value:'applause'},2200),{code:'rate_limited'});
+  advance(r,8000);for(const p of r.players)r=send(r,p.id,{type:'ready',value:true},8100);
+  assert.equal(r.phase,'countdown');r=send(r,'p0',{type:'reaction',value:'surprise'},8200);
+  advance(r,10100);assert.throws(()=>send(r,'p1',{type:'reaction',value:'laughter'},10101),{code:'phase'});
 });

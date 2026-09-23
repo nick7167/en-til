@@ -5,6 +5,7 @@ import Observation
     var room: RoomSnapshot?
     var busy = false
     var reconnecting = false
+    var restoring = UserDefaults.standard.string(forKey: "roomID") != nil
     var problem: String?
     var needsAdult = false
     var joinPreview: JoinPreview?
@@ -93,6 +94,8 @@ import Observation
         }
     }
     func restoreSeat() async {
+        restoring = true
+        defer { restoring = false }
         guard let id = UserDefaults.standard.string(forKey: "roomID") else { return }
         await perform {
             try await self.ensureSession()

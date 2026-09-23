@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import UIKit
 @testable import EnTil
 
 struct ContractTests {
@@ -23,6 +24,20 @@ struct ContractTests {
             #expect(client.problem == "Spillet er slut.")
             #expect(UserDefaults.standard.object(forKey: "roomID") == nil)
         }
+    }
+    @MainActor @Test func launchBackgroundAndEmptySeatRecovery() async throws {
+        let launch = try #require(Bundle.main.object(forInfoDictionaryKey: "UILaunchScreen") as? [String: Any])
+        let color = try #require(launch["UIColorName"] as? String)
+        #expect(UIColor(named: color) != nil)
+        let savedRoomID = UserDefaults.standard.object(forKey: "roomID")
+        defer { UserDefaults.standard.set(savedRoomID, forKey: "roomID") }
+        UserDefaults.standard.set("saved-seat", forKey: "roomID")
+        let client = GameClient()
+        #expect(client.restoring)
+        UserDefaults.standard.removeObject(forKey: "roomID")
+        await client.restoreSeat()
+        #expect(!client.restoring)
+        #expect(client.room == nil)
     }
     @Test func initialCommandEncodesNullIdentities() throws {
         let command = GameCommand(room: nil, action: .init(type: "join", name: "Freja", character: 1, adult: false, drinking: false))

@@ -82,6 +82,13 @@ import Foundation
                 if !personal { try await command(["type": "back", "playerID": participant.id == host.id ? friend.id : host.id], by: participant) }
             }
             XCTAssertEqual(room["phase"] as? String, "reveal")
+            if number == 1 {
+                try await command(["type": "reaction", "value": "laughter"], by: host)
+                try await Task.sleep(for: .milliseconds(2200))
+                XCTAssertTrue(app.buttons["Grin"].exists)
+                let revealCapture = XCTAttachment(screenshot: app.screenshot())
+                revealCapture.name = "live-reveal-reaction"; revealCapture.lifetime = .keepAlways; add(revealCapture)
+            }
             try await waitForPhase([expectedScore >= 5 ? "finale" : "board"], by: host)
             let results = try XCTUnwrap((room["round"] as? [String: Any])?["results"] as? [[String: Any]])
             XCTAssertEqual(results.count, 3)
@@ -99,7 +106,17 @@ import Foundation
                     XCTAssertTrue(app.staticTexts["Sådan står I"].waitForExistence(timeout: 10))
                 }
                 try tap(app.buttons["Klar til næste runde"], in: app)
-                XCTAssertTrue(app.buttons["Vent, jeg er ikke klar"].waitForExistence(timeout: 5))
+                XCTAssertTrue(app.buttons["Fortryd klar"].waitForExistence(timeout: 5))
+                XCTAssertEqual(app.staticTexts["board-readiness"].label, "Du er klar · 1/3 klar")
+                XCTAssertTrue(app.staticTexts["Venter på Freja, Noah"].exists)
+                if number == 1 {
+                    let readinessCapture = XCTAttachment(screenshot: app.screenshot())
+                    readinessCapture.name = "live-board-readiness"; readinessCapture.lifetime = .keepAlways; add(readinessCapture)
+                    try tap(app.buttons["Fortryd klar"], in: app)
+                    XCTAssertTrue(app.buttons["Klar til næste runde"].waitForExistence(timeout: 5))
+                    XCTAssertEqual(app.staticTexts["board-readiness"].label, "0/3 klar")
+                    try tap(app.buttons["Klar til næste runde"], in: app)
+                }
                 try await command(["type": "ready", "value": true], by: host)
                 try await command(["type": "ready", "value": true], by: friend)
             } else { break }
