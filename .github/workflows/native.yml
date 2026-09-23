@@ -7,6 +7,10 @@ on:
         type: choice
         options: [all, live, keyboard, packs, additional, reference]
         default: all
+      record:
+        description: Record the simulator session for UX review
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -42,7 +46,15 @@ jobs:
           mkdir -p build
           pnpm dev > build/backend.log 2>&1 &
           backend_pid=$!
-          trap 'kill "$backend_pid" 2>/dev/null || true' EXIT
+          recording_pid=""
+          cleanup() {
+            if [ -n "$recording_pid" ]; then
+              kill -INT "$recording_pid" 2>/dev/null || true
+              wait "$recording_pid" || true
+            fi
+            kill "$backend_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
           for attempt in {1..30}; do
             if curl --silent --fail http://127.0.0.1:8787/health; then break; fi
             sleep 1
@@ -60,7 +72,16 @@ jobs:
           elif [ "${{ inputs.scope }}" = packs ]; then
             test_args+=('-only-testing:EnTilUITests/EnTilUITests/testAllPackArtwork')
           fi
-          xcodebuild "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
+          destination='platform=iOS Simulator,name=iPhone 17,OS=26.5'
+          if [ "${{ inputs.record }}" = true ]; then
+            simulator_id=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(v["udid"] for k,vs in d["devices"].items() if k.endswith("iOS-26-5") for v in vs if v["name"] == "iPhone 17"))')
+            xcrun simctl boot "$simulator_id"
+            xcrun simctl bootstatus "$simulator_id" -b
+            destination="platform=iOS Simulator,id=$simulator_id"
+            xcrun simctl io "$simulator_id" recordVideo --codec=h264 build/gameplay-session.mp4 > build/recording.log 2>&1 &
+            recording_pid=$!
+          fi
+          xcodebuild "${test_args[@]}" -project ios/EnTil.xcodeproj -scheme EnTil -configuration Debug -destination "$destination" -parallel-testing-enabled NO -resultBundlePath build/EnTil.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- 2>&1 | tee build/xcodebuild.log
           test -d build/EnTil.xcresult
           grep -Fq "** TEST SUCCEEDED **" build/xcodebuild.log
       - name: Export screenshot attachments
@@ -70,6 +91,15 @@ jobs:
             xcrun xcresulttool export attachments --path build/EnTil.xcresult --output-path build/screenshots
             python3 scripts/prepare-native-review.py build/screenshots build/review/screenshots
           fi
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && inputs.record }}
+        with:
+          name: gameplay-session
+          path: |
+            build/gameplay-session.mp4
+            build/recording.log
+          retention-days: 7
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()
         with:
